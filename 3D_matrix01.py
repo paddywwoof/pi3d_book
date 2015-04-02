@@ -69,15 +69,15 @@ def refresh_vertices(shape, old_verts):
   shape.re_init(pts=new_verts) # finally update the vertex locations
 
 def print_matrices():
-  head_str = "        translation                 rotation                    scale"
+  head_str = "              translation                 x rotation                    y rotation                 z rotation"
   if hasattr(keys,"key"):
     keys.key.addstr(1, 0, head_str)
   else:
     print(head_str)
   for i in range(4):
-    t, r, s = t_mat[i], rz_mat[i], ry_mat[i]
-    out_str = ("{:8.3f},{:8.3f},{:8.3f},{:8.3f} |{:8.3f},{:8.3f},{:8.3f},{:8.3f} |{:8.3f},{:8.3f},{:8.3f},{:8.3f}"
-            .format(t[0], t[1], t[2], t[3], r[0], r[1], r[2], r[3], s[0], s[1], s[2], s[3]))
+    t, rx, ry, rz = t_mat[i], rx_mat[i], ry_mat[i], rz_mat[i]
+    out_str = ("{:6.1f},{:6.1f},{:6.1f},{:6.1f} |{:6.3f},{:6.3f},{:6.3f},{:6.3f} |{:6.3f},{:6.3f},{:6.3f},{:6.3f} |{:6.3f},{:6.3f},{:6.3f},{:6.3f}"
+            .format(t[0], t[1], t[2], t[3], rx[0], rx[1], rx[2], rx[3], ry[0], ry[1], ry[2], ry[3], rz[0], rz[1], rz[2], rz[3]))
     if hasattr(keys,"key"): # curses set up
       keys.key.addstr(2 + i, 0, out_str)
     else:
