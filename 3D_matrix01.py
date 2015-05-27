@@ -157,17 +157,28 @@ while display.loop_running():
       angle[1] -= 0.05 # radians!
       rotation = 1
 
-    if rotation > -1: # the trigonometry isn't too tricky to work out in 2D..
-      c = math.cos(angle[rotation])
-      s = math.sin(angle[rotation])
+    if rotation > -1: # 0 for rotation about x, 1 for y, 2 for z.
+      c = math.cos(angle[rotation]) # do the trig functions once here
+      s = math.sin(angle[rotation]) # 
       if rotation == 0:
         mat = rx_mat
       elif rotation == 1:
         mat = ry_mat
       else:
         mat = rz_mat
-      a = (1 + rotation) % 3
-      b = (2 + rotation) % 3
+      a = (1 + rotation) % 3 # i.e. rotation=0->a=1, 1->a=2, 2->a=0
+      b = (2 + rotation) % 3 #               0->b=2, 1->b=0, 2->b=1
+      """Watch what happens to the matrices as you press the buttons to
+      rotate the cube. You will see that they behave exactly as the 2D
+      matrix but with an extra row and column pushed in. So in 2D we were
+      effectively rotating about the z axis:
+       c  s
+      -s  c
+        z rot     y rot     x rot   in 3D
+       c  s  0   c  0 -s   1  c  s
+      -s  c  0   0  1  0   0  1  0
+       0  0  1   s  0  c   0 -s  c
+      """
       mat[a][a] = mat[b][b] = c
       mat[a][b] = s
       mat[b][a] = -s

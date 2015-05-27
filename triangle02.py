@@ -6,8 +6,9 @@ import pi3d
 
 """ There is an option to get the egl rendering to do anti-alias rendering
 of the diagonal edges. This is done by setting the samples argument to 4 when
-the Display is created. vmware can't cope with this for some reason so
-you will have to take it out if you're using that (or set to 0)
+the Display is created. Windows implementations of OpenGLES functionality
+can't cope with this for some reason so you will have to take it out if
+you're using that (or set to 0)
 """
 display = pi3d.Display.create(w=800, h=600, frames_per_second=15, samples=4)
 

@@ -28,14 +28,16 @@ cube = pi3d.Lines(camera=CAMERA, vertices=vertices, closed=True, z=500.0,
                     material=(1.0,0.8,0.05), line_width=3)
 cube.set_shader(matsh)
 
-""" Notice how the matrices have been transposed and now look wrong. However
-the Fortran convention is the default used by OpenGL where M[i][j] refers
-to the column i and the row j whereas the python (and C) convention is that
-M[i][j] refers to row i and column j. This is not the conventional way of
-indexing matrices used in mathematic notation.
+""" Notice how the matrices have been transposed and look different from
+before. If we used these in our previous mat_mult() function they would
+give the wrong answer. However the Fortran convention is the default used
+by OpenGL where M[i][j] refers to the column i and the row j whereas the
+python (and C) convention is that M[i][j] refers to row i and column j.
 
-Anyway, in order to pass the model transformation and projection matrices
-to the shader, pi3d holds them in Fortran orientation.
+The Fortran and OpenGL style is the conventional way of indexing matrices
+used in mathematic notation and will probably match examples you see on
+Wikipedia etc. In order to pass the model transformation and projection
+matrices to the shader, pi3d holds them in Fortran orientation.
 """
 def print_matrices():
   head_str = "              translation                 x rotation                    y rotation                 z rotation"

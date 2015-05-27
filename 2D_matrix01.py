@@ -143,7 +143,17 @@ while display.loop_running():
       s_mat[0][0] = s_mat[1][1] = s_mat[0][0] * 1.025
     elif k == ord('v'): # shrink
       s_mat[0][0] = s_mat[1][1] = s_mat[0][0] * 0.975
-    if do_rotation: # the trigonometry isn't too tricky to work out
+    if do_rotation:
+      """ the trigonometry isn't too tricky to work out but look at
+      http://en.wikipedia.org/wiki/Rotation_matrix
+      NB There are two confusing features to matrix representation in pi3d:
+      One is explained in 3D_matrix02 which is the python/C convention of
+      subscripts going M[row][col] whereas mathematicians are used to
+      M[col][row]
+      The other is the fact that the axis system in OpenGL is "right handed"
+      i.e. x increases left to right, y increases upwards but z increase
+      into the screen.
+      """
       c = math.cos(angle)
       s = math.sin(angle)
       r_mat[0][0] = r_mat[1][1] = c
