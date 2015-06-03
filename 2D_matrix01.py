@@ -5,7 +5,7 @@ import demo
 import pi3d
 import math
 
-display = pi3d.Display.create(w=800, h=600, samples=4)
+display = pi3d.Display.create(w=800, h=600)
 """ Camera defined with is_3d=False does not apply any perspective when
 rendering the scene and uses a convenient scale of 1 unit per pixel.
 The z value of shapes can be used for layering but doesn't have a normal
@@ -41,17 +41,19 @@ s_mat = [[1.0, 0.0, 0.0], # scale matrix - all three start out as 'identity' mat
          [0.0, 0.0, 1.0]]
 angle = 0 # keep track of the angle so it can be incremented for rotation
 
-def mat_mult(mat, vec):
+def mat_vec_mult(mat, vec):
+  """ apply a matrix to a vector and return a modified vector
+  """
   return [mat[0][0] * vec[0] + mat[0][1] * vec[1] + mat[0][2] * vec[2],
           mat[1][0] * vec[0] + mat[1][1] * vec[1] + mat[1][2] * vec[2],
           mat[2][0] * vec[0] + mat[2][1] * vec[1] + mat[2][2] * vec[2]]
-
+    
 def refresh_vertices(shape, old_verts):
   new_verts = []  # start off with a new list of vectors to keep the original ones 'clean'
   for v in old_verts:
-    new_v = mat_mult(s_mat, [v[0], v[1], 1.0]) # i.e. x, y, 1.0 to match 3x3 matrix
-    new_v = mat_mult(r_mat, new_v) # then multiply by rotation matrix
-    new_v = mat_mult(t_mat, new_v) # then by translation
+    new_v = mat_vec_mult(s_mat, [v[0], v[1], 1.0]) # i.e. x, y, 1.0 to match 3x3 matrix
+    new_v = mat_vec_mult(r_mat, new_v) # then multiply by rotation matrix
+    new_v = mat_vec_mult(t_mat, new_v) # then by translation
     new_verts.append(new_v) # finally add this to the new list of vectors
     """ NB the third position in the vector will be used as the z position
     but as this is a 2D projection it has no physical meaning. Similarly

@@ -26,7 +26,7 @@ cube = pi3d.Lines(camera=CAMERA, vertices=vertices, closed=True,
 cube.set_shader(matsh)
 t_mat = [[1.0, 0.0, 0.0, 0.0], # translation matrix
          [0.0, 1.0, 0.0, 0.0],
-         [0.0, 0.0, 1.0, 400.0], # though vertices centred on origin move away to be able to view (try changing this)
+         [0.0, 0.0, 1.0, 400.0], # the vertices are centred on origin move away to be able to view (try changing this)
          [0.0, 0.0, 0.0, 1.0]]
 rz_mat = [[1.0, 0.0, 0.0, 0.0], # z rotation matrix
          [0.0, 1.0, 0.0, 0.0],
@@ -64,19 +64,23 @@ def refresh_vertices(shape, old_verts):
     """
     new_v = mat_mult(t_mat, new_v) # then by translation
     new_v = mat_mult(p_mat, new_v) # then by projection
+    """ The following normalization by the fourth (w) term of the vector
+    is done automatically by the GPU but when doing the projection "manually"
+    we have to divide by the perspective factor.
+    """
     new_v = [new_v[j] / new_v[3] for j in [0,1,2]]
     new_verts.append(new_v) # finally add this to the new list of vectors
   shape.re_init(pts=new_verts) # finally update the vertex locations
 
 def print_matrices():
-  head_str = "              translation                 x rotation                    y rotation                 z rotation"
+  head_str = "          translation            x rotation               y rotation             z rotation"
   if hasattr(keys,"key"):
     keys.key.addstr(1, 0, head_str)
   else:
     print(head_str)
   for i in range(4):
     t, rx, ry, rz = t_mat[i], rx_mat[i], ry_mat[i], rz_mat[i]
-    out_str = ("{:6.1f},{:6.1f},{:6.1f},{:6.1f} |{:6.3f},{:6.3f},{:6.3f},{:6.3f} |{:6.3f},{:6.3f},{:6.3f},{:6.3f} |{:6.3f},{:6.3f},{:6.3f},{:6.3f}"
+    out_str = ("{:5.1f},{:5.1f},{:5.1f},{:5.1f}|{:5.2f},{:5.2f},{:5.2f},{:5.2f}|{:5.2f},{:5.2f},{:5.2f},{:5.2f}|{:5.2f},{:5.2f},{:5.2f},{:6.2f}"
             .format(t[0], t[1], t[2], t[3], rx[0], rx[1], rx[2], rx[3], ry[0], ry[1], ry[2], ry[3], rz[0], rz[1], rz[2], rz[3]))
     if hasattr(keys,"key"): # curses set up
       keys.key.addstr(2 + i, 0, out_str)

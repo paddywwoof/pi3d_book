@@ -13,6 +13,15 @@ Contents:
 
    Introduction
    GPUexplain
+   Vectors
+   Shapes
+   Textures
+   Models
+   Constructing
+   Input
+   Lines
+   Cameras
+   Video
 
 
 Indices and tables

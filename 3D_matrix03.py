@@ -8,28 +8,15 @@ import math
 display = pi3d.Display.create(w=800, h=600, samples=4)
 
 CAMERA = pi3d.Camera(is_3d=True)
-matsh = pi3d.Shader("mat_light")
+matsh = pi3d.Shader("mat_flat")
+lightsh = pi3d.Shader("mat_light")
 
-""" Here we just use the ready made pi3d Cuboid shape
+""" Here we just use the ready made pi3d Cuboid shape. Also, the matrices
+are not printed out as they would be identical to 3D_matrix02
 """
 cube = pi3d.Cuboid(camera=CAMERA, w=200, h=200, d=200, z=500.0)
 cube.set_material((1.0,0.8,0.05))
-cube.set_shader(matsh)
-
-def print_matrices():
-  head_str = "              translation                 x rotation                    y rotation                 z rotation"
-  if hasattr(keys,"key"):
-    keys.key.addstr(1, 0, head_str)
-  else:
-    print(head_str)
-  for i in range(4):
-    t, rx, ry, rz = cube.tr1[i], cube.rox[i], cube.roy[i], cube.roz[i]
-    out_str = ("{:6.1f},{:6.1f},{:6.1f},{:6.1f} |{:6.3f},{:6.3f},{:6.3f},{:6.3f} |{:6.3f},{:6.3f},{:6.3f},{:6.3f} |{:6.3f},{:6.3f},{:6.3f},{:6.3f}"
-            .format(t[0], t[1], t[2], t[3], rx[0], rx[1], rx[2], rx[3], ry[0], ry[1], ry[2], ry[3], rz[0], rz[1], rz[2], rz[3]))
-    if hasattr(keys,"key"): # curses set up
-      keys.key.addstr(2 + i, 0, out_str)
-    else:
-      print(out_str)
+cube.set_shader(lightsh)
 
 keys = pi3d.Keyboard()
 
@@ -92,4 +79,3 @@ while display.loop_running():
     elif k == ord('n'): # anti-clockwise y
       cube.rotateIncY(2.5)
       letters.rotateIncY(2.5)
-    print_matrices()

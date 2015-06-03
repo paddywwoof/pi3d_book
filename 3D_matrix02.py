@@ -7,7 +7,7 @@ import math
 
 display = pi3d.Display.create(w=800, h=600, samples=4)
 
-""" We are now using the gpu to do the matrix multiplication so we set
+""" We are now using pi3d and OpenGL to do the matrix multiplication so we set
 the camera to do the 3D projection for us.
 """
 CAMERA = pi3d.Camera(is_3d=True)

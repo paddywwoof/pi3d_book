@@ -4,28 +4,35 @@
 Introduction
 ============
 
-The Reader
-----------
+Target Audience
+---------------
 
 It's not possible to cater for all levels of knowledge and experience in
-one book, so you will find that I have pitched this offering to someone
-that doesn't match your profile exactly. Where I talk about stuff you
-already know you can skip ahead quickly and where there are parts that seem
-difficult you will have to take it slowly and check things out on-line (I will
-suggest links from time to time, and you can always use a search engine!).
+one book. Inevitably you will find sections where I cover things that you
+already know and you can skip ahead quickly, but there will also be parts
+that seem difficult where you will have to take it slowly and check things
+out on-line (I try to include links where they might be useful but you can
+always resort to google!). I assume that:
 
-* You already know how to program (either with python or with another
-  language to a high enough level that the switch to python presents no
-  issues). Apart from things that are non-standard, such as using numpy or
-  ctypes, I shall not explain general programming concepts or syntax. Also,
+* You already know how to program (either with python to a basic level,
+  or with another language to a high enough level that the switch to python
+  presents few issues). Apart from things that are non-standard, such as using numpy [#]_,
+  ctypes [#]_ or GLSL [#]_, I shall not explain general programming concepts or syntax. Also,
   although I will try to introduce pi3d concepts in a logical order, this
   will not necessarily correspond with the sophistication of the programming
   techniques used.
 
 * Although not essential it will help if you have a reasonable (secondary
-  school) understanding of mathematics such as basic trigonometry (sin,
-  cos, tan, arctan) and, ideally, have at least come across vectors and
-  matrices.
+  school) understanding of mathematics such as basic trigonometry
+  (`sin, cos, tan, arctan` [#]_, Pythagoras [#]_ etc.) and have at least come across
+  `vectors and matrices` [#]_.
+
+* You have an average understanding of computer images and display, in so
+  far as they consist of pixels with red, green, blue values and that some
+  file types (PNG, TIFF etc.) allow transparency per pixel with a fourth, alpha value.
+
+* You want to learn a bit about the mechanisms of producing 3D graphics
+  rather than simply find recipes for how to do things.
 
 The Structure and how to use this book
 --------------------------------------
@@ -76,7 +83,7 @@ Installation
 
 If you don't have pi3d set up already you need to read the relevant section here
 http://pi3d.github.io/html/ReadMe.html#setup-on-the-raspberry-pi and the
-paragraphs below that apply to your platform.
+paragraphs below, that apply to your platform.
 
 At points in the book I will suggest that you look in various pi3d files
 and if you installed on Raspberry Pi or Linux these will be in
@@ -87,3 +94,12 @@ an appropriately different path.
 You also need to get a copy of http://github.com/pi3d/pi3d_demos either
 using git clone or download the zip and extract it.
 
+And you need a copy of the example programs for this book
+github.com/paddywwoof/pi3d_book
+
+.. [#] http://www.numpy.org/
+.. [#] https://docs.python.org/2/library/ctypes.html
+.. [#] http://en.wikipedia.org/wiki/OpenGL_Shading_Language
+.. [#] https://www.mathsisfun.com/sine-cosine-tangent.html
+.. [#] https://www.mathsisfun.com/pythagoras.html
+.. [#] http://www.intmath.com/vectors/vectors-intro.php

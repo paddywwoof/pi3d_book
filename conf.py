@@ -105,7 +105,12 @@ pygments_style = 'sphinx'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {"sidebarbgcolor":"#9090C0"}
+html_theme_options = {"sidebarbgcolor":"#787890",
+                      "relbarbgcolor":"#687078",
+                      "footerbgcolor":"#585868",
+                      "stickysidebar":"true",
+                      "sidebarlinkcolor":"#203040",
+                      "relbarlinkcolor":"#A090E0"}
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []

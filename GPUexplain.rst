@@ -12,11 +12,11 @@ buffers, using masks, etc.
 
 Beneath the python module classes and functions provided by pi3d there are
 three "steps" necessary for control of the GPU. Two or three of these
-require external libraries (shared objects in linux, dlls in windows) imported:
+require external libraries (shared objects in linux, dlls in windows) imported [#]_:
 
   1. on the Raspberry Pi ``libbcm_host.so`` is used to create and manage a display
   surface to draw on. On linux (desktop and laptop) the surface is provided
-  by the x11 server and windows and Android use pygame (which uses SDL2)
+  by the x11 server [#]_ and windows and Android use pygame (which uses SDL2 [#]_)
 
   2. ``libELG`` is used to set up the interface between the machine or operating
   system window system and
@@ -40,7 +40,7 @@ pixel) shader which are written in a C like language (GLSL). I will give
 some more detail to what each actually does later but one crucial thing to
 appreciate is that information is passed from the CPU program (in
 our case python pi3d ones) to the shaders and the vertex shader can pass
-information on to the fragment shader, however the only output is pixels [*]_.
+information on to the fragment shader, however the only output is pixels [#]_.
 It is fundamental to the efficiency and speed of the GPU that the shaders
 operate on only one vertex or pixel. i.e. the vertex shader can't access
 information about the location of adjacent vertices and the fragment shader
@@ -131,7 +131,12 @@ Sequence of events
         [[0, 1, 2],
          [0, 2, 3]])
 
-    Draw these out on some paper so you can see how the system works.
+    .. image:: simple_quad.png
+       :scale: 50%
+       :align: left
+
+    Here's a sketch so you can see how the system works.
+
     The GPU uses coordinate directions x increases from left to right, y
     increases from bottom to top, z increases going into the screen.
 
@@ -175,6 +180,12 @@ Sequence of events
     buffer which, when complete at the end of the frame loop, is swapped
     'instantaneously' to visible. This makes the animation much smoother
 
-.. [*] It is possible to get 'output' from GPUs using sophisticated techniques
+.. [#] The attempt to work out on what platform pi3d is running and what
+   libraries to import is done in /pi3d/constants/__init__.py and the
+   Initialization is done in /pi3d/utils/DisplayOpenGL.py
+.. [#] X11 is the standard windowing and user-input system used on Linux
+   systems
+.. [#] Simple DirectMedia Layer https://www.libsdl.org/index.php
+.. [#] It is possible to get 'output' from GPUs using sophisticated techniques
    that allow the parallel processing capabilities to be used elsewhere, but
    this is not trivial!
