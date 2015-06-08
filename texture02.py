@@ -3,9 +3,8 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import demo
 import pi3d
-import math
 
-display = pi3d.Display.create(w=800, h=600, samples=4)
+display = pi3d.Display.create(w=800, h=600)
 
 CAMERA = pi3d.Camera(is_3d=True)
 shader = pi3d.Shader("uv_reflect")
@@ -17,7 +16,7 @@ cube = pi3d.Cuboid(camera=CAMERA, w=2.0, h=2.0, d=2.0, z=5.0)
 tex = pi3d.Texture("techy1.jpg")
 bump = pi3d.Texture("rocktile2.jpg")
 refl = pi3d.Texture("glassbuilding.jpg")
-cube.set_draw_details(shader, [tex, bump, refl], 2.0, 0.7, 2.0, 2.0)
+cube.set_draw_details(shader, [tex, bump, refl], 2.0, 0.2, 2.0, 2.0)
 """ Following from textures01.py this demo includes three textures. The
 self color one ``tex``, as before, plus a normal or bump map ``bump`` and
 a reflection image ``refl``.

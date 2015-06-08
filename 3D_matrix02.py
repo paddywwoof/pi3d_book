@@ -5,7 +5,7 @@ import demo
 import pi3d
 import math
 
-display = pi3d.Display.create(w=800, h=600, samples=4)
+display = pi3d.Display.create(w=800, h=600)
 
 """ We are now using pi3d and OpenGL to do the matrix multiplication so we set
 the camera to do the 3D projection for us.

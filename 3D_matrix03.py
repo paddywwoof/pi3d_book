@@ -5,7 +5,7 @@ import demo
 import pi3d
 import math
 
-display = pi3d.Display.create(w=800, h=600, samples=4)
+display = pi3d.Display.create(w=800, h=600)
 
 CAMERA = pi3d.Camera(is_3d=True)
 matsh = pi3d.Shader("mat_flat")
