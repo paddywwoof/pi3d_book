@@ -8,10 +8,16 @@ We've touched on the roles of these three classes previously but in this
 chapter I hope to give much more detail of how they fit together and how
 they can be used.
 
+Textures
+--------
+
 First of all have a look at the next illustration program textures01.py
 and run it to see what it does. The code starts from 3D_matrices03.py but
-replaces the yellow material of the cube with an image textures, the docstrings
+replaces the yellow material of the cube with an image texture, the docstrings
 explain the changes.
+
+Lights
+------
 
 Before looking at the next texture example it would be good to get more of
 an idea how Light works; so open up and run the light01.py example. Again,
@@ -19,13 +25,16 @@ much of the explanation that I would have put here is in the docstrings so
 read them and try the experiments suggested in the text.
 
 .. image:: texture02.png
-   :scale: 50%
+   :scale: 25%
    :align: right
 
 Now work your way through textures02.py which is using all the functionality
 available in the "standard" shaders. There are lots of variables to tweak
 and experiments to do with this example so work your way though it slowly
 and carefully.
+
+Shaders
+-------
 
 In the next illustration we will look at what the shader is doing to
 a) look up the texture values for a given pixel b) adjust for lighting.
@@ -36,16 +45,18 @@ want to look at it in detail you will have to read through the shader yourself!)
 **Caution** the language that shaders use (GLSL) is C-like in syntax, but
 that in itself shouldn't be a problem, the confusing aspect is that variables
 can be "different shapes". Bearing in mind that in GLSL (as in C) variable
-types have to be explicitly defined::
+types have to be explicitly defined:
 
-  float a = 4.12;
-  vec2 b = vec2(4.12, 5.23);
-  vec3 c = vec3(4.12, 5.23, 7.34);
-  a = mod(a, 3.1416); // python equivalent would be a % 3.1416
-  b = mod(b, 3.1416);
-  c = mod(c, 3.1416);
-  b = mod(b, vec2(3.1416, 6.2832);
-  c = mod(c, vec3(3.1416, 6.2832, 9.4248);
+..  code-block:: glsl
+
+    float a = 4.12;
+    vec2 b = vec2(4.12, 5.23);
+    vec3 c = vec3(4.12, 5.23, 7.34);
+    a = mod(a, 3.1416); // python equivalent would be a % 3.1416
+    b = mod(b, 3.1416);
+    c = mod(c, 3.1416);
+    b = mod(b, vec2(3.1416, 6.2832);
+    c = mod(c, vec3(3.1416, 6.2832, 9.4248);
 
 You will see that generally speaking variables can be vectors which the compiled
 GLSL is designed to process very fast. On the other hand branching and
@@ -66,20 +77,23 @@ RGBA values it's not so intuitive. A better informal description would be
 easy to see how this applies to light illuminating a surface but it's much
 easier to see that the dot function doesn't need to do any (slow) trigonometry,
 it is sufficient to multiply the x,y,z components together and this is very
-fast::
+fast:
 
-  normal = (1.0, 0.0, 0.0) # surface facing in the same direction as x axis
-  light = (-2.5, -2.5, -2.5) # light down, from right, out of the screen
-  dot(normal, light) = -2.5 # i.e. (1.0 * -2.5) + (0.0 * -2.5) + (0.0 * 2.5)
+..  code-block:: glsl
+
+    normal = vec3(1.0, 0.0, 0.0);   // surface facing in the same direction as x axis
+    light = vec3(-2.5, -2.5, -2.5); // light down, from right, out of the screen
+    float a = dot(normal, light);   // results in -2.5 # i.e. (1.0 * -2.5) + (0.0 * -2.5) + (0.0 * 2.5)
 
 So now have a look at shader01.py and play around with it. Any typos or
 errors in the two shader scripts will be hard to track down so proceed with
 caution (remember Ctrl-z can get you back to a working version!). Also,
 because the GLSL is embedded in strings in the python code, the chances
-are that any code formatting will be lost, so here is the code again.
-Vertex Shader:
+are that any code formatting in your editor will not be brilliant, so here
+is the code again. Vertex Shader:
 
 ..  code-block:: glsl
+    :linenos:
 
     precision mediump float;
     attribute vec3 vertex;           // these are the array buffer objects defined in Buffer
@@ -121,6 +135,7 @@ Vertex Shader:
 and Fragment shader:
 
 ..  code-block:: glsl
+    :linenos:
 
     precision mediump float;
     uniform sampler2D tex0; // this is the texture object
@@ -148,6 +163,32 @@ and Fragment shader:
       gl_FragColor.a *= unif[5][2];
     }
 
-Here is the khronos GLSL quick reference card
-https://www.khronos.org/opengles/sdk/docs/reference_cards/OpenGL-ES-2_0-Reference-card.pdf
+There is a khronos GLSL quick reference card [#]_
+
+I mentioned above that I would give a general description of how the normal
+map and reflection map work. If you have attempted to look at the shader
+code "really" used in pi3d you will have found that it is structured with
+lots of #includes so that common sections can be re-used - this makes it quite
+hard to reconstruct. You may have also seen that the normal vector is not
+passed from the vertex to fragment shader as shown in this example. Instead
+the light vector is rotated in the vertex shader by a complicated process
+(Euler angles again) so that it is correctly oriented relative to the normal
+vector at that vertex *if that vector was pointing straight out of the screen*
+i.e. in the -ve z direction!
+
+The reason for this complication is that it then allows the fragment shader
+to modify the normal vector by simply adding values from the RGB of a
+normal map texture. Values of red less than 0.5 make the x component
+of the normal negative, greater than 0.5 positive. The green values
+control the y component in a similar way.
+
+The reflection map works out the vertical and horizontal angles that a line
+drawn from the camera to a given pixel would be reflected. The reflection
+uses the normal vector at each pixel adjusted by the normal map as described
+above. The reflection angles are then used to look up a position from a
+Texture where the horizontal range is -pi to +pi (+/- 180 degrees) and the
+vertical range is -pi/2 to +pi/2 (+/- 90 degrees) This is the standard
+projection used for photo-spheres.
+
+.. [#] https://www.khronos.org/opengles/sdk/docs/reference_cards/OpenGL-ES-2_0-Reference-card.pdf
 
