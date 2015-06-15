@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="3D Graphics with pi3d" href="index.html" />
-    <link rel="next" title="Video and Sound" href="Video.html" />
-    <link rel="prev" title="Lines and Points" href="Lines.html" /> 
+    <link rel="next" title="Models" href="Models.html" />
+    <link rel="prev" title="Textures, Lights and Shaders" href="Textures.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,10 +35,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="Video.html" title="Video and Sound"
+          <a href="Models.html" title="Models"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Lines.html" title="Lines and Points"
+          <a href="Textures.html" title="Textures, Lights and Shaders"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
       </ul>
@@ -51,6 +51,75 @@
             
   <div class="section" id="cameras-2d-projection-and-sprites">
 <h1>Cameras, 2D projection and Sprites<a class="headerlink" href="#cameras-2d-projection-and-sprites" title="Permalink to this headline">¶</a></h1>
+<p>Although pi3d, and OpenGL generally, are aimed at making 3D rendering
+efficient and fast they allow 2D rendering to be done equally well. In
+fact we have already used 2D rendering in the first few examples in the
+Vectors and Matrices chapter. In that chapter I mention in passing that
+for a 2D or <tt class="docutils literal"><span class="pre">orthographic</span></tt> projection the matrix multiplication simply
+needs to preserve the x and y coordinates - no scaling with distance needs
+to be done. I also mention that, in pi3d, this can be achieved by setting
+the Camera argument is_3d=False.</p>
+<p>So this is the general scheme for managing different types of rendering in
+pi3d: Projection matrices are held in Camera objects. When a Shape is drawn
+either an explicitly assigned Camera or a default one will be used and the
+projection matrix passed to the shader as part of the <tt class="docutils literal"><span class="pre">uniform</span> <span class="pre">modelviewmatrix</span></tt>
+(as we saw at the end of the last chapter). Although it&#8217;s possible to have
+as many different Cameras as you want it&#8217;s normally sufficient to have just
+one 3D for rendering 3D objects that possibly moves around the virtual
+environment under user control, and one 2D that remains fixed and allows
+&#8220;dashboard&#8221; information to be displayed.</p>
+<p>Have a look at the two demo programs Minimal.py and Minimal_2d.py from
+<a class="reference external" href="https://github.com/pi3d/pi3d_demos">https://github.com/pi3d/pi3d_demos</a> There are a couple of noteworthy
+differences between 3D and 2D projections:</p>
+<blockquote>
+<div><p><strong>Scale</strong> In 3D projection (with the default lens settings) 1.0 unit of
+x or y at a z distance of 1.1 just about fills the screen (in the vertical
+direction; the <tt class="docutils literal"><span class="pre">field</span> <span class="pre">of</span> <span class="pre">view</span></tt> is defined vertically). Try adding variations
+of this line after the DISPLAY creation in Minimal.py:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">CAMERA</span> <span class="o">=</span> <span class="n">pi3d</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="n">lens</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="n">DISPLAY</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">DISPLAY</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>In 2D projections 1.0 unit of x or y equates to 1 pixel</p>
+<p><strong>z distance</strong> In 2D projections the effective distance of objects (to
+determine what gets drawn in front of what) is:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="mi">10000</span> <span class="o">/</span> <span class="p">(</span><span class="mi">10000</span> <span class="o">-</span> <span class="n">z_2D</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>So if you set a 2D object at z=20.0 it will be drawn in front of a 3D
+object at z=1.002 (effectively in front of <strong>all</strong> 3D objects). To draw a
+2D object behind a 3D object at z=20.0 it must be moved to z=9500.0 However
+the relative positions of 2D objects with respect to each other work as
+you would expect so a 2D object drawn at z=20.0 is in front of a 2D object
+at z=21.0</p>
+</div></blockquote>
+<p>In Minimal_2d.py try changing rotateIncZ to rotateIncX (or Y). Do you see
+the effect of moving some of the object in front of the <tt class="docutils literal"><span class="pre">near</span> <span class="pre">plane</span></tt>?
+To keep in in view you need to move it further away. In the following line
+<tt class="docutils literal"><span class="pre">sprite.position()</span></tt> increase the z value from 5.0 to 50.0.</p>
+<p>Open the demo file Blur.py. This has various features I haven&#8217;t explained
+yet: MergeShape, Defocus, Font and String. You can probably figure how they&#8217;re
+being used but don&#8217;t worry about that at the moment. Just look at lines
+78 and 79 where the String is defined. You will see that it uses a 2D
+camera, try increasing the z value. The text will only coincide with the balls
+when you increase z above 8000</p>
+<p>The most common way to use the 2d Camera is with the Sprite class which maps
+a rectangular Texture to a quad formed by two triangles. The Minimal_2d.py
+demo above shows the basic use via the ImageSprite class which wraps up
+the Texture loading and Shader allocation. Have a look at <strong>sprites01.py</strong> <a class="footnote-reference" href="#id2" id="id1">[1]</a>
+which shows why the order of drawing objects matters for blending.</p>
+<p>The Sprite class in pi3d is an easy way to do 2D rendering of images, however
+it runs into processing limitations if it is used for sprites in the sense
+of a 2D animation or game. Where there are hundreds or thousands of images
+moving about (think &#8220;creeps + towers + missiles&#8221; in a tower defence game)
+then it is more efficient to use the OpenGL point drawing functionality
+which will be touched on in the chapter <tt class="docutils literal"><span class="pre">Lines</span> <span class="pre">and</span> <span class="pre">Points</span></tt> and demonstrated
+in SpriteBalls.py and SpriteMulti.py</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/sprites01.py">https://github.com/paddywwoof/pi3d_book/blob/master/sprites01.py</a></td></tr>
+</tbody>
+</table>
 </div>
 
 
@@ -60,11 +129,11 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="Lines.html"
-                        title="previous chapter">Lines and Points</a></p>
+  <p class="topless"><a href="Textures.html"
+                        title="previous chapter">Textures, Lights and Shaders</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Video.html"
-                        title="next chapter">Video and Sound</a></p>
+  <p class="topless"><a href="Models.html"
+                        title="next chapter">Models</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/Cameras.txt"
@@ -94,10 +163,10 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="Video.html" title="Video and Sound"
+          <a href="Models.html" title="Models"
              >next</a> |</li>
         <li class="right" >
-          <a href="Lines.html" title="Lines and Points"
+          <a href="Textures.html" title="Textures, Lights and Shaders"
              >previous</a> |</li>
         <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
       </ul>

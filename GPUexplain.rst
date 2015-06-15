@@ -92,93 +92,92 @@ PerspectiveCamera, WebGLRenderer, Mesh, Geometry, Material etc.
 Sequence of events
 ------------------
 
-#.  3D objects are defined for use in graphics programs starting with a
-    list of points or vertices in space each one needing x, y, z coordinates.
-    Although not generally essential, in pi3d each vertex has a normal vector
-    defined as well. This is effectively an arrow at right angles to the surface
-    at that point and it also needs three values to define its magnitude in
-    the x, y, z directions. The normal vector can be used by the shader to
-    work out how light would illuminate a surface or how reflections would
-    appear. If the normals at each corner of a triangular face are all pointing
-    in the same direction then the fragment shader will treat the surface as
-    flat, but if they are in different directions the surface will appear to
-    blend smoothly from one direction to another. 3D models created in
-    applications such as blender normally have an option to set faces to look
-    either angular or smoothed by calculating different types of normal vectors.
-    Each vertex also has two texture coordinates. These are often
-    termed the u, v position from a two dimensional texture that is to be mapped
-    to that vertex. Again the fragment shader can interpolate points on a surface
-    between vertices and look up what part of a texture to render at each pixel.
-    The crucial piece of information needed by the shader is to define which
-    vertices to use for the corners of each triangle or element. So if I use as an example
-    a very simple one sided square this could be defined by the attribute array::
+3D objects are defined for use in graphics programs starting with a
+list of points or vertices in space each one needing x, y, z coordinates.
+Although not generally essential, in pi3d each vertex has a normal vector
+defined as well. This is effectively an arrow at right angles to the surface
+at that point and it also needs three values to define its magnitude in
+the x, y, z directions. The normal vector can be used by the shader to
+work out how light would illuminate a surface or how reflections would
+appear. If the normals at each corner of a triangular face are all pointing
+in the same direction then the fragment shader will treat the surface as
+flat, but if they are in different directions the surface will appear to
+blend smoothly from one direction to another. 3D models created in
+applications such as blender normally have an option to set faces to look
+either angular or smoothed by calculating different types of normal vectors.
+Each vertex also has two texture coordinates. These are often
+termed the u, v position from a two dimensional texture that is to be mapped
+to that vertex. Again the fragment shader can interpolate points on a surface
+between vertices and look up what part of a texture to render at each pixel.
+The crucial piece of information needed by the shader is to define which
+vertices to use for the corners of each triangle or element. So if I use as an example
+a very simple one sided square this could be defined by the attribute array::
 
-      """   vertices     |    normals     |  texture
-                         |                |  coords
-           x    y    z   |  x    y    z   |  u    v
-      """
-      attribute_array = numpy.array(
-        [[0.0, 0.0, 0.0,   0.0, 0.0,-1.0,   0.0, 0.0],   # 0
-         [0.0, 1.0, 0.0,   0.0, 0.0,-1.0,   0.0, 1.0],   # 1
-         [1.0, 1.0, 0.0,   0.0, 0.0,-1.0,   1.0, 1.0],   # 2
-         [1.0, 0.0, 0.0,   0.0, 0.0,-1.0,   1.0, 0.0]])  # 3
+  """   vertices     |    normals     |  texture
+                     |                |  coords
+       x    y    z   |  x    y    z   |  u    v
+  """
+  attribute_array = numpy.array(
+    [[0.0, 0.0, 0.0,   0.0, 0.0,-1.0,   0.0, 0.0],   # 0
+     [0.0, 1.0, 0.0,   0.0, 0.0,-1.0,   0.0, 1.0],   # 1
+     [1.0, 1.0, 0.0,   0.0, 0.0,-1.0,   1.0, 1.0],   # 2
+     [1.0, 0.0, 0.0,   0.0, 0.0,-1.0,   1.0, 0.0]])  # 3
 
-    and the element array of triangle indices. Note the order of corners
-    is important. Each triangle 'faces' towards a view where the sequence
-    is clock-wise. Normally the backs of faces are not rendered by the GPU::
+and the element array of triangle indices. Note the order of corners
+is important. Each triangle 'faces' towards a view where the sequence
+is clock-wise. Normally the backs of faces are not rendered by the GPU::
 
-      element_array = numpy.array(
-        [[0, 1, 2],
-         [0, 2, 3]])
+  element_array = numpy.array(
+    [[0, 1, 2],
+     [0, 2, 3]])
 
-    .. image:: simple_quad.png
-       :scale: 50%
-       :align: left
+.. image:: simple_quad.png
+   :align: left
 
-    Here's a sketch so you can see how the system works.
+Here's a sketch so you can see how the system works.
 
-    The GPU uses coordinate directions x increases from left to right, y
-    increases from bottom to top, z increases going into the screen.
+The GPU uses coordinate directions x increases from left to right, y
+increases from bottom to top, z increases going into the screen.
 
-#.  The GPU has been designed to be fantastically efficient at performing
-    vector and matrix arithmetic. So rather than the CPU calculating where
-    about the vertices have  moved and how these positions can be represented
-    on the 2D computer screen it simply calculates a transformation matrix
-    to represent this and passes that to the GPU. In pi3d we pass two matrices,
-    one representing the object translation, rotation and scale and an additional
-    one including the camera movement and perspective calculations. In the
-    vertex shader these matrices are used to convert the raw vertex positions
-    to screen locations and to work out where the light should come from in
-    order to work out shadows.
-      
-#.  Image files are converted into texture arrays that are accessed
-    very efficiently by the GPU.
+The GPU has been designed to be fantastically efficient at performing
+vector and matrix arithmetic. So rather than the CPU calculating where
+about the vertices have  moved and how these positions can be represented
+on the 2D computer screen it simply calculates a transformation matrix
+to represent this and passes that to the GPU. In pi3d we pass two matrices,
+one representing the object translation, rotation and scale and an additional
+one including the camera movement and perspective calculations. In the
+vertex shader these matrices are used to convert the raw vertex positions
+to screen locations and to work out where the light should come from in
+order to work out shadows.
+  
+Image files are converted into texture arrays that are accessed
+very efficiently by the GPU.
 
-#.  When pi3d.Buffer.draw() method is called for a 3D object the python side
-    of the program sets the shader and necessary uniform variables to draw the
-    given object. It then works out the 4x4 matrix combining translation, rotation,
-    scale for the object and an additional matrix incorporating the camera
-    movement and lens settings. The camera has two basic modes for handling
-    perspective, the default is 'normal' where things further away are represented
-    as smaller on the screen and the this is defined by a viewing angle between
-    the top edge of the screen and bottom edge. If the camera is set to
-    orthographic mode then objects do not get smaller in the distance and one
-    unit of object dimension corresponds to a pixel on the screen. An orthographic
-    camera can be used to do fast 2D drawing.
+When pi3d.Buffer.draw() method is called for a 3D object the python side
+of the program sets the shader and necessary uniform variables to draw the
+given object. It then works out the 4x4 matrix combining translation, rotation,
+scale for the object and an additional matrix incorporating the camera
+movement and lens settings. The camera has two basic modes for handling
+perspective, the default is 'normal' where things further away are represented
+as smaller on the screen and the this is defined by a viewing angle between
+the top edge of the screen and bottom edge. If the camera is set to
+orthographic mode then objects do not get smaller in the distance and one
+unit of object dimension corresponds to a pixel on the screen. An orthographic
+camera can be used to do fast 2D drawing.
 
-#.  The glDrawElements function is then called  which sets the vertex shader
-    to work out the locations of each vertex, normal, lighting, texture in
-    terms of screen coordinates. The vertex shader then passes the relevant
-    information to the fragment shader which  calculates what colour and alpha
-    value to use for each pixel. The fragment shader takes into account the
-    depth value of each pixel and doesn't draw anything that is behind something
-    it has already drawn. This means that it is more efficient to draw opaque
-    objects from near to far but if something is partially transparent then
-    is must be drawn **after** anything further away that should 'show through'.
+The glDrawElements function is then called  which sets the vertex shader
+to work out the locations of each vertex, normal, lighting, texture in
+terms of screen coordinates. The vertex shader then passes the relevant
+information to the fragment shader which  calculates what colour and alpha
+value to use for each pixel. The fragment shader takes into account the
+depth value of each pixel and doesn't draw anything that is behind something
+it has already drawn. This means that it is more efficient to draw opaque
+objects from near to far but if something is partially transparent then
+is must be drawn **after** anything further away that should 'show through'.
 
-#.  pi3d uses a double buffer system where everything is drawn onto an off-screen
-    buffer which, when complete at the end of the frame loop, is swapped
-    'instantaneously' to visible. This makes the animation much smoother
+pi3d uses a double buffer system where everything is drawn onto an off-screen
+buffer which, when complete at the end of the frame loop, is swapped
+'instantaneously' to visible. This makes the animation much smoother
 
 .. [#] The attempt to work out on what platform pi3d is running and what
    libraries to import is done in /pi3d/constants/__init__.py and the

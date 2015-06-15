@@ -131,8 +131,7 @@ PerspectiveCamera, WebGLRenderer, Mesh, Geometry, Material etc.</p>
 </div>
 <div class="section" id="sequence-of-events">
 <h2>Sequence of events<a class="headerlink" href="#sequence-of-events" title="Permalink to this headline">¶</a></h2>
-<ol class="arabic">
-<li><p class="first">3D objects are defined for use in graphics programs starting with a
+<p>3D objects are defined for use in graphics programs starting with a
 list of points or vertices in space each one needing x, y, z coordinates.
 Although not generally essential, in pi3d each vertex has a normal vector
 defined as well. This is effectively an arrow at right angles to the surface
@@ -171,12 +170,11 @@ is clock-wise. Normally the backs of faces are not rendered by the GPU:</p>
    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
 </pre></div>
 </div>
-<a class="reference internal image-reference" href="_images/simple_quad.png"><img alt="_images/simple_quad.png" class="align-left" src="_images/simple_quad.png" style="width: 320.0px; height: 200.0px;" /></a>
+<img alt="_images/simple_quad.png" class="align-left" src="_images/simple_quad.png" />
 <p>Here&#8217;s a sketch so you can see how the system works.</p>
 <p>The GPU uses coordinate directions x increases from left to right, y
 increases from bottom to top, z increases going into the screen.</p>
-</li>
-<li><p class="first">The GPU has been designed to be fantastically efficient at performing
+<p>The GPU has been designed to be fantastically efficient at performing
 vector and matrix arithmetic. So rather than the CPU calculating where
 about the vertices have  moved and how these positions can be represented
 on the 2D computer screen it simply calculates a transformation matrix
@@ -186,11 +184,9 @@ one including the camera movement and perspective calculations. In the
 vertex shader these matrices are used to convert the raw vertex positions
 to screen locations and to work out where the light should come from in
 order to work out shadows.</p>
-</li>
-<li><p class="first">Image files are converted into texture arrays that are accessed
+<p>Image files are converted into texture arrays that are accessed
 very efficiently by the GPU.</p>
-</li>
-<li><p class="first">When pi3d.Buffer.draw() method is called for a 3D object the python side
+<p>When pi3d.Buffer.draw() method is called for a 3D object the python side
 of the program sets the shader and necessary uniform variables to draw the
 given object. It then works out the 4x4 matrix combining translation, rotation,
 scale for the object and an additional matrix incorporating the camera
@@ -201,8 +197,7 @@ the top edge of the screen and bottom edge. If the camera is set to
 orthographic mode then objects do not get smaller in the distance and one
 unit of object dimension corresponds to a pixel on the screen. An orthographic
 camera can be used to do fast 2D drawing.</p>
-</li>
-<li><p class="first">The glDrawElements function is then called  which sets the vertex shader
+<p>The glDrawElements function is then called  which sets the vertex shader
 to work out the locations of each vertex, normal, lighting, texture in
 terms of screen coordinates. The vertex shader then passes the relevant
 information to the fragment shader which  calculates what colour and alpha
@@ -211,12 +206,9 @@ depth value of each pixel and doesn&#8217;t draw anything that is behind somethi
 it has already drawn. This means that it is more efficient to draw opaque
 objects from near to far but if something is partially transparent then
 is must be drawn <strong>after</strong> anything further away that should &#8216;show through&#8217;.</p>
-</li>
-<li><p class="first">pi3d uses a double buffer system where everything is drawn onto an off-screen
+<p>pi3d uses a double buffer system where everything is drawn onto an off-screen
 buffer which, when complete at the end of the frame loop, is swapped
 &#8216;instantaneously&#8217; to visible. This makes the animation much smoother</p>
-</li>
-</ol>
 <table class="docutils footnote" frame="void" id="id5" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">

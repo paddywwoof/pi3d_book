@@ -27,22 +27,24 @@ varying float lightFactor;// their values "vary" by interpolating between vertic
 varying vec3 normout;
 
 void main(void) {
-  vec4 relPosn = modelviewmatrix[0] * vec4(vertex, 1.0);
-  
   if (unif[7][0] == 1.0) {                        // this is a point light and unif[8] is location
-    lightVector =  unif[8] - vec3(relPosn);
+    vec4 vPosn = modelviewmatrix[0] * vec4(vertex, 1.0); // apply the model transformation matrix
+    lightVector =  unif[8] - vec3(vPosn);  // to get vector from vertex to the light position
     lightFactor = pow(length(lightVector), -2.0); // inverse square law
     lightVector = normalize(lightVector);         // now convert to unit vector for direction
   } else {                                        // this is directional light
     lightVector = normalize(unif[8]) * -1.0;      // directional light
-    lightFactor = 1.0;
+    lightFactor = 1.0;                            // constant brightness
   }
   lightVector.z *= -1.0;                          // fix r-hand axis
   normout = normalize(vec3(modelviewmatrix[0] * vec4(normal, 1.0))); // matrix multiplication   
   texcoordout = texcoord * unib[2].xy + unib[3].xy; // offset and mult for texture coords
-
   gl_Position = modelviewmatrix[1] * vec4(vertex,1.0); // matrix multiplication
-                                  // NB now including projection as well as model movement
+  /* gl_Position is a pre-defined variable that has to be set in the vertex
+  shader to define the vertex location in projection space. i.e. x and y
+  are now screen coordinates and z is depth to determine which pixels are
+  rendered in front or discarded. This matrix multiplication used the full
+  projection matrix whereas normout used only the model transformation matrix*/
 }
 """,
 
@@ -63,14 +65,18 @@ varying vec3 lightVector;
 varying float lightFactor;
 
 void main(void) {
-  vec4 texc = texture2D(tex0, texcoordout); // look up material or basic colour from texture
-  //vec4 texc = vec4(0.7, 0.1, 0.4, 0.9);   // try making it a "material" color by swapping with the line above
-  if (texc.a < unib[0][2]) discard;         // to allow rendering behind the transparent parts of this object
+  gl_FragColor = texture2D(tex0, texcoordout); /* look up the basic RGBA value
+  from the loaded Texture. This function also takes into account the distance
+  of the pixel and will use lower resolution versions or mipmaps that were
+  generated on creation (unless mipmaps=False was set)
+  gl_FragColor is another of the pre-defined variables, representing the
+  RGBA contribution to this pixel */
+  //gl_FragColor = vec4(0.7, 0.1, 0.4, 0.9);   // try making it a "material" color by swapping with the line above
+  if (gl_FragColor.a < unib[0][2]) discard;         // to allow rendering behind the transparent parts of this object
   float intensity = clamp(dot(lightVector, normout) * lightFactor, 0.0, 1.0); // adjustment of colour according to combined normal
-  texc.rgb = (texc.rgb * unif[9]) * intensity + (texc.rgb * unif[10]); // directional lightcol * intensity + ambient lightcol
-
-  gl_FragColor =  texc;
-  gl_FragColor.a *= unif[5][2];
+  //float intensity = dot(lightVector, normout) * lightFactor; // try removing the 0 to 1 constraint (with point light)
+  gl_FragColor.rgb *= (unif[9] * intensity + unif[10]); // directional lightcol * intensity + ambient lightcol
+  gl_FragColor.a *= unif[5][2]; // finally modify the alpha with the Shape alpha
 }
 """)
 
@@ -81,6 +87,7 @@ light = pi3d.Light(l_vec,
 cube = pi3d.Cuboid(camera=CAMERA, w=1.5, h=1.5, d=1.5, z=4.0)
 tex = pi3d.Texture("techy1.jpg")
 #tex = pi3d.Texture("techy2.png", blend=True)
+#pi3d.opengles.glDisable(pi3d.GL_CULL_FACE)
 cube.set_draw_details(shader, [tex])
 """ This takes essentially the same code as light01.py but brings the
 Shader code inside to allow hacking. NB there is virtually no debugging
@@ -100,13 +107,24 @@ Try swapping the ``vec4 texc = texture2D`` line from the fragment shader
 for the following fixed material shade. Try altering RGBA values, including
 values > 1.0 and < 0.0.
 
-Also try swapping the texture from the jpg to the png file with varying alpha.
-Change the blend argument between True and False. This variable is picked
-up in Buffer.draw() (line 306) and used in the fragment shader via unib[0][2]
-This allows pixels to be discarded with either a soft edge (if blend=True)
-and values merged with anything already drawn at that pixel, or with a hard
-edge (if False). Compare the sphere of clouds on the Earth.py demo with
-the trees on ForestWalk.py
+See what effect the ``clamp()`` function has on the intensity in the fragment
+shader. It will only have any effect when using a point light near to a
+vertex.
+
+Also try swapping the texture from the jpg to the png file on the next line
+with varying alpha. Change the blend argument between True and False. This
+variable is picked up in Buffer.draw() (line 306) and used in the fragment
+shader via unib[0][2] This allows pixels to be discarded with either a soft
+edge (if blend=True) and values merged with anything already drawn at that
+pixel, or with a hard edge (if False). Compare the sphere of clouds on the
+Earth.py demo with the trees on ForestWalk.py
+
+As a bonus experiment with the partially transparent png texture try enabling
+the following line which disables `CULL_FACE`. This means you can see the
+back of the walls of the box. However if you look carefully you will see
+that the lighting is not calcualted correctly - we only have one set of
+normals and they point outwards. To get the correct lighting effect you
+would have to create a double walled cube.
 """
 #####
 light_obj = pi3d.Lines(vertices=((0.0,0.0,0.0), l_vec ,

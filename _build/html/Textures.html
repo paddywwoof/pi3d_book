@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="3D Graphics with pi3d" href="index.html" />
-    <link rel="next" title="Models" href="Models.html" />
+    <link rel="next" title="Cameras, 2D projection and Sprites" href="Cameras.html" />
     <link rel="prev" title="Shapes, Buffers and Display" href="Shapes.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="Models.html" title="Models"
+          <a href="Cameras.html" title="Cameras, 2D projection and Sprites"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="Shapes.html" title="Shapes, Buffers and Display"
@@ -56,19 +56,19 @@ chapter I hope to give much more detail of how they fit together and how
 they can be used.</p>
 <div class="section" id="textures">
 <h2>Textures<a class="headerlink" href="#textures" title="Permalink to this headline">¶</a></h2>
-<p>First of all have a look at the next illustration program textures01.py
-and run it to see what it does. The code starts from 3D_matrices03.py but
+<img alt="_images/texture02.png" class="align-right" src="_images/texture02.png" />
+<p>First of all have a look at the next illustration program <strong>textures01.py</strong> <a class="footnote-reference" href="#id7" id="id1">[1]</a>
+and run it to see what it does. The code starts from <strong>3D_matrices03.py</strong> but
 replaces the yellow material of the cube with an image texture, the docstrings
 explain the changes.</p>
 </div>
 <div class="section" id="lights">
 <h2>Lights<a class="headerlink" href="#lights" title="Permalink to this headline">¶</a></h2>
 <p>Before looking at the next texture example it would be good to get more of
-an idea how Light works; so open up and run the light01.py example. Again,
+an idea how Light works; so open up and run the <strong>light01.py</strong> <a class="footnote-reference" href="#id8" id="id2">[2]</a> example. Again,
 much of the explanation that I would have put here is in the docstrings so
 read them and try the experiments suggested in the text.</p>
-<a class="reference internal image-reference" href="_images/texture02.png"><img alt="_images/texture02.png" class="align-right" src="_images/texture02.png" style="width: 118.75px; height: 115.0px;" /></a>
-<p>Now work your way through textures02.py which is using all the functionality
+<p>Now work your way through <strong>textures02.py</strong> <a class="footnote-reference" href="#id9" id="id3">[3]</a> which is using all the functionality
 available in the &#8220;standard&#8221; shaders. There are lots of variables to tweak
 and experiments to do with this example so work your way though it slowly
 and carefully.</p>
@@ -94,11 +94,11 @@ types have to be explicitly defined:</p>
 <span class="n">c</span> <span class="o">=</span> <span class="n">mod</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">3.1416</span><span class="p">,</span> <span class="mf">6.2832</span><span class="p">,</span> <span class="mf">9.4248</span><span class="p">);</span>
 </pre></div>
 </div>
+<img alt="_images/dot_eg.png" class="align-right" src="_images/dot_eg.png" />
 <p>You will see that generally speaking variables can be vectors which the compiled
 GLSL is designed to process very fast. On the other hand branching and
-conditional statements are very slow and this results in some non-standard
-program structuring.</p>
-<a class="reference internal image-reference" href="_images/dot_eg.png"><img alt="_images/dot_eg.png" class="align-left" src="_images/dot_eg.png" style="width: 200.0px; height: 200.0px;" /></a>
+conditional statements are very slow and this sometimes results in strange
+program structure and use of built in functions such as <tt class="docutils literal"><span class="pre">step()</span></tt> and <tt class="docutils literal"><span class="pre">clamp()</span></tt>.</p>
 <p>One final bit of explanation before looking at the next example. The dot
 product of two vectors is often described as &#8220;the length of one times the
 length of the other times the cosine of the angle between them&#8221;. This is
@@ -115,7 +115,7 @@ fast:</p>
 <span class="k">float</span> <span class="n">a</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="n">light</span><span class="p">);</span>   <span class="c1">// results in -2.5 # i.e. (1.0 * -2.5) + (0.0 * -2.5) + (0.0 * 2.5)</span>
 </pre></div>
 </div>
-<p>So now have a look at shader01.py and play around with it. Any typos or
+<p>So now have a look at <strong>shader01.py</strong> <a class="footnote-reference" href="#id10" id="id4">[4]</a> and play around with it. Any typos or
 errors in the two shader scripts will be hard to track down so proceed with
 caution (remember Ctrl-z can get you back to a working version!). Also,
 because the GLSL is embedded in strings in the python code, the chances
@@ -156,12 +156,16 @@ is the code again. Vertex Shader:</p>
 33
 34
 35
-36</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">precision</span> <span class="k">mediump</span> <span class="k">float</span><span class="p">;</span>
-<span class="k">attribute</span> <span class="k">vec3</span> <span class="n">vertex</span><span class="p">;</span>           <span class="c1">// these are the array buffer objects defined in Buffer</span>
-<span class="k">attribute</span> <span class="k">vec3</span> <span class="n">normal</span><span class="p">;</span>
+36
+37
+38
+39
+40</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">precision</span> <span class="k">mediump</span> <span class="k">float</span><span class="p">;</span>
+<span class="k">attribute</span> <span class="k">vec3</span> <span class="n">vertex</span><span class="p">;</span>           <span class="c1">// these are the array buffer objects</span>
+<span class="k">attribute</span> <span class="k">vec3</span> <span class="n">normal</span><span class="p">;</span>           <span class="c1">//  defined in Buffer</span>
 <span class="k">attribute</span> <span class="k">vec2</span> <span class="n">texcoord</span><span class="p">;</span>
 
-<span class="k">uniform</span> <span class="k">mat4</span> <span class="n">modelviewmatrix</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span> <span class="c1">// [0] model movement in real coords, [1] in camera coords</span>
+<span class="k">uniform</span> <span class="k">mat4</span> <span class="n">modelviewmatrix</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span> <span class="c1">// [0] model movement [1] projection</span>
 <span class="k">uniform</span> <span class="k">vec3</span> <span class="n">unib</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
 <span class="cm">/* umult, vmult =&gt; unib[2][0:1] # these are defined in Buffer</span>
 <span class="cm">   u_off, v_off =&gt; unib[3][0:1] */</span>
@@ -175,22 +179,26 @@ is the code again. Vertex Shader:</p>
 <span class="k">varying</span> <span class="k">vec3</span> <span class="n">normout</span><span class="p">;</span>
 
 <span class="k">void</span> <span class="n">main</span><span class="p">(</span><span class="k">void</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">vec4</span> <span class="n">relPosn</span> <span class="o">=</span> <span class="n">modelviewmatrix</span><span class="p">[</span><span class="mo">0</span><span class="p">]</span> <span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
-
-  <span class="k">if</span> <span class="p">(</span><span class="n">unif</span><span class="p">[</span><span class="mi">7</span><span class="p">][</span><span class="mo">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">)</span> <span class="p">{</span>                        <span class="c1">// this is a point light and unif[8] is location</span>
-    <span class="n">lightVector</span> <span class="o">=</span>  <span class="n">unif</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">-</span> <span class="k">vec3</span><span class="p">(</span><span class="n">relPosn</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">unif</span><span class="p">[</span><span class="mi">7</span><span class="p">][</span><span class="mo">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// this is a point light and unif[8] is location</span>
+    <span class="c1">// apply the model transformation matrix</span>
+    <span class="k">vec4</span> <span class="n">vPosn</span> <span class="o">=</span> <span class="n">modelviewmatrix</span><span class="p">[</span><span class="mo">0</span><span class="p">]</span> <span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+    <span class="c1">// to get vector from vertex to the light position</span>
+    <span class="n">lightVector</span> <span class="o">=</span>  <span class="n">unif</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">-</span> <span class="k">vec3</span><span class="p">(</span><span class="n">vPosn</span><span class="p">);</span>
     <span class="n">lightFactor</span> <span class="o">=</span> <span class="n">pow</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">lightVector</span><span class="p">),</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">);</span> <span class="c1">// inverse square law</span>
     <span class="n">lightVector</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">lightVector</span><span class="p">);</span>         <span class="c1">// now convert to unit vector for direction</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>                                        <span class="c1">// this is directional light</span>
     <span class="n">lightVector</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">unif</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">;</span>      <span class="c1">// directional light</span>
-    <span class="n">lightFactor</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+    <span class="n">lightFactor</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>                            <span class="c1">// constant brightness</span>
   <span class="p">}</span>
   <span class="n">lightVector</span><span class="p">.</span><span class="n">z</span> <span class="o">*=</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">;</span>                          <span class="c1">// fix r-hand axis</span>
   <span class="n">normout</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="k">vec3</span><span class="p">(</span><span class="n">modelviewmatrix</span><span class="p">[</span><span class="mo">0</span><span class="p">]</span> <span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)));</span> <span class="c1">// matrix multiplication</span>
   <span class="n">texcoordout</span> <span class="o">=</span> <span class="n">texcoord</span> <span class="o">*</span> <span class="n">unib</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">xy</span> <span class="o">+</span> <span class="n">unib</span><span class="p">[</span><span class="mi">3</span><span class="p">].</span><span class="n">xy</span><span class="p">;</span> <span class="c1">// offset and mult for texture coords</span>
-
   <span class="n">gl_Position</span> <span class="o">=</span> <span class="n">modelviewmatrix</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span><span class="mf">1.0</span><span class="p">);</span> <span class="c1">// matrix multiplication</span>
-                                  <span class="c1">// NB now including projection as well as model movement</span>
+  <span class="cm">/* gl_Position is a pre-defined variable that has to be set in the vertex</span>
+<span class="cm">  shader to define the vertex location in projection space. i.e. x and y</span>
+<span class="cm">  are now screen coordinates and z is depth to determine which pixels are</span>
+<span class="cm">  rendered in front or discarded. This matrix multiplication used the full</span>
+<span class="cm">  projection matrix whereas normout used only the model transformation matrix*/</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
@@ -219,7 +227,16 @@ is the code again. Vertex Shader:</p>
 22
 23
 24
-25</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">precision</span> <span class="k">mediump</span> <span class="k">float</span><span class="p">;</span>
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">precision</span> <span class="k">mediump</span> <span class="k">float</span><span class="p">;</span>
 <span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">tex0</span><span class="p">;</span> <span class="c1">// this is the texture object</span>
 <span class="k">uniform</span> <span class="k">vec3</span> <span class="n">unib</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
 <span class="cm">/*     blend cutoff =&gt; unib[0][2] # defined in Buffer */</span>
@@ -235,18 +252,28 @@ is the code again. Vertex Shader:</p>
 <span class="k">varying</span> <span class="k">float</span> <span class="n">lightFactor</span><span class="p">;</span>
 
 <span class="k">void</span> <span class="n">main</span><span class="p">(</span><span class="k">void</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">vec4</span> <span class="n">texc</span> <span class="o">=</span> <span class="n">texture2D</span><span class="p">(</span><span class="n">tex0</span><span class="p">,</span> <span class="n">texcoordout</span><span class="p">);</span> <span class="c1">// look up material or basic colour from texture</span>
-  <span class="c1">//vec4 texc = vec4(0.7, 0.1, 0.4, 0.9);   // try making it a &quot;material&quot; color by swapping with the line above</span>
-  <span class="k">if</span> <span class="p">(</span><span class="n">texc</span><span class="p">.</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">unib</span><span class="p">[</span><span class="mo">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="k">discard</span><span class="p">;</span>         <span class="c1">// to allow rendering behind the transparent parts of this object</span>
-  <span class="k">float</span> <span class="n">intensity</span> <span class="o">=</span> <span class="n">clamp</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">lightVector</span><span class="p">,</span> <span class="n">normout</span><span class="p">)</span> <span class="o">*</span> <span class="n">lightFactor</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span> <span class="c1">// adjustment of colour according to combined normal</span>
-  <span class="n">texc</span><span class="p">.</span><span class="n">rgb</span> <span class="o">=</span> <span class="p">(</span><span class="n">texc</span><span class="p">.</span><span class="n">rgb</span> <span class="o">*</span> <span class="n">unif</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span> <span class="o">*</span> <span class="n">intensity</span> <span class="o">+</span> <span class="p">(</span><span class="n">texc</span><span class="p">.</span><span class="n">rgb</span> <span class="o">*</span> <span class="n">unif</span><span class="p">[</span><span class="mi">10</span><span class="p">]);</span> <span class="c1">// directional lightcol * intensity + ambient lightcol</span>
-
-  <span class="n">gl_FragColor</span> <span class="o">=</span>  <span class="n">texc</span><span class="p">;</span>
-  <span class="n">gl_FragColor</span><span class="p">.</span><span class="n">a</span> <span class="o">*=</span> <span class="n">unif</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">2</span><span class="p">];</span>
+  <span class="n">gl_FragColor</span> <span class="o">=</span> <span class="n">texture2D</span><span class="p">(</span><span class="n">tex0</span><span class="p">,</span> <span class="n">texcoordout</span><span class="p">);</span> <span class="cm">/* look up the basic RGBA value</span>
+<span class="cm">  from the loaded Texture. This function also takes into account the distance</span>
+<span class="cm">  of the pixel and will use lower resolution versions or mipmaps that were</span>
+<span class="cm">  generated on creation (unless mipmaps=False was set)</span>
+<span class="cm">  gl_FragColor is another of the pre-defined variables, representing the</span>
+<span class="cm">  RGBA contribution to this pixel */</span>
+  <span class="c1">// try making it a &quot;material&quot; color by swapping with the line above</span>
+  <span class="c1">//gl_FragColor = vec4(0.7, 0.1, 0.4, 0.9);</span>
+  <span class="c1">// to allow rendering behind the transparent parts of this object:</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">gl_FragColor</span><span class="p">.</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">unib</span><span class="p">[</span><span class="mo">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="k">discard</span><span class="p">;</span>
+  <span class="c1">// adjustment of colour according to combined normal:</span>
+  <span class="k">float</span> <span class="n">intensity</span> <span class="o">=</span> <span class="n">clamp</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">lightVector</span><span class="p">,</span> <span class="n">normout</span><span class="p">)</span> <span class="o">*</span> <span class="n">lightFactor</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+  <span class="c1">// try removing the 0 to 1 constraint (with point light):</span>
+  <span class="c1">//float intensity = dot(lightVector, normout) * lightFactor;</span>
+  <span class="c1">// directional lightcol * intensity + ambient lightcol:</span>
+  <span class="n">gl_FragColor</span><span class="p">.</span><span class="n">rgb</span> <span class="o">*=</span> <span class="p">(</span><span class="n">unif</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">*</span> <span class="n">intensity</span> <span class="o">+</span> <span class="n">unif</span><span class="p">[</span><span class="mi">10</span><span class="p">]);</span>
+  <span class="n">gl_FragColor</span><span class="p">.</span><span class="n">a</span> <span class="o">*=</span> <span class="n">unif</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">2</span><span class="p">];</span> <span class="c1">// finally modify the alpha with the Shape alpha</span>
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>There is a khronos GLSL quick reference card <a class="footnote-reference" href="#id2" id="id1">[1]</a></p>
+<p>There is a khronos GLSL quick reference card <a class="footnote-reference" href="#id11" id="id5">[5]</a> if you want to see what
+all the functions do.</p>
 <p>I mentioned above that I would give a general description of how the normal
 map and reflection map work. If you have attempted to look at the shader
 code &#8220;really&#8221; used in pi3d you will have found that it is structured with
@@ -269,10 +296,53 @@ above. The reflection angles are then used to look up a position from a
 Texture where the horizontal range is -pi to +pi (+/- 180 degrees) and the
 vertical range is -pi/2 to +pi/2 (+/- 90 degrees) This is the standard
 projection used for photo-spheres.</p>
-<table class="docutils footnote" frame="void" id="id2" rules="none">
+</div>
+<div class="section" id="a-final-look-at-textures">
+<h2>A Final look at Textures<a class="headerlink" href="#a-final-look-at-textures" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/conway_texture.png" class="align-right" src="_images/conway_texture.png" />
+<p>As a final bit of fun have a look at the <strong>textures03.py</strong> <a class="footnote-reference" href="#id12" id="id6">[6]</a> demo. This
+illustrates how Texture objects can be constructed from numpy arrays (or
+PIL Image objects) and can be updated each loop. Although numpy or PIL are
+much faster than python (they are compiled modules written in C) they are
+not as fast as GPU shaders. However for some applications it can be very
+convenient to manipulate reasonably small textures in this way. The
+VideoWalk.py demo (on github.com/pi3d/pi3d_demos/) shows how video frames
+can be read using ffmpeg and used to update a Texture. This is also a way
+to use OpenCV images as Textures as they are already numpy arrays.</p>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://www.khronos.org/opengles/sdk/docs/reference_cards/OpenGL-ES-2_0-Reference-card.pdf">https://www.khronos.org/opengles/sdk/docs/reference_cards/OpenGL-ES-2_0-Reference-card.pdf</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/textures01.py">https://github.com/paddywwoof/pi3d_book/blob/master/textures01.py</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/light01.py">https://github.com/paddywwoof/pi3d_book/blob/master/light01.py</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/textures02.py">https://github.com/paddywwoof/pi3d_book/blob/master/textures02.py</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/shader01.py">https://github.com/paddywwoof/pi3d_book/blob/master/shader01.py</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td><a class="reference external" href="https://www.khronos.org/opengles/sdk/docs/reference_cards/OpenGL-ES-2_0-Reference-card.pdf">https://www.khronos.org/opengles/sdk/docs/reference_cards/OpenGL-ES-2_0-Reference-card.pdf</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[6]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/textures03.py">https://github.com/paddywwoof/pi3d_book/blob/master/textures03.py</a></td></tr>
 </tbody>
 </table>
 </div>
@@ -290,6 +360,7 @@ projection used for photo-spheres.</p>
 <li><a class="reference internal" href="#textures">Textures</a></li>
 <li><a class="reference internal" href="#lights">Lights</a></li>
 <li><a class="reference internal" href="#shaders">Shaders</a></li>
+<li><a class="reference internal" href="#a-final-look-at-textures">A Final look at Textures</a></li>
 </ul>
 </li>
 </ul>
@@ -298,8 +369,8 @@ projection used for photo-spheres.</p>
   <p class="topless"><a href="Shapes.html"
                         title="previous chapter">Shapes, Buffers and Display</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Models.html"
-                        title="next chapter">Models</a></p>
+  <p class="topless"><a href="Cameras.html"
+                        title="next chapter">Cameras, 2D projection and Sprites</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/Textures.txt"
@@ -329,7 +400,7 @@ projection used for photo-spheres.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="Models.html" title="Models"
+          <a href="Cameras.html" title="Cameras, 2D projection and Sprites"
              >next</a> |</li>
         <li class="right" >
           <a href="Shapes.html" title="Shapes, Buffers and Display"

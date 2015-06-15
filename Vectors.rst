@@ -115,7 +115,6 @@ matrices become 4x4. If you are unclear why this is necessary it may be a
 good idea to go back and look at the first illustration.
 
 .. image:: perspective.png
-   :scale: 50%
    :align: right
 
 Because the computer screen is essentially flat there has to be a method of
