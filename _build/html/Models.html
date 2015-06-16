@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="3D Graphics with pi3d" href="index.html" />
     <link rel="next" title="Constructing a Shape from scratch" href="Constructing.html" />
-    <link rel="prev" title="Shapes and Buffers" href="Shapes.html" /> 
+    <link rel="prev" title="Cameras, 2D projection and Sprites" href="Cameras.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,7 +38,7 @@
           <a href="Constructing.html" title="Constructing a Shape from scratch"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Shapes.html" title="Shapes and Buffers"
+          <a href="Cameras.html" title="Cameras, 2D projection and Sprites"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
       </ul>
@@ -51,6 +51,79 @@
             
   <div class="section" id="models">
 <h1>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h1>
+<p>3D models can be made and edited using a wide variety of software and
+saved in nearly as large a variety of formats. In pi3d, at the moment,
+there are just two file types that can be parsed: wavefront <strong>obj</strong> and
+Panda3D <strong>egg</strong>. Of these two the obj is simpler and faster to load.</p>
+<p>If you have <strong>blender</strong> <a class="footnote-reference" href="#id4" id="id1">[1]</a> installed on your PC then you can open the
+file <strong>model01.blend</strong> <a class="footnote-reference" href="#id5" id="id2">[2]</a> or you can view it by running the pi3d demo
+<strong>model01.py</strong> <a class="footnote-reference" href="#id6" id="id3">[3]</a> It&#8217;s basically a box with horns! In the diagram below
+the left view is normal perspective (as with pi3d) and the right view is
+the uv &#8220;unwrapping&#8221; for texture mapping to the vertices.</p>
+<p>Blender screen</p>
+<img alt="_images/blender01.jpg" src="_images/blender01.jpg" />
+<p>Open the <strong>blender01.obj</strong> and <strong>blender01.mtl</strong> files and have a look at
+the structure of the information, it should be reasonably familiar by now
+with a little explanation.</p>
+<p>Most of the obj file consists of four types of lines:</p>
+<blockquote>
+<div><p><strong>v vertex</strong> lines with x, y, z coordinates.</p>
+<p><strong>vt vertex texture</strong> lines with u, v coordinates.</p>
+<p><strong>vn vertex normal</strong> lines with x, y, z components of normals.</p>
+<p><strong>f face</strong> lines with a series of references to v/vt/vn lines for each
+corner of the face. When I made the model in blender I converted the
+faces to triangles but in general there could be more corners and the
+parser function has to convert it into triangles to work with OpenGL ES2.0</p>
+</div></blockquote>
+<p>Additional occasional lines are <strong>mtllib model01.mtl</strong> which points to material file.
+<strong>o Cube</strong> define different objects within this file. In pi3d these will
+each be a different Buffer object within one Shape. <strong>usemtl Material</strong>
+instructs the properties from mtllib under &#8220;Material&#8221; to be used for the
+following faces. <strong>s off</strong> and <strong>s 1</strong> turn smoothing off and on. Pi3d
+doesn&#8217;t use these instruction but does use the normals. If you look at the
+lines:</p>
+<div class="highlight-python"><div class="highlight"><pre>s off
+f 4/1/1 11/2/1 3/3/1
+f 8/4/2 7/5/2 10/6/2
+f 9/7/3 14/8/3 22/9/3
+</pre></div>
+</div>
+<p>You will see three faces using vertices (4,11,3) (8,7,10) (9,14,22) with
+normals (1,1,1) (2,2,2) (3,3,3) i.e. all three corners are facing the same
+direction. Later on:</p>
+<div class="highlight-python"><div class="highlight"><pre>s 1
+f 22/9/15 30/62/16 23/63/17
+f 22/21/15 17/20/18 25/64/19
+f 30/62/16 38/65/20 31/66/21
+</pre></div>
+</div>
+<p>faces (22,30,12) (22,17,25) (30,38,31) have normals (15,16,17) (15,18,19)
+(16,20,21) i.e. not a flat face. And you will see that the same vertex
+used in different faces (i.e. vertex #22 or #30 above) has the same normal vector
+(#15 or #16)</p>
+<p>In the mtl file you will see that there is a <strong>newmtl Material</strong> to match
+the usemtl line in the obj file, followed by lines specifying material
+properties (Ns specular exponent, Ka ambient, Kd diffuse, Ks specular (RGB
+values), d alpha, illum illumination model, map_kd a file to use for diffuse
+values) Pi3d only picks up the Kd and map_kd to use as material and Texture.</p>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="http://www.blender.org/">http://www.blender.org/</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/model01.blend">https://github.com/paddywwoof/pi3d_book/blob/master/model01.blend</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/model01.py">https://github.com/paddywwoof/pi3d_book/blob/master/model01.py</a></td></tr>
+</tbody>
+</table>
 </div>
 
 
@@ -60,8 +133,8 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="Shapes.html"
-                        title="previous chapter">Shapes and Buffers</a></p>
+  <p class="topless"><a href="Cameras.html"
+                        title="previous chapter">Cameras, 2D projection and Sprites</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="Constructing.html"
                         title="next chapter">Constructing a Shape from scratch</a></p>
@@ -97,7 +170,7 @@
           <a href="Constructing.html" title="Constructing a Shape from scratch"
              >next</a> |</li>
         <li class="right" >
-          <a href="Shapes.html" title="Shapes and Buffers"
+          <a href="Cameras.html" title="Cameras, 2D projection and Sprites"
              >previous</a> |</li>
         <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
       </ul>

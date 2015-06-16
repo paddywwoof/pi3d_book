@@ -90,7 +90,7 @@ because the GLSL is embedded in strings in the python code, the chances
 are that any code formatting in your editor will not be brilliant, so here
 is the code again. Vertex Shader:
 
-..  code-block:: glsli
+..  code-block:: glsl
     :linenos:
 
     precision mediump float;
