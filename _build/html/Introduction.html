@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; 3D Graphics with pi3d</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="3D Graphics with pi3d" href="index.html" />
+    <link rel="next" title="3D Graphics Explanation" href="GPUexplain.html" />
+    <link rel="prev" title="Pi3d Book" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="GPUexplain.html" title="3D Graphics Explanation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Pi3d Book"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="target-audience">
+<h2>Target Audience<a class="headerlink" href="#target-audience" title="Permalink to this headline">¶</a></h2>
+<p>It&#8217;s not possible to cater for all levels of knowledge and experience in
+one book. Inevitably you will find sections where I cover things that you
+already know and you can skip ahead quickly, but there will also be parts
+that seem difficult where you will have to take it slowly and check things
+out on-line (I try to include links where they might be useful but you can
+always resort to google!). I assume that:</p>
+<ul class="simple">
+<li>You already know how to program (either with python to a basic level,
+or with another language to a high enough level that the switch to python
+presents few issues). Apart from things that are non-standard, such as using numpy <a class="footnote-reference" href="#id7" id="id1">[1]</a>,
+ctypes <a class="footnote-reference" href="#id8" id="id2">[2]</a> or GLSL <a class="footnote-reference" href="#id9" id="id3">[3]</a>, I shall not explain general programming concepts or syntax. Also,
+although I will try to introduce pi3d concepts in a logical order, this
+will not necessarily correspond with the sophistication of the programming
+techniques used.</li>
+<li>Although not essential it will help if you have a reasonable (secondary
+school) understanding of mathematics such as basic trigonometry
+(<cite>sin, cos, tan, arctan</cite> <a class="footnote-reference" href="#id10" id="id4">[4]</a>, Pythagoras <a class="footnote-reference" href="#id11" id="id5">[5]</a> etc.) and have at least come across
+<cite>vectors and matrices</cite> <a class="footnote-reference" href="#id12" id="id6">[6]</a>.</li>
+<li>You have an average understanding of computer images and display, in so
+far as they consist of pixels with red, green, blue values and that some
+file types (PNG, TIFF etc.) allow transparency per pixel with a fourth, alpha value.</li>
+<li>You want to learn a bit about the mechanisms of producing 3D graphics
+rather than simply find recipes for how to do things.</li>
+</ul>
+</div>
+<div class="section" id="the-structure-and-how-to-use-this-book">
+<h2>The Structure and how to use this book<a class="headerlink" href="#the-structure-and-how-to-use-this-book" title="Permalink to this headline">¶</a></h2>
+<p>A book on how to program, or use a module within a language, inevitably
+needs lots of code to look at and run (unless it sets out to be a very
+boring book). And code needs lots of comments and explanations because that&#8217;s
+almost the essence of good coding. So it did occur to me that the whole
+book could be constructed entirely from the documentation in the example programs
+that accompanied it. However, although this works for generating documentation
+(as used for <a class="reference external" href="http://pi3d.github.io/html/index.html">http://pi3d.github.io/html/index.html</a>),
+it produces too many constraints and a rather unwieldy book structure. In
+the end I opted for this:</p>
+<ol class="arabic simple">
+<li>A narrative and overall explanation starting from the workings of the GPU
+and OpenGL, the use of vectors and matrix transformations, simple shapes and
+shaders through to complicated projects and games.</li>
+<li>A set of programs that can be run to illustrate the topics covered above.
+Generally the illustrations will use pi3d to create the graphical output
+but to start with this will be glossed over as a distraction from the
+topic being explained.</li>
+<li>A selection of the demo programs from github.com/pi3d/pi3d_demos. As
+familiarity and understanding grow these can become a source of ideas
+and boiler-plate code to modify.</li>
+<li>The source code of pi3d. A key reason to use python is that it&#8217;s easy
+to read and understand how it works. If something in pi3d doesn&#8217;t work as you
+expect you are encouraged to open the source code with an editor and
+figure out exactly how it works.</li>
+<li>The on-line documentation. Things like installation instructions for
+different platforms, arguments and return values of class methods, and
+FAQs belong elsewhere and do not clutter up this book!</li>
+</ol>
+<p>The programs are referenced from the narrative and include comprehensive
+docstrings and comments. <strong>The code and the docstrings are NOT duplicated
+in the narrative</strong> so it is essential that the book is read in conjunction
+with the programs, and that the programs are <em>read</em> as well as run.</p>
+<p>This is an outline mind map from Coggle.it</p>
+<img alt="_images/pi3d_book.png" src="_images/pi3d_book.png" />
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>If you don&#8217;t have pi3d set up already you need to read the relevant section here
+<a class="reference external" href="http://pi3d.github.io/html/ReadMe.html#setup-on-the-raspberry-pi">http://pi3d.github.io/html/ReadMe.html#setup-on-the-raspberry-pi</a> and the
+paragraphs below, that apply to your platform.</p>
+<p>At points in the book I will suggest that you look in various pi3d files
+and if you installed on Raspberry Pi or Linux these will be in
+<tt class="docutils literal"><span class="pre">/usr/local/lib/python2.7/dist-packages/pi3d/</span></tt> (or similar), on Windows
+try  <tt class="docutils literal"><span class="pre">C:\Python27\Lib\site-packages\pi3d\</span></tt>. Obviously python3 would have
+an appropriately different path.</p>
+<p>You also need to get a copy of <a class="reference external" href="http://github.com/pi3d/pi3d_demos">http://github.com/pi3d/pi3d_demos</a> either
+using git clone or download the zip and extract it.</p>
+<p>And you need a copy of the example programs for this book
+github.com/paddywwoof/pi3d_book</p>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="http://www.numpy.org/">http://www.numpy.org/</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="https://docs.python.org/2/library/ctypes.html">https://docs.python.org/2/library/ctypes.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="http://en.wikipedia.org/wiki/OpenGL_Shading_Language">http://en.wikipedia.org/wiki/OpenGL_Shading_Language</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td><a class="reference external" href="https://www.mathsisfun.com/sine-cosine-tangent.html">https://www.mathsisfun.com/sine-cosine-tangent.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id11" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td><a class="reference external" href="https://www.mathsisfun.com/pythagoras.html">https://www.mathsisfun.com/pythagoras.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id12" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[6]</a></td><td><a class="reference external" href="http://www.intmath.com/vectors/vectors-intro.php">http://www.intmath.com/vectors/vectors-intro.php</a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introduction</a><ul>
+<li><a class="reference internal" href="#target-audience">Target Audience</a></li>
+<li><a class="reference internal" href="#the-structure-and-how-to-use-this-book">The Structure and how to use this book</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Pi3d Book</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="GPUexplain.html"
+                        title="next chapter">3D Graphics Explanation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/Introduction.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="GPUexplain.html" title="3D Graphics Explanation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Pi3d Book"
+             >previous</a> |</li>
+        <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Paddy Gaunt.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

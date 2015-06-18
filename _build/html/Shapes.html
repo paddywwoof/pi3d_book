@@ -1,0 +1,354 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Shapes, Buffers and Display &mdash; 3D Graphics with pi3d</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="3D Graphics with pi3d" href="index.html" />
+    <link rel="next" title="Textures, Lights and Shaders" href="Textures.html" />
+    <link rel="prev" title="Vectors and Matrices" href="Vectors.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Textures.html" title="Textures, Lights and Shaders"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Vectors.html" title="Vectors and Matrices"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="shapes-buffers-and-display">
+<h1>Shapes, Buffers and Display<a class="headerlink" href="#shapes-buffers-and-display" title="Permalink to this headline">¶</a></h1>
+<p>This is a rather technical chapter with only a few examples and demos, however
+it takes a look inside some of the pi3d source code with two-fold aims: one is
+to see how the information needed by the shader is held by pi3d objects and the
+way it is sent when the draw() method gets called, the other aim to get used
+to opening up the source code of the module to figure out any problems using
+it.</p>
+<p>In the the pi3d documentation ReadMe there is an ultra minimal example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pi3d</span>
+<span class="n">DISPLAY</span> <span class="o">=</span> <span class="n">pi3d</span><span class="o">.</span><span class="n">Display</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+<span class="n">ball</span> <span class="o">=</span> <span class="n">pi3d</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">z</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+<span class="k">while</span> <span class="n">DISPLAY</span><span class="o">.</span><span class="n">loop_running</span><span class="p">():</span>
+  <span class="n">ball</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Which seems to be at odds with the requirement that there has to be a Camera,
+Light and Shader object in existence to draw any of the standard
+Shapes. The answer is that all these classes inherit from the DefaultInstance
+class as explained in the Shape.draw() description below.</p>
+<p>If you open pi3d/shape/Sphere.py in an editor you will see that it is relatively
+brief. Almost all of the functionality comes from its parent class Shape
+and this is the case for everything in the pi3d/shape directory:</p>
+<div class="highlight-python"><div class="highlight"><pre>Building   ElevationMap     LodSprite    Sphere       Tube
+Canvas     EnvironmentCube  MergeShape   Sprite
+Cone       Extrude          Model        TCone
+Cuboid     Helix            MultiSprite  Tetrahedron
+Cylinder   Lathe            Plane        Torus
+Disk       Lines            Points       Triangle
+</pre></div>
+</div>
+<div class="section" id="shape">
+<h2>Shape<a class="headerlink" href="#shape" title="Permalink to this headline">¶</a></h2>
+<p>Have a look at the source code for Shape. <em>Don&#8217;t be dismayed by how long it
+is - the majority of it is just convenience methods for</em>:</p>
+<ol class="arabic simple">
+<li>setting the uniform variables array (<tt class="docutils literal"><span class="pre">self.unif</span></tt>, remember uniform variables
+from chapter two - one of the four categories of data passed to the GPU
+shaders),</li>
+<li>setting the uniform variables held in the Buffer list (<tt class="docutils literal"><span class="pre">self.buf[0].unib</span></tt>,
+I will explain the relationship between Shapes and Buffers below),</li>
+<li>updating the matrices (see <tt class="docutils literal"><span class="pre">rotateIncY()</span></tt> on line 665, you&#8217;ve already used
+that method in 3D_matrix02.py and the process of writing sines and cosines
+into an array should be reassuringly familiar!)</li>
+</ol>
+<p>However the draw() method does several important things. Firstly, on lines
+163, 164 and 37 (which is in __init__() actually!) you will see the method
+instance() being called for Camera, Shader and Light. These three classes
+inherit from the DefaultInstance class and the method will either return
+the first instance of that class that has been created, or if none, it will
+create one.</p>
+<p>Most of the time the default Light is fine - it&#8217;s a neutral directional
+light. The default Camera is also what you want for normal 3D viewing, but
+there are occasions when you need to overlay 2D objects in front of a 3D
+scene and this can be done by using two Camera instances and assigning
+each to different objects. The default Shader is much more of a fall-back
+position. This is because it has to be a &#8220;material&#8221; based Shader rather
+than one that relies on Textures being loaded. When we look inside the
+Buffer class you will see why a default material can be set easily but
+default textures would be messy.</p>
+<p>The second thing to look at in the Shape.draw() method is the section from line
+167 to 205. This is basically the matrix multiplication we did by hand in
+2D_matrix01.py and 3D_matrix01.py Because this has to be done for every
+object in the scene in every frame it is time critical and this has been
+found to be the fastest combination 1) use numpy dot() <a class="footnote-reference" href="#id5" id="id1">[1]</a> 2) set flags
+everywhere and only do the dot() when something has moved or rotated.
+Line 210 is where two 4x4 matrices are passed to the shader and line 214
+passes twenty 3x1 vectors, the Shape.unif array.</p>
+<p>Before we follow line 218 to the Buffer.draw() we&#8217;ll just have a quick
+scan through the Shape.unif array which occupies lines 38 to 49 (with a
+comprehensive description of what it all is underneath it). The first twelve
+values are taken from arguments to the __init__() method and only offset
+should need any explanation. This allows objects to be rotated about different
+points than their self origin. Fog is a shade and alpha value that is &#8220;merged&#8221;
+by the Shader starting at a third of fog distance and increasing to 100% fog
+values at the full fog distance. Shape alpha allows objects to become partially
+or completely transparent. The Light values get stored here, in each Shape,
+even though there is a separate Light object. This means that it&#8217;s possible
+to illuminate objects within a scene with different lights. Although there
+looks to be space for two lights for each Shape all the Shaders (so far)
+only calculate illumination on the basis of the first one. Lights will be
+discussed in a later chapter but they essentially have a flag to mark them
+as &#8220;point&#8221; or &#8220;directional&#8221; which determines how the x,y,z vector is
+interpetted, an RGB color value for the light and RGB for ambient. The final
+eighteen values are available for special shader effects.</p>
+<p>N.B. If you are eagle-eyed and have been paying attention you will have
+noticed a &#8220;proteted&#8221; function <a class="footnote-reference" href="#id6" id="id2">[2]</a> in Shape <tt class="docutils literal"><span class="pre">_lathe()</span></tt> that is used by
+the majority of the pi3d/shape classes. This will be investigated in a
+later chapter.</p>
+</div>
+<div class="section" id="buffer">
+<h2>Buffer<a class="headerlink" href="#buffer" title="Permalink to this headline">¶</a></h2>
+<p>This class gets its name because it&#8217;s the object used to hold the attribute
+array and element array which are both created by calling the OpenGL function
+<tt class="docutils literal"><span class="pre">glBufferData()</span></tt>. The reason why it&#8217;s a separate class (rather than just
+being part of Shape) is that one Shape can be constructed from several parts,
+each with its own Texture or material properties. This is particularly true
+of Model object i.e. Shapes that have been designed elsewhere and saved as
+<tt class="docutils literal"><span class="pre">obj</span></tt> or <tt class="docutils literal"><span class="pre">egg</span></tt> files.</p>
+<p>The Buffer class is also complicated-looking and has more opengles function
+calls than Shape. There are a few things worth noting about this class</p>
+<ol class="arabic">
+<li><p class="first">The &#8220;constructor&#8221; __init__() takes lists of vertices, normals, texture
+coordinates and element indices, as we would expect. However if the normals
+argument passed is <tt class="docutils literal"><span class="pre">None</span></tt> it will calculate a set of vectors at right
+angles to both the triangle edges that meet at each vertex <a class="footnote-reference" href="#id7" id="id3">[3]</a>. It can
+also be made to construct smaller buffers by being passed empty lists for
+the texture coordinate and or the normals when these are not needed i.e.
+for Lines, Points or a non-texture-mapped Shape.</p>
+</li>
+<li><p class="first">The draw() method (which is called by Shape.draw() as we saw above) passes
+the attribute and element arrays to the Shader on lines 263 to 270 and
+on line 296 four 3x1 vectors, from Buffer.unib (which I will explain in
+more detail below). draw() also passes the Texture samplers from line 275.
+NB when I say &#8220;pass&#8221; the data it is only the pointer to the data that needs
+to be transferred, the actual arrays were set up in the GPU memory space
+when the Buffer was created and just need to be switched on (which is
+very quick). However...</p>
+</li>
+<li><p class="first">There is a re_init() method that can be used to alter the values of the
+vertex, normal or texture coordinate vectors from frame to frame. This
+requires more processing than simply enabling data that is already there
+but it is much faster than scrapping the previous Buffer object and
+creating a complete new one.</p>
+<p>Moving vertices, normals or texture coordinates isn&#8217;t something that needs
+to be done very often but it might make an entertaining exercise in this
+otherwise fairly wordy chapter. Copy the example program from the start of this
+chapter into an editor and make sure it runs OK (there&#8217;s no way of stopping
+it as it stands apart from Ctrl+C to break or closing the window). Then
+add some distortion, straight after <tt class="docutils literal"><span class="pre">ball.draw()</span></tt> at the same indent
+along the lines of:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">bufr</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>        <span class="c"># there&#39;s only one Buffer in the list buf</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">bufr</span><span class="o">.</span><span class="n">array_buffer</span>     <span class="c"># this is the array buffer!</span>
+<span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>                <span class="c"># the length of the array buffer (195 actually)</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>        <span class="c"># python is clever enough not to do this every loop!</span>
+<span class="n">b</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="c"># numpy slicing, see below</span>
+<span class="n">bufr</span><span class="o">.</span><span class="n">re_init</span><span class="p">(</span><span class="n">pts</span><span class="o">=</span><span class="n">b</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span> <span class="c"># finally re make the buffer</span>
+</pre></div>
+</div>
+<p>If you are not used to numpy you will probably be bamboozled by the
+fifth line. This is how numpy works: the looping is done &#8220;automatically&#8221;
+as a result of the slicing or the shape of the arrays involved. Using
+python list comprehension this would achieve the same result:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">new_buf</span> <span class="o">=</span> <span class="p">[[</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">l</span><span class="p">)]</span>
+<span class="n">bufr</span><span class="o">.</span><span class="n">re_init</span><span class="p">(</span><span class="n">pts</span><span class="o">=</span><span class="n">new_buf</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And good old straightforward, easy to understand looping:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">new_buf</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+  <span class="n">new_buf</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+  <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">new_buf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">))</span>
+<span class="n">bufr</span><span class="o">.</span><span class="n">re_init</span><span class="p">(</span><span class="n">pts</span><span class="o">=</span><span class="n">new_buf</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The reason for this apparent regression to a less obvious code
+format is <strong>speed</strong>. If you test the three alternatives with <tt class="docutils literal"><span class="pre">timeit</span></tt>
+you will find that the traditional looping takes 2.2ms, the list comprehension
+takes 1.95ms and numpy takes 0.08ms, a massive margin that only increases
+as the array gets bigger.</p>
+</li>
+</ol>
+<p>The Buffer.unib array of uniform variable passed to the Shader needs a
+bit more explanation than the equivalent array in Shape. <strong>ntile</strong> is used
+to control how many normal map Texture maps (also called bump maps) are to
+be tiled for each unit of texture coordinates. Normal maps will be explained
+fully in the chapter on Light and Texture but they are a way of adding structural
+detail to a surface without having to make it from millions of vertices -
+have a search on google if you&#8217;re curious. <strong>shiny</strong> controls how much reflection
+is produced by the mat_reflect or uv_reflect Shaders. <strong>blend</strong> is a variable
+set during the draw() process depending on whether the Texture values taken
+from the image file are to be blended or not. If the alpha value of the pixel
+is below this value then the pixel will be &#8220;discarded&#8221;. This will be covered
+in detail later but it allow sharp edges to be produced around shapes
+constructed from png images with large areas of transparency. <strong>material</strong>
+is the RGB values for this Buffer when drawn using a material Shader. <strong>umult</strong>
+and <strong>vmult</strong> control the tiling of the Texture map (the color one as opposed
+to normal or reflection). <strong>point_size</strong> is the size in pixels of vertices
+drawn by the Points object. <strong>u_off</strong> and <strong>v_off</strong> are the tiling offsets
+that go with vmult and umult. <strong>line_width</strong> is the size in pixels drawn
+by the Lines object.</p>
+</div>
+<div class="section" id="display">
+<h2>Display<a class="headerlink" href="#display" title="Permalink to this headline">¶</a></h2>
+<p>Although there could have been a case for making Display create a default instance
+of itself in the same way that Camera, Light and Shader do, there are
+various reasons why this would be messy, the most obvious of which relate
+to how the main loop would be structured.</p>
+<p>In pi3d we have chosen to make the loop an explicit python <tt class="docutils literal"><span class="pre">while</span> <span class="pre">..:</span></tt>
+with a call to a central <tt class="docutils literal"><span class="pre">loop_running()</span></tt> used to do various once-per-frame
+tasks, tidy up GPU buffers and close things down when the program finishes. Many
+other user interface frameworks have adopted a more event oriented &#8220;hidden&#8221; loop
+style but our reasoning was that it only makes sense to use the GPU and OpenGL
+where frames per second are of central importance, so in pi3d the main loop is made
+very visible.</p>
+<p>Open pi3d/Display.py in an editor and look though the docstrings, all of
+which should be self-explanatory. There are some more obscure but occasionally
+useful arguments to the create() function <a class="footnote-reference" href="#id8" id="id4">[4]</a>.</p>
+<table class="docutils footnote" frame="void" id="id5" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>numpy <a class="reference external" href="http://www.numpy.org/">http://www.numpy.org/</a> is an important addition to python that can
+dramatically improve performance. Although it&#8217;s quite hard to get the
+hang of, it&#8217;s definitely worth persisting.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>python doesn&#8217;t have formal name-space control seen in other languages
+where attributes and methods are declared public, private, protected
+etc. However the convention is to use underscores as the first letter to
+indicate that a method is not intended for &#8220;external&#8221; use. Similarly
+pi3d adopts standard upper case names to denote global &#8220;static&#8221; variables.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>using cross product <a class="reference external" href="http://en.wikipedia.org/wiki/Cross_product">http://en.wikipedia.org/wiki/Cross_product</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>something not explained very clearly elsewhere is the <tt class="docutils literal"><span class="pre">samples</span></tt>
+argument to create() this can be set to 4 and will give much better
+anti-aliasing i.e. prevent the stepped edges of diagonals of contrasting
+color. However using this will prevent pi3d from creating a Display on
+computers running windows. This might be because of the functionality of
+DirectX and the OpenGL ES emulators for windows (even Linux virtual
+machines under windows).</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Shapes, Buffers and Display</a><ul>
+<li><a class="reference internal" href="#shape">Shape</a></li>
+<li><a class="reference internal" href="#buffer">Buffer</a></li>
+<li><a class="reference internal" href="#display">Display</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Vectors.html"
+                        title="previous chapter">Vectors and Matrices</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Textures.html"
+                        title="next chapter">Textures, Lights and Shaders</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/Shapes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Textures.html" title="Textures, Lights and Shaders"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Vectors.html" title="Vectors and Matrices"
+             >previous</a> |</li>
+        <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Paddy Gaunt.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
