@@ -50,7 +50,7 @@ differences between 3D and 2D projections:
 
 In Minimal_2d.py try changing rotateIncZ to rotateIncX (or Y). Do you see
 the effect of moving some of the object in front of the ``near plane``?
-To keep in in view you need to move it further away. In the following line
+To keep it in view you need to move it further away. In the following line
 ``sprite.position()`` increase the z value from 5.0 to 50.0.
 
 Open the demo file Blur.py. This has various features I haven't explained

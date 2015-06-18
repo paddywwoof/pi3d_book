@@ -31,8 +31,8 @@ while display.loop_running():
   cube.draw()
   if f % 3 == 0: # only do this every three frames
     i = int(f / 3) % 3 # cycle between RGB values
-    im[:,:,:i] += np.random.randint(0,4,(128, 128, 1))
-    """
+    #im[:,:,:i] += np.random.randint(0,4,(128, 128, 1))
+    #"""
     # alternatively the following does a Conways game of life on the pixels.
     # comment out the above randint() line and the triple quotes around
     # this docstring
@@ -44,7 +44,7 @@ while display.loop_running():
     survive = ((N==30) | (N==45)) & (im[1:-1,1:-1,i]==15)
     im[:,:,i] = 0
     im[1:-1,1:-1,i][birth | survive] = 255
-    """
+    #"""
 
     tex.update_ndarray(im)
     """ NB the Tecture has to have the OpenGL buffer updated in order for

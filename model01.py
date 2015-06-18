@@ -11,10 +11,18 @@ CAMERA = pi3d.Camera(is_3d=True)
 shader = pi3d.Shader("uv_reflect")
 
 model = pi3d.Model(camera=CAMERA, file_string="model01.obj", y=-2.0, z=10.0)
-model.set_shader(shader)
 bump = pi3d.Texture("rocktile2.jpg")
 refl = pi3d.Texture("glassbuilding.jpg")
-model.set_normal_shine(bump, 1.0, refl, 0.1)
+model.set_shader(shader)
+#model.set_normal_shine(bump, 1.0, refl, 0.1)
+""" Note that the Texture for the "diffuse" coloring has been loaded by
+the Model class. We still need to load a shader and textures for the normal
+map and reflection - if these are required. The above method is the alternative
+to the more standard set_draw_details() for Model objects. Try commenting
+out the above lines (separately and together. NB using a shader that expect
+three textures but only loading one will have unpredictable consequences
+so it's something you should avoid in your code!)
+"""
 u_off, v_off = 0.0, 0.0
 keys = pi3d.Keyboard()
 while display.loop_running():

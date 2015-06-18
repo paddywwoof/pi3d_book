@@ -124,9 +124,9 @@ calls than Shape. There are a few things worth noting about this class
     for Lines, Points or a non-texture-mapped Shape.
 
 #.  The draw() method (which is called by Shape.draw() as we saw above) passes
-    the attribute and element arrays to the Shader on lines 283 to 292 and
-    on line 318 four 3x1 vectors, from Buffer.unib (which I will explain in
-    more detail below). draw() also passes the Texture samplers from line 297.
+    the attribute and element arrays to the Shader on lines 263 to 270 and
+    on line 296 four 3x1 vectors, from Buffer.unib (which I will explain in
+    more detail below). draw() also passes the Texture samplers from line 275.
     NB when I say "pass" the data it is only the pointer to the data that needs
     to be transferred, the actual arrays were set up in the GPU memory space
     when the Buffer was created and just need to be switched on (which is
@@ -177,7 +177,7 @@ calls than Shape. There are a few things worth noting about this class
     as the array gets bigger.
 
 The Buffer.unib array of uniform variable passed to the Shader needs a
-bit more explanation that the equivalent array in Shape. **ntile** is used
+bit more explanation than the equivalent array in Shape. **ntile** is used
 to control how many normal map Texture maps (also called bump maps) are to
 be tiled for each unit of texture coordinates. Normal maps will be explained
 fully in the chapter on Light and Texture but they are a way of adding structural
