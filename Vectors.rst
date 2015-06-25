@@ -75,7 +75,7 @@ are:
      v = T1(v) # apply translation matrix function to v
      v = R1(v) # then rotate it
      v = S1(v) # then scale it (etc etc)
-     v = P1(v) # then convert it to 2D screen coordinates using perspective!
+     v = P1(v) # then to 2D screen coordinates using perspective!
      # which you could write as
      v = P1(S1(R1(T1(v))))
      # with matrix maths you can do
@@ -115,7 +115,7 @@ matrices become 4x4. If you are unclear why this is necessary it may be a
 good idea to go back and look at the first illustration.
 
 .. image:: perspective.png
-   :align: right
+   :align: left
 
 Because the computer screen is essentially flat there has to be a method of
 converting the (x, y, z) vectors of the model into (x, y) vectors of the

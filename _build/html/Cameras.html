@@ -76,7 +76,10 @@ differences between 3D and 2D projections:</p>
 x or y at a z distance of 1.1 just about fills the screen (in the vertical
 direction; the <tt class="docutils literal"><span class="pre">field</span> <span class="pre">of</span> <span class="pre">view</span></tt> is defined vertically). Try adding variations
 of this line after the DISPLAY creation in Minimal.py:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">CAMERA</span> <span class="o">=</span> <span class="n">pi3d</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="n">lens</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="n">DISPLAY</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">DISPLAY</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">CAMERA</span> <span class="o">=</span> <span class="n">pi3d</span><span class="o">.</span><span class="n">Camera</span><span class="p">(</span><span class="n">lens</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span>    <span class="c"># near plane</span>
+                           <span class="mf">1000.0</span><span class="p">,</span> <span class="c"># far plane</span>
+                           <span class="mi">25</span><span class="p">,</span>     <span class="c"># field of view</span>
+                           <span class="n">DISPLAY</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">DISPLAY</span><span class="o">.</span><span class="n">height</span><span class="p">)))</span>
 </pre></div>
 </div>
 <p>In 2D projections 1.0 unit of x or y equates to 1 pixel</p>
