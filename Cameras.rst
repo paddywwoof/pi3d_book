@@ -32,7 +32,10 @@ differences between 3D and 2D projections:
   direction; the ``field of view`` is defined vertically). Try adding variations
   of this line after the DISPLAY creation in Minimal.py::
 
-    CAMERA = pi3d.Camera(lens=(1.0, 1000.0, 25, DISPLAY.width / float(DISPLAY.height)))
+    CAMERA = pi3d.Camera(lens=(1.0,    # near plane
+                               1000.0, # far plane
+                               25,     # field of view
+                               DISPLAY.width / float(DISPLAY.height)))
 
   In 2D projections 1.0 unit of x or y equates to 1 pixel
 

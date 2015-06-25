@@ -61,9 +61,9 @@ the end I opted for this:
    and boiler-plate code to modify.
 
 #. The source code of pi3d. A key reason to use python is that it's easy
-   to read and understand how it works. If something in pi3d doesn't work as you
+   to read and understand how it works. If something in pi3d doesn't do what you
    expect you are encouraged to open the source code with an editor and
-   figure out exactly how it works.
+   figure out what the problem is.
 
 #. The on-line documentation. Things like installation instructions for
    different platforms, arguments and return values of class methods, and
@@ -74,9 +74,9 @@ docstrings and comments. **The code and the docstrings are NOT duplicated
 in the narrative** so it is essential that the book is read in conjunction
 with the programs, and that the programs are *read* as well as run.
 
-This is an outline mind map from Coggle.it
+.. figure:: pi3d_book.png
 
-.. image:: pi3d_book.png
+   Outline mind map from Coggle.it
 
 Installation
 ------------

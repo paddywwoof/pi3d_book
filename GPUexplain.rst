@@ -134,7 +134,7 @@ is clock-wise. Normally the backs of faces are not rendered by the GPU::
 .. image:: simple_quad.png
    :align: left
 
-Here's a sketch so you can see how the system works.
+   Here's a sketch so you can see how the system works.
 
 The GPU uses coordinate directions x increases from left to right, y
 increases from bottom to top, z increases going into the screen.

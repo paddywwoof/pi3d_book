@@ -9,15 +9,15 @@ saved in nearly as large a variety of formats. In pi3d, at the moment,
 there are just two file types that can be parsed: wavefront **obj** and
 Panda3D **egg**. Of these two the obj is simpler and faster to load.
 
+.. figure:: blender01.jpg
+
+   Blender screen-capture
+
 If you have **blender** [#]_ installed on your PC then you can open the
 file **model01.blend** [#]_ or you can view it by running the pi3d demo
-**model01.py** [#]_ It's basically a box with horns! In the diagram below
+**model01.py** [#]_ It's basically a box with horns! In the diagram above
 the left view is normal perspective (as with pi3d) and the right view is
 the uv "unwrapping" for texture mapping to the vertices.
-
-Blender screen
-
-.. image:: blender01.jpg
 
 Open the **blender01.obj** and **blender01.mtl** files and have a look at
 the structure of the information, it should be reasonably familiar by now

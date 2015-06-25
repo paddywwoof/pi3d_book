@@ -113,7 +113,11 @@ a combined effect. So in pseudo-code:</p>
 <span class="n">v</span> <span class="o">=</span> <span class="n">T1</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="c"># apply translation matrix function to v</span>
 <span class="n">v</span> <span class="o">=</span> <span class="n">R1</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="c"># then rotate it</span>
 <span class="n">v</span> <span class="o">=</span> <span class="n">S1</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="c"># then scale it (etc etc)</span>
+<<<<<<< HEAD
 <span class="n">v</span> <span class="o">=</span> <span class="n">P1</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="c"># then convert it to 2D screen coordinates using perspective!</span>
+=======
+<span class="n">v</span> <span class="o">=</span> <span class="n">P1</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="c"># then to 2D screen coordinates using perspective!</span>
+>>>>>>> gh-pages
 <span class="c"># which you could write as</span>
 <span class="n">v</span> <span class="o">=</span> <span class="n">P1</span><span class="p">(</span><span class="n">S1</span><span class="p">(</span><span class="n">R1</span><span class="p">(</span><span class="n">T1</span><span class="p">(</span><span class="n">v</span><span class="p">))))</span>
 <span class="c"># with matrix maths you can do</span>
@@ -150,7 +154,11 @@ out what&#8217;s happening before you move on.</p>
 <p>In <strong>3D_matrix01.py</strong> <a class="footnote-reference" href="#id8" id="id3">[3]</a> there is an expansion into three dimensions so the transformation
 matrices become 4x4. If you are unclear why this is necessary it may be a
 good idea to go back and look at the first illustration.</p>
+<<<<<<< HEAD
 <img alt="_images/perspective.png" class="align-right" src="_images/perspective.png" />
+=======
+<img alt="_images/perspective.png" class="align-left" src="_images/perspective.png" />
+>>>>>>> gh-pages
 <p>Because the computer screen is essentially flat there has to be a method of
 converting the (x, y, z) vectors of the model into (x, y) vectors of the
 screen. The simplest way would be to just ignore the z values, and this is

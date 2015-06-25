@@ -79,9 +79,12 @@ fast:
 
 ..  code-block:: glsl
 
-    normal = vec3(1.0, 0.0, 0.0);   // surface facing in the same direction as x axis
-    light = vec3(-2.5, -2.5, -2.5); // light down, from right, out of the screen
-    float a = dot(normal, light);   // results in -2.5 # i.e. (1.0 * -2.5) + (0.0 * -2.5) + (0.0 * 2.5)
+    // surface facing in the same direction as x axis
+    normal = vec3(1.0, 0.0, 0.0);
+    // light down, from right, out of the screen
+    light = vec3(-2.5, -2.5, -2.5);
+    // results in -2.5 # i.e. (1.0 * -2.5) + (0.0 * -2.5) + (0.0 * 2.5)
+    float a = dot(normal, light);
 
 So now have a look at **shader01.py** [#]_ and play around with it. Any typos or
 errors in the two shader scripts will be hard to track down so proceed with
@@ -106,32 +109,35 @@ is the code again. Vertex Shader:
     /* eye position => unif[6][0:3] # defined in Shape
      light position => unif[8][0:3] */
 
-    varying vec2 texcoordout; // these have values set in the vertex shader which
-    varying vec3 lightVector; // are picked up in the fragment shader. However    
-    varying float lightFactor;// their values "vary" by interpolating between vertices
-    varying vec3 normout;
+    varying vec2 texcoordout; // these values set in vertex shader which
+    varying vec3 lightVector; // are picked up in the fragment shader.    
+    varying float lightFactor;// However their values "vary" by
+    varying vec3 normout;     // interpolating between vertices
 
     void main(void) {
-      if (unif[7][0] == 1.0) { // this is a point light and unif[8] is location
+      if (unif[7][0] == 1.0) { // a point light; unif[8] is location
         // apply the model transformation matrix
         vec4 vPosn = modelviewmatrix[0] * vec4(vertex, 1.0);
         // to get vector from vertex to the light position
         lightVector =  unif[8] - vec3(vPosn);
         lightFactor = pow(length(lightVector), -2.0); // inverse square law
-        lightVector = normalize(lightVector);         // now convert to unit vector for direction
-      } else {                                        // this is directional light
-        lightVector = normalize(unif[8]) * -1.0;      // directional light
-        lightFactor = 1.0;                            // constant brightness
+        lightVector = normalize(lightVector); // to unit vector for direction
+      } else {
+        lightVector = normalize(unif[8]) * -1.0;    // directional light
+        lightFactor = 1.0;                          // constant brightness
       }
       lightVector.z *= -1.0;                          // fix r-hand axis
-      normout = normalize(vec3(modelviewmatrix[0] * vec4(normal, 1.0))); // matrix multiplication   
-      texcoordout = texcoord * unib[2].xy + unib[3].xy; // offset and mult for texture coords
-      gl_Position = modelviewmatrix[1] * vec4(vertex,1.0); // matrix multiplication
-      /* gl_Position is a pre-defined variable that has to be set in the vertex
-      shader to define the vertex location in projection space. i.e. x and y
-      are now screen coordinates and z is depth to determine which pixels are
-      rendered in front or discarded. This matrix multiplication used the full
-      projection matrix whereas normout used only the model transformation matrix*/
+      // matrix multiplication 
+      normout = normalize(vec3(modelviewmatrix[0] * vec4(normal, 1.0)));
+      // offset and mult for texture coords  
+      texcoordout = texcoord * unib[2].xy + unib[3].xy;
+      gl_Position = modelviewmatrix[1] * vec4(vertex,1.0);
+      /* gl_Position is a pre-defined variable that has to be set in the
+      vertex shader to define the vertex location in projection space.
+      i.e. x and y are now screen coordinates and z is depth to determine
+      which pixels are rendered in front or discarded. This matrix
+      multiplication used the full projection matrix whereas normout
+      used only the model transformation matrix*/
     }
 
 and Fragment shader:
@@ -155,23 +161,25 @@ and Fragment shader:
     varying float lightFactor;
 
     void main(void) {
-      gl_FragColor = texture2D(tex0, texcoordout); /* look up the basic RGBA value
-      from the loaded Texture. This function also takes into account the distance
-      of the pixel and will use lower resolution versions or mipmaps that were
-      generated on creation (unless mipmaps=False was set)
-      gl_FragColor is another of the pre-defined variables, representing the
-      RGBA contribution to this pixel */
+      gl_FragColor = texture2D(tex0, texcoordout); /* look up the basic
+      RGBA value from the loaded Texture. This function also takes into
+      account the distance of the pixel and will use lower resolution
+      versions or mipmaps that were generated on creation
+      (unless mipmaps=False was set)
+      gl_FragColor is another of the pre-defined variables, representing
+      the RGBA contribution to this pixel */
       // try making it a "material" color by swapping with the line above
       //gl_FragColor = vec4(0.7, 0.1, 0.4, 0.9);
       // to allow rendering behind the transparent parts of this object:
       if (gl_FragColor.a < unib[0][2]) discard;
       // adjustment of colour according to combined normal:
-      float intensity = clamp(dot(lightVector, normout) * lightFactor, 0.0, 1.0);
+      float intensity = clamp(dot(lightVector, normout) *
+                                        lightFactor, 0.0, 1.0);
       // try removing the 0 to 1 constraint (with point light):
       //float intensity = dot(lightVector, normout) * lightFactor;
       // directional lightcol * intensity + ambient lightcol:
       gl_FragColor.rgb *= (unif[9] * intensity + unif[10]); 
-      gl_FragColor.a *= unif[5][2]; // finally modify the alpha with the Shape alpha
+      gl_FragColor.a *= unif[5][2]; // modify alpha with the Shape alpha
     }
 There is a khronos GLSL quick reference card [#]_ if you want to see what
 all the functions do.
@@ -205,7 +213,7 @@ A Final look at Textures
 ------------------------
 
 .. image:: conway_texture.png
-   :align: right
+   :align: left
 
 As a final bit of fun have a look at the **textures03.py** [#]_ demo. This
 illustrates how Texture objects can be constructed from numpy arrays (or

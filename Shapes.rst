@@ -146,11 +146,11 @@ calls than Shape. There are a few things worth noting about this class
     add some distortion, straight after ``ball.draw()`` at the same indent
     along the lines of::
 
-      bufr = ball.buf[0]        # there's only one Buffer in the list buf
+      bufr = ball.buf[0]        # only one Buffer in the list buf
       b = bufr.array_buffer     # this is the array buffer!
-      l = len(b)                # the length of the array buffer (195 actually)
-      import numpy as np        # python is clever enough not to do this every loop!
-      b[:,0:3] *= np.random.uniform(0.99, 1.01, (l, 3)) # numpy slicing, see below
+      l = len(b)                # length of the array (195 actually)
+      import numpy as np        # python will do this just once!
+      b[:,0:3] *= np.random.uniform(0.99, 1.01, (l, 3)) # see below..
       bufr.re_init(pts=b[:,0:3]) # finally re make the buffer
 
     If you are not used to numpy you will probably be bamboozled by the
@@ -158,7 +158,8 @@ calls than Shape. There are a few things worth noting about this class
     as a result of the slicing or the shape of the arrays involved. Using
     python list comprehension this would achieve the same result::
       
-      new_buf = [[b[i,j] * random.uniform(0.99, 1.01) for j in range(3)] for i in range(l)]
+      new_buf = [[b[i,j] * random.uniform(0.99, 1.01)
+                             for j in range(3)] for i in range(l)]
       bufr.re_init(pts=new_buf)
 
     And good old straightforward, easy to understand looping::

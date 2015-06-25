@@ -110,9 +110,18 @@ easy to see how this applies to light illuminating a surface but it&#8217;s much
 easier to see that the dot function doesn&#8217;t need to do any (slow) trigonometry,
 it is sufficient to multiply the x,y,z components together and this is very
 fast:</p>
+<<<<<<< HEAD
 <div class="highlight-glsl"><div class="highlight"><pre><span class="n">normal</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>   <span class="c1">// surface facing in the same direction as x axis</span>
 <span class="n">light</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">);</span> <span class="c1">// light down, from right, out of the screen</span>
 <span class="k">float</span> <span class="n">a</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="n">light</span><span class="p">);</span>   <span class="c1">// results in -2.5 # i.e. (1.0 * -2.5) + (0.0 * -2.5) + (0.0 * 2.5)</span>
+=======
+<div class="highlight-glsl"><div class="highlight"><pre><span class="c1">// surface facing in the same direction as x axis</span>
+<span class="n">normal</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+<span class="c1">// light down, from right, out of the screen</span>
+<span class="n">light</span> <span class="o">=</span> <span class="k">vec3</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.5</span><span class="p">);</span>
+<span class="c1">// results in -2.5 # i.e. (1.0 * -2.5) + (0.0 * -2.5) + (0.0 * 2.5)</span>
+<span class="k">float</span> <span class="n">a</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="n">light</span><span class="p">);</span>
+>>>>>>> gh-pages
 </pre></div>
 </div>
 <p>So now have a look at <strong>shader01.py</strong> <a class="footnote-reference" href="#id10" id="id4">[4]</a> and play around with it. Any typos or
@@ -160,7 +169,14 @@ is the code again. Vertex Shader:</p>
 37
 38
 39
+<<<<<<< HEAD
 40</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">precision</span> <span class="k">mediump</span> <span class="k">float</span><span class="p">;</span>
+=======
+40
+41
+42
+43</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">precision</span> <span class="k">mediump</span> <span class="k">float</span><span class="p">;</span>
+>>>>>>> gh-pages
 <span class="k">attribute</span> <span class="k">vec3</span> <span class="n">vertex</span><span class="p">;</span>           <span class="c1">// these are the array buffer objects</span>
 <span class="k">attribute</span> <span class="k">vec3</span> <span class="n">normal</span><span class="p">;</span>           <span class="c1">//  defined in Buffer</span>
 <span class="k">attribute</span> <span class="k">vec2</span> <span class="n">texcoord</span><span class="p">;</span>
@@ -173,6 +189,7 @@ is the code again. Vertex Shader:</p>
 <span class="cm">/* eye position =&gt; unif[6][0:3] # defined in Shape</span>
 <span class="cm"> light position =&gt; unif[8][0:3] */</span>
 
+<<<<<<< HEAD
 <span class="k">varying</span> <span class="k">vec2</span> <span class="n">texcoordout</span><span class="p">;</span> <span class="c1">// these have values set in the vertex shader which</span>
 <span class="k">varying</span> <span class="k">vec3</span> <span class="n">lightVector</span><span class="p">;</span> <span class="c1">// are picked up in the fragment shader. However</span>
 <span class="k">varying</span> <span class="k">float</span> <span class="n">lightFactor</span><span class="p">;</span><span class="c1">// their values &quot;vary&quot; by interpolating between vertices</span>
@@ -180,11 +197,21 @@ is the code again. Vertex Shader:</p>
 
 <span class="k">void</span> <span class="n">main</span><span class="p">(</span><span class="k">void</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">unif</span><span class="p">[</span><span class="mi">7</span><span class="p">][</span><span class="mo">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// this is a point light and unif[8] is location</span>
+=======
+<span class="k">varying</span> <span class="k">vec2</span> <span class="n">texcoordout</span><span class="p">;</span> <span class="c1">// these values set in vertex shader which</span>
+<span class="k">varying</span> <span class="k">vec3</span> <span class="n">lightVector</span><span class="p">;</span> <span class="c1">// are picked up in the fragment shader.</span>
+<span class="k">varying</span> <span class="k">float</span> <span class="n">lightFactor</span><span class="p">;</span><span class="c1">// However their values &quot;vary&quot; by</span>
+<span class="k">varying</span> <span class="k">vec3</span> <span class="n">normout</span><span class="p">;</span>     <span class="c1">// interpolating between vertices</span>
+
+<span class="k">void</span> <span class="n">main</span><span class="p">(</span><span class="k">void</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">unif</span><span class="p">[</span><span class="mi">7</span><span class="p">][</span><span class="mo">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// a point light; unif[8] is location</span>
+>>>>>>> gh-pages
     <span class="c1">// apply the model transformation matrix</span>
     <span class="k">vec4</span> <span class="n">vPosn</span> <span class="o">=</span> <span class="n">modelviewmatrix</span><span class="p">[</span><span class="mo">0</span><span class="p">]</span> <span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
     <span class="c1">// to get vector from vertex to the light position</span>
     <span class="n">lightVector</span> <span class="o">=</span>  <span class="n">unif</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span> <span class="o">-</span> <span class="k">vec3</span><span class="p">(</span><span class="n">vPosn</span><span class="p">);</span>
     <span class="n">lightFactor</span> <span class="o">=</span> <span class="n">pow</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">lightVector</span><span class="p">),</span> <span class="o">-</span><span class="mf">2.0</span><span class="p">);</span> <span class="c1">// inverse square law</span>
+<<<<<<< HEAD
     <span class="n">lightVector</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">lightVector</span><span class="p">);</span>         <span class="c1">// now convert to unit vector for direction</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>                                        <span class="c1">// this is directional light</span>
     <span class="n">lightVector</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">unif</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">;</span>      <span class="c1">// directional light</span>
@@ -199,6 +226,25 @@ is the code again. Vertex Shader:</p>
 <span class="cm">  are now screen coordinates and z is depth to determine which pixels are</span>
 <span class="cm">  rendered in front or discarded. This matrix multiplication used the full</span>
 <span class="cm">  projection matrix whereas normout used only the model transformation matrix*/</span>
+=======
+    <span class="n">lightVector</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">lightVector</span><span class="p">);</span> <span class="c1">// to unit vector for direction</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">lightVector</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">unif</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">;</span>    <span class="c1">// directional light</span>
+    <span class="n">lightFactor</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>                          <span class="c1">// constant brightness</span>
+  <span class="p">}</span>
+  <span class="n">lightVector</span><span class="p">.</span><span class="n">z</span> <span class="o">*=</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">;</span>                          <span class="c1">// fix r-hand axis</span>
+  <span class="c1">// matrix multiplication</span>
+  <span class="n">normout</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="k">vec3</span><span class="p">(</span><span class="n">modelviewmatrix</span><span class="p">[</span><span class="mo">0</span><span class="p">]</span> <span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">normal</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)));</span>
+  <span class="c1">// offset and mult for texture coords</span>
+  <span class="n">texcoordout</span> <span class="o">=</span> <span class="n">texcoord</span> <span class="o">*</span> <span class="n">unib</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">xy</span> <span class="o">+</span> <span class="n">unib</span><span class="p">[</span><span class="mi">3</span><span class="p">].</span><span class="n">xy</span><span class="p">;</span>
+  <span class="n">gl_Position</span> <span class="o">=</span> <span class="n">modelviewmatrix</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="k">vec4</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span><span class="mf">1.0</span><span class="p">);</span>
+  <span class="cm">/* gl_Position is a pre-defined variable that has to be set in the</span>
+<span class="cm">  vertex shader to define the vertex location in projection space.</span>
+<span class="cm">  i.e. x and y are now screen coordinates and z is depth to determine</span>
+<span class="cm">  which pixels are rendered in front or discarded. This matrix</span>
+<span class="cm">  multiplication used the full projection matrix whereas normout</span>
+<span class="cm">  used only the model transformation matrix*/</span>
+>>>>>>> gh-pages
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
@@ -236,7 +282,13 @@ is the code again. Vertex Shader:</p>
 31
 32
 33
+<<<<<<< HEAD
 34</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">precision</span> <span class="k">mediump</span> <span class="k">float</span><span class="p">;</span>
+=======
+34
+35
+36</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">precision</span> <span class="k">mediump</span> <span class="k">float</span><span class="p">;</span>
+>>>>>>> gh-pages
 <span class="k">uniform</span> <span class="k">sampler2D</span> <span class="n">tex0</span><span class="p">;</span> <span class="c1">// this is the texture object</span>
 <span class="k">uniform</span> <span class="k">vec3</span> <span class="n">unib</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
 <span class="cm">/*     blend cutoff =&gt; unib[0][2] # defined in Buffer */</span>
@@ -252,23 +304,42 @@ is the code again. Vertex Shader:</p>
 <span class="k">varying</span> <span class="k">float</span> <span class="n">lightFactor</span><span class="p">;</span>
 
 <span class="k">void</span> <span class="n">main</span><span class="p">(</span><span class="k">void</span><span class="p">)</span> <span class="p">{</span>
+<<<<<<< HEAD
   <span class="n">gl_FragColor</span> <span class="o">=</span> <span class="n">texture2D</span><span class="p">(</span><span class="n">tex0</span><span class="p">,</span> <span class="n">texcoordout</span><span class="p">);</span> <span class="cm">/* look up the basic RGBA value</span>
 <span class="cm">  from the loaded Texture. This function also takes into account the distance</span>
 <span class="cm">  of the pixel and will use lower resolution versions or mipmaps that were</span>
 <span class="cm">  generated on creation (unless mipmaps=False was set)</span>
 <span class="cm">  gl_FragColor is another of the pre-defined variables, representing the</span>
 <span class="cm">  RGBA contribution to this pixel */</span>
+=======
+  <span class="n">gl_FragColor</span> <span class="o">=</span> <span class="n">texture2D</span><span class="p">(</span><span class="n">tex0</span><span class="p">,</span> <span class="n">texcoordout</span><span class="p">);</span> <span class="cm">/* look up the basic</span>
+<span class="cm">  RGBA value from the loaded Texture. This function also takes into</span>
+<span class="cm">  account the distance of the pixel and will use lower resolution</span>
+<span class="cm">  versions or mipmaps that were generated on creation</span>
+<span class="cm">  (unless mipmaps=False was set)</span>
+<span class="cm">  gl_FragColor is another of the pre-defined variables, representing</span>
+<span class="cm">  the RGBA contribution to this pixel */</span>
+>>>>>>> gh-pages
   <span class="c1">// try making it a &quot;material&quot; color by swapping with the line above</span>
   <span class="c1">//gl_FragColor = vec4(0.7, 0.1, 0.4, 0.9);</span>
   <span class="c1">// to allow rendering behind the transparent parts of this object:</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">gl_FragColor</span><span class="p">.</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">unib</span><span class="p">[</span><span class="mo">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="k">discard</span><span class="p">;</span>
   <span class="c1">// adjustment of colour according to combined normal:</span>
+<<<<<<< HEAD
   <span class="k">float</span> <span class="n">intensity</span> <span class="o">=</span> <span class="n">clamp</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">lightVector</span><span class="p">,</span> <span class="n">normout</span><span class="p">)</span> <span class="o">*</span> <span class="n">lightFactor</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+=======
+  <span class="k">float</span> <span class="n">intensity</span> <span class="o">=</span> <span class="n">clamp</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">lightVector</span><span class="p">,</span> <span class="n">normout</span><span class="p">)</span> <span class="o">*</span>
+                                    <span class="n">lightFactor</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+>>>>>>> gh-pages
   <span class="c1">// try removing the 0 to 1 constraint (with point light):</span>
   <span class="c1">//float intensity = dot(lightVector, normout) * lightFactor;</span>
   <span class="c1">// directional lightcol * intensity + ambient lightcol:</span>
   <span class="n">gl_FragColor</span><span class="p">.</span><span class="n">rgb</span> <span class="o">*=</span> <span class="p">(</span><span class="n">unif</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span> <span class="o">*</span> <span class="n">intensity</span> <span class="o">+</span> <span class="n">unif</span><span class="p">[</span><span class="mi">10</span><span class="p">]);</span>
+<<<<<<< HEAD
   <span class="n">gl_FragColor</span><span class="p">.</span><span class="n">a</span> <span class="o">*=</span> <span class="n">unif</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">2</span><span class="p">];</span> <span class="c1">// finally modify the alpha with the Shape alpha</span>
+=======
+  <span class="n">gl_FragColor</span><span class="p">.</span><span class="n">a</span> <span class="o">*=</span> <span class="n">unif</span><span class="p">[</span><span class="mi">5</span><span class="p">][</span><span class="mi">2</span><span class="p">];</span> <span class="c1">// modify alpha with the Shape alpha</span>
+>>>>>>> gh-pages
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
@@ -299,7 +370,11 @@ projection used for photo-spheres.</p>
 </div>
 <div class="section" id="a-final-look-at-textures">
 <h2>A Final look at Textures<a class="headerlink" href="#a-final-look-at-textures" title="Permalink to this headline">¶</a></h2>
+<<<<<<< HEAD
 <img alt="_images/conway_texture.png" class="align-right" src="_images/conway_texture.png" />
+=======
+<img alt="_images/conway_texture.png" class="align-left" src="_images/conway_texture.png" />
+>>>>>>> gh-pages
 <p>As a final bit of fun have a look at the <strong>textures03.py</strong> <a class="footnote-reference" href="#id12" id="id6">[6]</a> demo. This
 illustrates how Texture objects can be constructed from numpy arrays (or
 PIL Image objects) and can be updated each loop. Although numpy or PIL are
