@@ -191,15 +191,9 @@ htmlhelp_basename = 'pi3d_bookdoc'
 latex_elements = {
 # The paper size ('letterpaper' or 'a4paper').
 #'papersize': 'letterpaper',
-<<<<<<< HEAD
-
-# The font size ('10pt', '11pt' or '12pt').
-#'pointsize': '10pt',
-=======
 'papersize': 'a5paper',
 # The font size ('10pt', '11pt' or '12pt').
 #'pointsize': '10pt'
->>>>>>> gh-pages
 
 # Additional stuff for the LaTeX preamble.
 #'preamble': '',
@@ -232,9 +226,6 @@ latex_documents = [
 
 # If false, no module index is generated.
 #latex_domain_indices = True
-<<<<<<< HEAD
-
-=======
 ########################################################################
 from sphinx.highlighting import PygmentsBridge
 from pygments.formatters.latex import LatexFormatter
@@ -246,7 +237,6 @@ class CustomLatexFormatter(LatexFormatter):
 
 PygmentsBridge.latex_formatter = CustomLatexFormatter
 ########################################################################
->>>>>>> gh-pages
 
 # -- Options for manual page output ---------------------------------------
 

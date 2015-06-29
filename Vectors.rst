@@ -75,11 +75,7 @@ are:
      v = T1(v) # apply translation matrix function to v
      v = R1(v) # then rotate it
      v = S1(v) # then scale it (etc etc)
-<<<<<<< HEAD
-     v = P1(v) # then convert it to 2D screen coordinates using perspective!
-=======
      v = P1(v) # then to 2D screen coordinates using perspective!
->>>>>>> gh-pages
      # which you could write as
      v = P1(S1(R1(T1(v))))
      # with matrix maths you can do

@@ -148,7 +148,12 @@ mouse movement. With mouse steering you can fly forwards and backwards
 using w and s keys. You will also see one of the problems that the
 ElevationMap helps to prevent - going through the ground surface!
 
-
+There are various ways that the city could be improved: procedural street
+layout, more varieties of building, better image textures, more structure
+to the models, normal maps to give more close-up detail, reflections from
+windows.. The scope is almost limitless but hopefully you now have some
+idea how to approach and implement some of the more sophisticated aspects
+of 3D modelling.
 
 .. [#] https://github.com/paddywwoof/pi3d_book/blob/master/construct01.py
 .. [#] https://github.com/paddywwoof/pi3d_book/blob/master/construct02.py

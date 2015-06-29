@@ -40,7 +40,7 @@ def build_block_specs(block, o_prob=0.15):
     (x2,y2) = block[i-1] # previous point (i.e. next anti-clockwise)
     # c will be a list of type followed by four corners of building
     c = [0 if random() < o_prob else 1] # choose between office or house
-    var = (5.0 + random()) / 5.5 # variation
+    var = (5.0 + random()) / 7.5 # variation - but tending smaller
     # add three "outside" corners, clockwise order
     c.extend([interp((x0, y0), (x2, y2), B_DIM[c[0]][1] * var), [x0, y0],
               interp((x0, y0), (x1, y1), B_DIM[c[0]][0] * var)])
@@ -66,7 +66,7 @@ def build_block_specs(block, o_prob=0.15):
     x_last, y_last = 0.0, 0.0
     for j in range(nbuild):
       b = [0 if random() < o_prob else 1, [x_last, y_last]]
-      width = B_DIM[b[0]][0] * (3.0 + random()) / 3.5
+      width = B_DIM[b[0]][0] * (5.0 + random()) / 5.5
       x_last += width
       y_last += width
       b.append([x_last, y_last])
@@ -77,7 +77,7 @@ def build_block_specs(block, o_prob=0.15):
       for j in b[1:3]:
         j[0] = x0 + j[0] * x_factor
         j[1] = y0 + j[1] * y_factor
-      depth = B_DIM[b[0]][1] * (3.0 + random()) / 3.5
+      depth = B_DIM[b[0]][1] * (5.0 + random()) / 5.5
       dx = (y1 - y0) * depth / slen # line at right angle to edge
       dy = (x1 - x0) * depth / slen
       b.insert(1, [b[1][0] + dx, b[1][1] - dy]) # first point in spec at back
@@ -90,21 +90,21 @@ def build_block_specs(block, o_prob=0.15):
   for c in corners:
     if c[0] == 0: # it's an office
       office_specs.append(c[1:])
-      ht = B_DIM[0][2] * (0.3 + random()) / 0.3
+      ht = B_DIM[0][2] * (0.4 + random()) / 0.4
       office_specs[-1].extend([ht, ht / 20.0])
     else:
       house_specs.append(c[1:])
-      ht = B_DIM[1][2] * (1.0 + random()) / 1.0
+      ht = B_DIM[1][2] * (3.0 + random()) / 3.0
       house_specs[-1].extend([ht, 1.0])
   for edge in edges:
     for b in edge:
       if b[0] == 0: # it's an office
         office_specs.append(b[1:])
-        ht = B_DIM[0][2] * (0.3 + random()) / 0.3
+        ht = B_DIM[0][2] * (0.4 + random()) / 0.4
         office_specs[-1].extend([ht, ht / 20.0])
       else:
         house_specs.append(b[1:])
-        ht = B_DIM[1][2] * (1.0 + random()) / 1.0
+        ht = B_DIM[1][2] * (3.0 + random()) / 3.0
         house_specs[-1].extend([ht, 1.0])
   return (office_specs, house_specs)
 

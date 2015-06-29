@@ -180,19 +180,11 @@ chapter into an editor and make sure it runs OK (there&#8217;s no way of stoppin
 it as it stands apart from Ctrl+C to break or closing the window). Then
 add some distortion, straight after <tt class="docutils literal"><span class="pre">ball.draw()</span></tt> at the same indent
 along the lines of:</p>
-<<<<<<< HEAD
-<div class="highlight-python"><div class="highlight"><pre><span class="n">bufr</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>        <span class="c"># there&#39;s only one Buffer in the list buf</span>
-<span class="n">b</span> <span class="o">=</span> <span class="n">bufr</span><span class="o">.</span><span class="n">array_buffer</span>     <span class="c"># this is the array buffer!</span>
-<span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>                <span class="c"># the length of the array buffer (195 actually)</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>        <span class="c"># python is clever enough not to do this every loop!</span>
-<span class="n">b</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="c"># numpy slicing, see below</span>
-=======
 <div class="highlight-python"><div class="highlight"><pre><span class="n">bufr</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>        <span class="c"># only one Buffer in the list buf</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">bufr</span><span class="o">.</span><span class="n">array_buffer</span>     <span class="c"># this is the array buffer!</span>
 <span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>                <span class="c"># length of the array (195 actually)</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>        <span class="c"># python will do this just once!</span>
 <span class="n">b</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="c"># see below..</span>
->>>>>>> gh-pages
 <span class="n">bufr</span><span class="o">.</span><span class="n">re_init</span><span class="p">(</span><span class="n">pts</span><span class="o">=</span><span class="n">b</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span> <span class="c"># finally re make the buffer</span>
 </pre></div>
 </div>
@@ -200,12 +192,8 @@ along the lines of:</p>
 fifth line. This is how numpy works: the looping is done &#8220;automatically&#8221;
 as a result of the slicing or the shape of the arrays involved. Using
 python list comprehension this would achieve the same result:</p>
-<<<<<<< HEAD
-<div class="highlight-python"><div class="highlight"><pre><span class="n">new_buf</span> <span class="o">=</span> <span class="p">[[</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">l</span><span class="p">)]</span>
-=======
 <div class="highlight-python"><div class="highlight"><pre><span class="n">new_buf</span> <span class="o">=</span> <span class="p">[[</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span>
                        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">l</span><span class="p">)]</span>
->>>>>>> gh-pages
 <span class="n">bufr</span><span class="o">.</span><span class="n">re_init</span><span class="p">(</span><span class="n">pts</span><span class="o">=</span><span class="n">new_buf</span><span class="p">)</span>
 </pre></div>
 </div>
