@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Lines and Points &mdash; 3D Graphics with pi3d</title>
+    <title>Lines, Points and Merging &mdash; 3D Graphics with pi3d</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="3D Graphics with pi3d" href="index.html" />
-    <link rel="next" title="Cameras, 2D projection and Sprites" href="Cameras.html" />
-    <link rel="prev" title="User input" href="Input.html" /> 
+    <link rel="next" title="Video and Sound" href="Video.html" />
+    <link rel="prev" title="User input and Environment Utilities" href="Input.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,10 +35,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="Cameras.html" title="Cameras, 2D projection and Sprites"
+          <a href="Video.html" title="Video and Sound"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="Input.html" title="User input"
+          <a href="Input.html" title="User input and Environment Utilities"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
       </ul>
@@ -49,8 +49,127 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="lines-and-points">
-<h1>Lines and Points<a class="headerlink" href="#lines-and-points" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="lines-points-and-merging">
+<h1>Lines, Points and Merging<a class="headerlink" href="#lines-points-and-merging" title="Permalink to this headline">¶</a></h1>
+<p>In the chapter introducing 3D graphics I described the process of setting
+up the &#8220;attribute array&#8221; of vertex information and the &#8220;element array&#8221;
+essentially specifying how the vertices define the triangular faces. I then
+passed quickly over the details of how the OpenGL function glDrawElements()
+is called to draw the shape. In actual fact this function needs to be told
+what kind of elements to draw, not just GL_TRIANGLES but also GL_POINTS,
+GL_LINE_STRIP, GL_LINE_LOOP, GL_LINES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN
+work, each of which interpret the element array differently.</p>
+<p>In pi3d.Shape there are two methods that allow switching between triangles
+(the default) and points or lines.</p>
+<div class="section" id="set-line-width-and-set-point-size">
+<h2>set_line_width and set_point_size<a class="headerlink" href="#set-line-width-and-set-point-size" title="Permalink to this headline">¶</a></h2>
+<p>Have a look at the source code of pi3d/Shape.py around line 420 and you
+will see that it is a relatively simple process of calling the OpenGL
+function glLineWidth() and changing the Buffer property draw_method. If
+the argument <tt class="docutils literal"><span class="pre">closed</span></tt> is set to True then the line will loop from the
+last point back to the first, If the width is set to zero then the draw_method
+will revert to triangles. The set_point_size method above it is slightly
+simpler as there is no OpenGL function to set a global point size, rather
+the size is passed to the vertex shader as a uniform variable Buffer.unib[8].
+This is then scaled with distance so that a point is the size specified at
+one unit distance from the camera, half at two units, third at three
+units etc. (Have a look at any of the standard vertex shaders to see how
+this is done). Lines are always the same width however near or far away.</p>
+<p>Now open <strong>linepoint01.py</strong> <a class="footnote-reference" href="#id6" id="id1">[1]</a> and try toggling between triangles, lines
+and points using the t, l and p keys. Check out the effect of using a flat
+shader or lighting dependent shader and the related effect of using uv
+texture mapped shader. Try the pi3d.Lines object; one thing you will find
+with this is that only the mat_flat shader works as expected. This is because
+the Buffer attribute array doesn&#8217;t have normals or texture coordiates.
+There is also a pi3d.Points class which is very similar.</p>
+<img alt="_images/simple_quad.png" class="align-left" src="_images/simple_quad.png" />
+<p>You might also notice with many of the standard shapes drawn as lines with
+the &#8220;strip&#8221; argument to set_line_width set True, that though the majority
+of the lines define quadrilaterals there are some quads that have an
+additional diagonal line. In fact, it might seem logical for all the
+diagonals to show, after all, that&#8217;s how the triangles are represented
+when the 3D shapes are drawn as solid objects. However if the order of
+vertices used in the element buffer is defined carefully the line drawing
+can be made to (mainly) follow the edges. In the diagram, for instance,
+the triangles are defined as <tt class="docutils literal"><span class="pre">[(0,</span> <span class="pre">1,</span> <span class="pre">2),</span> <span class="pre">(2,</span> <span class="pre">3,</span> <span class="pre">0)]</span></tt> which when used to
+define a line is interpetted as 0=&gt;1 1=&gt;2 2=&gt;2 2=&gt;3 3=&gt;0 i.e. going round the
+outside. In earlier versions of pi3d the triangles may have been defined
+as <tt class="docutils literal"><span class="pre">[(0,</span> <span class="pre">1,</span> <span class="pre">2),</span> <span class="pre">(0,</span> <span class="pre">2,</span> <span class="pre">3)]</span></tt> which would have produced a line with the
+diagonal drawn twice and the edge from 3=&gt;0 missing!</p>
+<p>In the above example the line drawing is what would happen using GL_LINE_STRIP
+which is the default behaviour of set_line_width. If the argument &#8220;strip=False&#8221;
+is used then the draw method is GL_LINES and this interprets the elements
+as a series of pairs defining each end of a series of lines. The result
+would then be 0=&gt;1 2=&gt;2 3=&gt;0 i.e. only the first and last edge would be
+drawn, which you will have seen when you tried the experiments suggested
+in linepoint01.py. Generally the edges will be drawn more completely using
+the default &#8220;strip=True&#8221; however for standard shapes created with Shape.lathe()
+(i.e. most of them!) the faces fit together to fill in the gaps. Also for
+models loaded from obj files there is a tendency for extra edges to appear
+joining the scattered faces and these often look better using &#8220;strip=False&#8221;.</p>
+<p>It might occasionally be nice to be able to draw a 3D object as a solid,
+with directional lighting then overlay lines defining the edges of its faces.
+However there are two problems with this: 1. As we have seen in the linepoint01.py
+example we would need two shaders to do it nicely 2. The lines will be
+exactly the same distance from the camera as the edges of the faces they
+outline so there is likely to be z-fighting <a class="footnote-reference" href="#id7" id="id2">[2]</a> or partial obscuring of
+lines as the object rotates.</p>
+<img alt="_images/helix01.jpg" class="align-right" src="_images/helix01.jpg" />
+<p>There are at least three ways of tackling this problem. One might be to
+make a Shape with two Buffers, the first using GL_TRIANGLES with mat_light
+shader, the second Buffer being a duplicate of the first but using GL_LINES and
+mat_flat shader. Ideally the second Buffer would be scaled up slightly so
+the lines were always drawn outside the solid version. As scaling can be
+more easily done for a whole Shape it might be easier to achieve the
+same result by using two Shapes, rather than Buffers with the second
+Shape a child of the first one. (Look at the TigerTank.py demo to see
+how child objects can be used to conveniently join Shapes together but allow
+them to be moved relative to each other). In <strong>linepoint02.py</strong> <a class="footnote-reference" href="#id8" id="id3">[3]</a>
+I use a technique of drawing the object twice each frame, once as a solid
+then as a wireframe. I use the Camera transformation matrix to move the
+shape slightly towards the view point between each draw. <a class="footnote-reference" href="#id9" id="id4">[4]</a></p>
+<p>The final example in this chapter <strong>linepoint03.py</strong> <a class="footnote-reference" href="#id10" id="id5">[5]</a> introduces the
+pi3d.MergeShape class. This class can be used to combine several Shape
+objects into one with the advantage that only one draw() call will then
+be needed. For a large number of objects, such as the trees in the
+ForestWalk.py demo, this will make a very significant reduction in the
+(slow) python side matrix multiplication. MergeShape has two methods:
+radialCopy() which can be used to produce regular patterns and cluster()
+which is used to &#8220;scatter&#8221; objects randomly onto an ElevationMap, as in
+the ForestWalk.py demo.</p>
+<table class="docutils footnote" frame="void" id="id6" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/linepoint01.py">https://github.com/paddywwoof/pi3d_book/blob/master/linepoint01.py</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id7" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="https://en.wikipedia.org/wiki/Z-fighting">https://en.wikipedia.org/wiki/Z-fighting</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id8" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/linepoint02.py">https://github.com/paddywwoof/pi3d_book/blob/master/linepoint02.py</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id9" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>In this case the camera isn&#8217;t moving so a simple translateZ() by a
+fixed small amount would have sufficed, however the technique used
+in the example can be used more generally.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/linepoint03.py">https://github.com/paddywwoof/pi3d_book/blob/master/linepoint03.py</a></td></tr>
+</tbody>
+</table>
+</div>
 </div>
 
 
@@ -59,12 +178,20 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Lines, Points and Merging</a><ul>
+<li><a class="reference internal" href="#set-line-width-and-set-point-size">set_line_width and set_point_size</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="Input.html"
-                        title="previous chapter">User input</a></p>
+                        title="previous chapter">User input and Environment Utilities</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Cameras.html"
-                        title="next chapter">Cameras, 2D projection and Sprites</a></p>
+  <p class="topless"><a href="Video.html"
+                        title="next chapter">Video and Sound</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/Lines.txt"
@@ -94,10 +221,10 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="Cameras.html" title="Cameras, 2D projection and Sprites"
+          <a href="Video.html" title="Video and Sound"
              >next</a> |</li>
         <li class="right" >
-          <a href="Input.html" title="User input"
+          <a href="Input.html" title="User input and Environment Utilities"
              >previous</a> |</li>
         <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
       </ul>

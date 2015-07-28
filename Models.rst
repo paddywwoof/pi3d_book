@@ -32,8 +32,7 @@ Most of the obj file consists of four types of lines:
   **vn vertex normal** lines with x, y, z components of normals.
 
   **f face** lines with a series of references to v/vt/vn lines for each
-  corner of the face. When I made the model in blender I converted the
-  faces to triangles but in general there could be more corners and the
+  corner of the face. In general there could be more than three corners and the
   parser function has to convert it into triangles to work with OpenGL ES2.0
 
 Additional occasional lines are **mtllib model01.mtl** which points to material file.
@@ -45,23 +44,24 @@ doesn't use these instruction but does use the normals. If you look at the
 lines::
 
   s off
-  f 4/1/1 11/2/1 3/3/1
-  f 8/4/2 7/5/2 10/6/2
-  f 9/7/3 14/8/3 22/9/3
+  f 3/1/1 2/2/1 9/3/1 7/4/1
+  f 13/5/2 14/6/2 9/7/2 2/8/2
+  f 3/9/3 7/10/3 8/11/3
 
-You will see three faces using vertices (4,11,3) (8,7,10) (9,14,22) with
-normals (1,1,1) (2,2,2) (3,3,3) i.e. all three corners are facing the same
-direction. Later on::
+You will see three faces using vertices (4,2,9,7) (13,14,9,2) (3,7,8) with
+normals (1,1,1,1) (2,2,2,2) (3,3,3) i.e. all corners are facing the same
+direction. NB the parser will convert each of the first two quads into
+triangles. Later on::
 
   s 1
-  f 22/9/15 30/62/16 23/63/17
-  f 22/21/15 17/20/18 25/64/19
-  f 30/62/16 38/65/20 31/66/21
+  f 17/42/15 16/41/16 24/62/17 25/63/18
+  f 15/46/19 22/49/20 30/64/21 23/65/22
+  f 30/66/21 22/15/20 17/14/15 25/67/18
 
-faces (22,30,12) (22,17,25) (30,38,31) have normals (15,16,17) (15,18,19)
-(16,20,21) i.e. not a flat face. And you will see that the same vertex
-used in different faces (i.e. vertex #22 or #30 above) has the same normal vector
-(#15 or #16)
+faces (17,16,24,25) (15,22,30,23) (30,22,17,25) have normals (15,16,17,18) (19,20,21,22)
+(21,20,15,18) i.e. not a flat face. And you will see that the same vertex
+used in different faces (i.e. vertex #17 or #25 above) has the same normal vector
+(#15 or #18)
 
 In the mtl file you will see that there is a **newmtl Material** to match
 the usemtl line in the obj file, followed by lines specifying material
