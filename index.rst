@@ -21,13 +21,7 @@ Contents:
    Constructing
    Input
    Lines
-   Video
+   Strings
+   Complicated
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 

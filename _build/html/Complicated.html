@@ -1,0 +1,208 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Off-screen textures (and other more complicated things) &mdash; 3D Graphics with pi3d</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="3D Graphics with pi3d" href="index.html" />
+    <link rel="prev" title="Strings" href="Strings.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Strings.html" title="Strings"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="off-screen-textures-and-other-more-complicated-things">
+<h1>Off-screen textures (and other more complicated things)<a class="headerlink" href="#off-screen-textures-and-other-more-complicated-things" title="Permalink to this headline">¶</a></h1>
+<p>The normal result of drawing objects with pi3d is for them to appear on
+the display. However there can be situations where it might be useful to
+capture the output and do other processing on it before posting it to the
+screen. Reasons include: blurring, distorting, edge detection and any
+number of artistic post-processing effect but also collision detection,
+shadow casting and stereo imaging.</p>
+<p>In pi3d there is a class OffScreenTexture that inherits from Texture. It
+isn&#8217;t really intended to be used directly but other classes inherit from
+it: Clashtest, Defocus, PostProcess, ShadowCaster and StereoCam. Each of
+these has a similar outline work flow each frame.</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>Start the off-screen capture</li>
+<li>Draw the objects in the scene, possibly with a special shader as with
+Clashtest or ShadowCaster but otherwise just normally i.e. PostProcess or
+StereoCam</li>
+<li>Stop the off-screen capture</li>
+<li>Process the image. Sometimes using a special shader, sometimes drawing
+the off-screen texture to a Sprite with a normal uv_flat shader.</li>
+</ol>
+</div></blockquote>
+<img alt="_images/complicated.jpg" class="align-right" src="_images/complicated.jpg" />
+<p>Because offscreen textures can be used for a wide range of reasons the
+details of each one will vary greatly. However the Post-processing application
+is probably the most general this is a good one to look at.</p>
+<p>Open pi3d_demos/Post.py and, after running it to see what it does, try
+commenting out the lines 67, 73 and 78. This will basically cut out the
+capturing to off-screen texture and subsequent post processing so you can
+see what is being captured. For the moment ignore the fancy swirling
+texture on the Spheres, this is a separate complication that I will explain
+later. If you look inside the pi3d/util/PostProcess.py file you will see
+that although it can be called with all its arguments defaulting to values,
+in this instance we are passing a Camera instance and setting the divide
+argument. The reason for this is explained in the docstrings: there is
+a facility to only capture part of the screen to generate a lower resolution
+off screen texture which speeds up the whole rendering process quite a bit.
+In order to effect this low resolution capture the camera has to be defined
+with a wider field of view which is done on line 28 of pi3d_demos/Post.py
+(<tt class="docutils literal"><span class="pre">scale</span></tt> is a tidier alternative to defining a whole lens spec with
+larger fov) And the camera is passed to the PostProcess constructor in
+line 35 along with the same scaling factor, however you will notice that
+the camera instance is set to self.viewcam in line 51 which is then not used!
+The same camera is specified for myshape and mysprite on lines 42 and 48.
+The reason for all this camera specification is the default instance behaviour
+of pi3d - which will make the default camera from the first one to be
+created and, as a 2D camera is created in the <tt class="docutils literal"><span class="pre">__init__()</span></tt> function of
+PostProcess, care has to be taken to ensure that this doesn&#8217;t become the
+default instance by accident.</p>
+<p>In PostProcess line 72 you can see the OffScreenTexture._start() method
+call and some code to just render part of the screen using the glScissor
+function. On line 85 OffScreenTexture._end() stops the screen capture and
+draw() renders a simple subdivided quad self.sprite using self.shader, self.tex_list
+and self.camera. On line 63 you will see that self.tex_list[0] points to
+the PostProcess instance itself which inherits the behaviour of pi3d.Texture
+via pi3d.OffScreenTexture. There are a couple of things that make this
+even harder to follow: 1. on line 64 and 65 there is a facility to add
+additional textures (such as bump and relfection) for use by the shader,
+2. on lines 99 to 101 there is a facility to modify the <tt class="docutils literal"><span class="pre">unif</span></tt> array
+of self.sprite. The pi3d_demos/Post.py example doesn&#8217;t use any additional
+textures (although some of the shaders in pi3d_demos/FilterDemo.py do) but
+on line 78 of pi3d_demos/Post.py you will see that post.draw() is passed
+a value for unif[48] that very slowly increases from 2.0 to 6.999, after
+which it resets to 2.0.</p>
+<p>Now if you look in pi3d/shader/post_base.fs - the fragment shader - you
+will see on line 27 that use seems to be made of unif[16][0] (remember that
+the flat c_types.float(60) array in python becomes vec3[20] in GLSL so
+unif[48] in python is unif[16][0] in the shader.) But what exactly is it
+doing? Well the vertex shader is very simple, essentially just setting the
+vertex location in gl_Position and flipping the image top to bottom as it
+sets the uniform variable texcoordout. In the fragment shader lines 26 to 29
+loop nine times to increment the eventual pixel RGBA value texc. Each loop
+looks up the value from the PostProcess texture using Texture2D with a
+slightly offset coordinate dx[] and dy[] and a weighting factor f[]. unif[16][0]
+is used as a multiplier for the dx[] and dy[] values in order to sample
+the &#8220;convolution&#8221; <a class="footnote-reference" href="#id2" id="id1">[1]</a> over a wider area. If you watch the demo for long
+enough you will see the edges gradually get wider then suddenly jump back
+when the value in unif[48] wraps back to 2.0.</p>
+<div class="section" id="other-shaders">
+<h2>Other Shaders<a class="headerlink" href="#other-shaders" title="Permalink to this headline">¶</a></h2>
+<p>The &#8220;star&#8221; shader used to texture the Spheres in pi3d_demos/Post.py above
+is another example of how you can use the GPU to do all kinds of fancy
+things. Look at the source code, which was contributed by Peter Hess based
+on www.iquilezles.org shadertoy demos. The shader works by converting the
+texture coordinates to a polar basis in lines 25 and 26, then applying
+factors that depend on an incrementing value &#8220;time&#8221; and trigonometric
+transformations then using the values to lookup and modify the RGBA values
+from the texture sampler.</p>
+<p>It&#8217;s quite fun to experiment with different formulas and values in shaders
+but, if you do, you will probably have to put your shaders in subdirectory
+of your working directory (as with pi3d_demos/shaders) and you will probably
+have to &#8220;expand&#8221; the <tt class="docutils literal"><span class="pre">#include</span> <span class="pre">...</span></tt> syntax used in the main pi3d shaders
+as the process of figuring out the path to import from might defeat the
+Shader loader!</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://en.wikipedia.org/wiki/Kernel_%28image_processing">https://en.wikipedia.org/wiki/Kernel_%28image_processing</a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Off-screen textures (and other more complicated things)</a><ul>
+<li><a class="reference internal" href="#other-shaders">Other Shaders</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Strings.html"
+                        title="previous chapter">Strings</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/Complicated.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Strings.html" title="Strings"
+             >previous</a> |</li>
+        <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Paddy Gaunt.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

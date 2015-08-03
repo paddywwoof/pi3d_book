@@ -2,7 +2,7 @@
    :linenothreshold: 25
 
 Lines, Points and Merging
-=========================
+===========================================
 
 In the chapter introducing 3D graphics I described the process of setting
 up the "attribute array" of vertex information and the "element array"
@@ -21,7 +21,7 @@ set_line_width and set_point_size
 
 Have a look at the source code of pi3d/Shape.py around line 420 and you
 will see that it is a relatively simple process of calling the OpenGL
-function glLineWidth() and changing the Buffer property draw_method. If
+function glLineWidth() and changing the Buffer property ``draw_method``. If
 the argument ``closed`` is set to True then the line will loop from the
 last point back to the first, If the width is set to zero then the draw_method
 will revert to triangles. The set_point_size method above it is slightly
@@ -94,15 +94,43 @@ I use a technique of drawing the object twice each frame, once as a solid
 then as a wireframe. I use the Camera transformation matrix to move the
 shape slightly towards the view point between each draw. [#]_
 
-The final example in this chapter **linepoint03.py** [#]_ introduces the
+The third example in this chapter **linepoint03.py** [#]_ introduces the
 pi3d.MergeShape class. This class can be used to combine several Shape
 objects into one with the advantage that only one draw() call will then
 be needed. For a large number of objects, such as the trees in the
 ForestWalk.py demo, this will make a very significant reduction in the
 (slow) python side matrix multiplication. MergeShape has two methods:
-radialCopy() which can be used to produce regular patterns and cluster()
-which is used to "scatter" objects randomly onto an ElevationMap, as in
-the ForestWalk.py demo.
+radialCopy() which can be used to produce regular patterns (see pi3d_demos/Blur.py)
+and cluster() which is used to "scatter" objects randomly onto an ElevationMap,
+(see pi3d_demos/ForestWalk.py).
+
+Points using texture mapping
+----------------------------
+
+Finally, in the chapter on 'Cameras, 2D projection and Sprites' I referred
+to an alternative sprite drawing method using points, for fast rendering
+when the numbers get big. Open up the demo pi3d_demos/SpriteBalls.py 
+There are several features of this demo that use numpy to do the bounce
+and movement calculations on large arrays of vertices, I won't attempt
+to explain any of that here but I do recommend trying to get to grips with
+this in the longer term. For the moment it is sufficient to understand
+that the sprites are represented by the vertices of a Points Shape and
+that the z location is being used to represent the size of each point (see
+lines 46 to 51). Each frame the vertices move according to "physics" and
+the locations are revised using the Buffer.re_init() method (line 73)
+and the points are drawn using a special shader. Now look at the shaders
+pi3d_demos/shaders/uv_sprite.* (.vs and .fs)
+
+In the vertex shader you will see that it simply sets gl_Position in the
+normal way using the projection matrix (as neither the Shape nor the
+Camera move, this matrix multiplication could have been eliminated by using
+a different basis for the vertex coordinates). And the gl_PointSize is set
+to be inversely proportional to z depth. In the fragment shader a Texture2D
+lookup is performed on the texture loaded in SpriteBalls.py, however rather
+than using a 2D vector calcualted from the texture coordinates (which are
+not passed to the shader when using the Points class anyway), it uses
+gl_PointCoord, a variable available in the fragment shader while drawing
+points.
 
 .. [#] https://github.com/paddywwoof/pi3d_book/blob/master/linepoint01.py
 .. [#] https://en.wikipedia.org/wiki/Z-fighting

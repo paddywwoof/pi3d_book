@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="3D Graphics with pi3d" href="index.html" />
-    <link rel="next" title="Video and Sound" href="Video.html" />
+    <link rel="next" title="Strings" href="Strings.html" />
     <link rel="prev" title="User input and Environment Utilities" href="Input.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="Video.html" title="Video and Sound"
+          <a href="Strings.html" title="Strings"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="Input.html" title="User input and Environment Utilities"
@@ -65,7 +65,7 @@ work, each of which interpret the element array differently.</p>
 <h2>set_line_width and set_point_size<a class="headerlink" href="#set-line-width-and-set-point-size" title="Permalink to this headline">¶</a></h2>
 <p>Have a look at the source code of pi3d/Shape.py around line 420 and you
 will see that it is a relatively simple process of calling the OpenGL
-function glLineWidth() and changing the Buffer property draw_method. If
+function glLineWidth() and changing the Buffer property <tt class="docutils literal"><span class="pre">draw_method</span></tt>. If
 the argument <tt class="docutils literal"><span class="pre">closed</span></tt> is set to True then the line will loop from the
 last point back to the first, If the width is set to zero then the draw_method
 will revert to triangles. The set_point_size method above it is slightly
@@ -128,15 +128,41 @@ them to be moved relative to each other). In <strong>linepoint02.py</strong> <a 
 I use a technique of drawing the object twice each frame, once as a solid
 then as a wireframe. I use the Camera transformation matrix to move the
 shape slightly towards the view point between each draw. <a class="footnote-reference" href="#id9" id="id4">[4]</a></p>
-<p>The final example in this chapter <strong>linepoint03.py</strong> <a class="footnote-reference" href="#id10" id="id5">[5]</a> introduces the
+<p>The third example in this chapter <strong>linepoint03.py</strong> <a class="footnote-reference" href="#id10" id="id5">[5]</a> introduces the
 pi3d.MergeShape class. This class can be used to combine several Shape
 objects into one with the advantage that only one draw() call will then
 be needed. For a large number of objects, such as the trees in the
 ForestWalk.py demo, this will make a very significant reduction in the
 (slow) python side matrix multiplication. MergeShape has two methods:
-radialCopy() which can be used to produce regular patterns and cluster()
-which is used to &#8220;scatter&#8221; objects randomly onto an ElevationMap, as in
-the ForestWalk.py demo.</p>
+radialCopy() which can be used to produce regular patterns (see pi3d_demos/Blur.py)
+and cluster() which is used to &#8220;scatter&#8221; objects randomly onto an ElevationMap,
+(see pi3d_demos/ForestWalk.py).</p>
+</div>
+<div class="section" id="points-using-texture-mapping">
+<h2>Points using texture mapping<a class="headerlink" href="#points-using-texture-mapping" title="Permalink to this headline">¶</a></h2>
+<p>Finally, in the chapter on &#8216;Cameras, 2D projection and Sprites&#8217; I referred
+to an alternative sprite drawing method using points, for fast rendering
+when the numbers get big. Open up the demo pi3d_demos/SpriteBalls.py
+There are several features of this demo that use numpy to do the bounce
+and movement calculations on large arrays of vertices, I won&#8217;t attempt
+to explain any of that here but I do recommend trying to get to grips with
+this in the longer term. For the moment it is sufficient to understand
+that the sprites are represented by the vertices of a Points Shape and
+that the z location is being used to represent the size of each point (see
+lines 46 to 51). Each frame the vertices move according to &#8220;physics&#8221; and
+the locations are revised using the Buffer.re_init() method (line 73)
+and the points are drawn using a special shader. Now look at the shaders
+pi3d_demos/shaders/uv_sprite.* (.vs and .fs)</p>
+<p>In the vertex shader you will see that it simply sets gl_Position in the
+normal way using the projection matrix (as neither the Shape nor the
+Camera move, this matrix multiplication could have been eliminated by using
+a different basis for the vertex coordinates). And the gl_PointSize is set
+to be inversely proportional to z depth. In the fragment shader a Texture2D
+lookup is performed on the texture loaded in SpriteBalls.py, however rather
+than using a 2D vector calcualted from the texture coordinates (which are
+not passed to the shader when using the Points class anyway), it uses
+gl_PointCoord, a variable available in the fragment shader while drawing
+points.</p>
 <table class="docutils footnote" frame="void" id="id6" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
@@ -182,6 +208,7 @@ in the example can be used more generally.</td></tr>
   <ul>
 <li><a class="reference internal" href="#">Lines, Points and Merging</a><ul>
 <li><a class="reference internal" href="#set-line-width-and-set-point-size">set_line_width and set_point_size</a></li>
+<li><a class="reference internal" href="#points-using-texture-mapping">Points using texture mapping</a></li>
 </ul>
 </li>
 </ul>
@@ -190,8 +217,8 @@ in the example can be used more generally.</td></tr>
   <p class="topless"><a href="Input.html"
                         title="previous chapter">User input and Environment Utilities</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="Video.html"
-                        title="next chapter">Video and Sound</a></p>
+  <p class="topless"><a href="Strings.html"
+                        title="next chapter">Strings</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/Lines.txt"
@@ -221,7 +248,7 @@ in the example can be used more generally.</td></tr>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="Video.html" title="Video and Sound"
+          <a href="Strings.html" title="Strings"
              >next</a> |</li>
         <li class="right" >
           <a href="Input.html" title="User input and Environment Utilities"

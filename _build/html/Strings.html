@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Strings &mdash; 3D Graphics with pi3d</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="3D Graphics with pi3d" href="index.html" />
+    <link rel="next" title="Off-screen textures (and other more complicated things)" href="Complicated.html" />
+    <link rel="prev" title="Lines, Points and Merging" href="Lines.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="Complicated.html" title="Off-screen textures (and other more complicated things)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="Lines.html" title="Lines, Points and Merging"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="strings">
+<h1>Strings<a class="headerlink" href="#strings" title="Permalink to this headline">¶</a></h1>
+<p>pi3d has two mechanisms for producing Text:</p>
+<p>The first one is the pi3d.String class which inherits from pi3d.Shape in
+the same way as the &#8220;standard&#8221; shapes such as Cuboid, Sphere, Sprite, Torus
+etc. However as it is initialised it constructs its vertices and texture
+coordinates to map rectangles from a special Texture - pi3d.Font or pi3d.Pngfont.
+Each of these classes contain an image of all the letters required and a
+dictionary to look up the location, width and height of each letter. pi3d.Font
+is generally more useful as it is generated &#8220;on the fly&#8221; from a TrueType font
+but it requires certain functionality from the Python Imaging Library, and
+where that might not be available (I couldn&#8217;t get it to work on Android),
+pi3d.Pngfont can be used (but it&#8217;s restricted to the letters on the special
+png image files)</p>
+<img alt="_images/string01.jpg" class="align-right" src="_images/string01.jpg" />
+<p>The second mechanism is the pi3d.FixedString class which inherits from
+pi3d.Texture, a bit like the pi3d.Font class above but rather than containing
+the full alphabet it uses a string passed to the constructor. This means that
+the string can then be drawn using only four vertices and two triangles
+rather than that number for every letter required by pi3d.String, so it can
+be quite a bit faster on some platforms if there&#8217;s lots of text. Another
+of advantage of FixedString is that PIL <a class="footnote-reference" href="#id3" id="id1">[1]</a> and numpy can be used to
+provide filters: BUMP will generate a normal map, EMBOSS, CONTOUR,
+BLUR and SMOOTH. The FixedString class can be used wherever a pi3d.Texture
+would be used, but it also contains an instance of pi3d.Sprite (called
+pi3d.FixedString.sprite) which has width, height, umult and vmult to match
+the dimensions of the string to the Texture. (Look back at the chapter
+<tt class="docutils literal"><span class="pre">Shapes,</span> <span class="pre">Buffers</span> <span class="pre">and</span> <span class="pre">Display</span></tt> if you don&#8217;t remember umult and vmult)</p>
+<p>However for varying text (such as a score, or timer) the overhead of
+creating a new PIL image and converting it to a Texture every frame would
+be large and in this case it is better to use the pi3d.String.quick_change()
+method. This has various restrictions as described in the documentation,
+the most significant of which is that the string can&#8217;t be changed to a
+longer length than it started (of course it should be padded by spaces initially
+for this eventuality).</p>
+<p>Have a play with the three examples <strong>strings01.py</strong>, <strong>strings02.py</strong> and
+<strong>strings03.py</strong> <a class="footnote-reference" href="#id4" id="id2">[2]</a> There are one or two quirks to watch out for: if you
+use a 2D Camera (orthographic - argument is_3d=False) with a pi3d.String
+object, then you also need to set the argument in the String constructor
+to is_3d=False. Also the font passed to pi3d.String constructor is a pi3d.Font
+object but the font passed to pi3d.FixedString is the path to a TrueType
+font as a string. One odd.</p>
+<p>With the rotating text you will have noticed the strange effect of the
+mipmaps which are a series of lower resolution images that automatically
+get swapped depending on the z depth of the fragment being rendered.
+The mipmaps are generated at the time of Texture creation and are generally
+a good thing so the default argument to Texture is mipmap=True.</p>
+<p>You will find strings used in quite a few of the pi3d_demos so have a look
+at those as well.</p>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>Python Image Library - generally Pillow <a class="reference external" href="https://pypi.python.org/pypi/Pillow">https://pypi.python.org/pypi/Pillow</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/strings01.py">https://github.com/paddywwoof/pi3d_book/blob/master/strings01.py</a> etc</td></tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Lines.html"
+                        title="previous chapter">Lines, Points and Merging</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Complicated.html"
+                        title="next chapter">Off-screen textures (and other more complicated things)</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/Strings.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="Complicated.html" title="Off-screen textures (and other more complicated things)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="Lines.html" title="Lines, Points and Merging"
+             >previous</a> |</li>
+        <li><a href="index.html">3D Graphics with pi3d</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Paddy Gaunt.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

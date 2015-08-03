@@ -120,7 +120,7 @@ constant" variable B_DIM! making everything bigger.
 if __name__ == "__main__":
   from PIL import Image, ImageDraw
   B_DIM = ((55, 45, 50), (40, 25, 30)) # width, depth, height - for larger scale image
-  off_specs, hou_specs = build_block_specs(((56,56),(36, 206),(206, 406),(356, 336),(296, 06))) # large scale image version
+  off_specs, hou_specs = build_block_specs(((56,56),(36, 206),(206, 406),(356, 336),(296, 6))) # large scale image version
   im = Image.new("L", (512, 512), 255)
   draw = ImageDraw.Draw(im)
   for spec in off_specs:
