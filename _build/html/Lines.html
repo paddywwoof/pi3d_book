@@ -140,6 +140,7 @@ and cluster() which is used to &#8220;scatter&#8221; objects randomly onto an El
 </div>
 <div class="section" id="points-using-texture-mapping">
 <h2>Points using texture mapping<a class="headerlink" href="#points-using-texture-mapping" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/spriteballs.jpg" class="align-left" src="_images/spriteballs.jpg" />
 <p>Finally, in the chapter on &#8216;Cameras, 2D projection and Sprites&#8217; I referred
 to an alternative sprite drawing method using points, for fast rendering
 when the numbers get big. Open up the demo pi3d_demos/SpriteBalls.py
@@ -162,7 +163,8 @@ lookup is performed on the texture loaded in SpriteBalls.py, however rather
 than using a 2D vector calcualted from the texture coordinates (which are
 not passed to the shader when using the Points class anyway), it uses
 gl_PointCoord, a variable available in the fragment shader while drawing
-points.</p>
+points. To get an idea of the increased speed of this type of rendering
+try increasing MAX_BALLS to several thousand as used for the image above.</p>
 <table class="docutils footnote" frame="void" id="id6" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">

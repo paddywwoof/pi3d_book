@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="3D Graphics with pi3d" href="index.html" />
-    <link rel="next" title="set_line_width and set_point_size" href="Lines.html" />
+    <link rel="next" title="Lines, Points and Merging" href="Lines.html" />
     <link rel="prev" title="Constructing a Shape from scratch" href="Constructing.html" /> 
   </head>
   <body>
@@ -35,7 +35,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="Lines.html" title="set_line_width and set_point_size"
+          <a href="Lines.html" title="Lines, Points and Merging"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="Constructing.html" title="Constructing a Shape from scratch"
@@ -62,7 +62,7 @@ non-blocking key input as a &#8220;built-in&#8221; function. The reasons is almo
 certainly because of the desire to make python applications run unaltered
 on all platforms. In pi3d we have to provide a host of different options for
 keyboard input: CursesKeyboard, SysKeyboard, x11Keyboard, AndroidKeyboard
-(which is really just a placeholder) and WindowsKeyboard. Normally the
+(which is really just a placeholder) and PygameKeyboard. Normally the
 appropriate one will be loaded for the environment you are using but this
 is a surprisingly non-straightforward area that may need some careful
 thought especially on non-standard platforms or using non-standard keyboards
@@ -78,12 +78,13 @@ that the mouse movements continue to provide input even when the cursor
 is outside the relevant window or even &#8220;stuck&#8221; against a screen edge. This
 means that it&#8217;s possible to click on other things on the desktop, including
 the X to close the pi3d window, if needed! To achieve the same effect with
-the pygame mouse input (as used with Windows), the cursor is &#8220;warped&#8221; to the
-centre of the window each frame. There are slight differences in the
-behaviour of Mouse functions with the two systems but most of the demos
-simply use position()</p>
+the pygame mouse input (as used with Windows but available on linux (except
+Raspberry Pi) by using <tt class="docutils literal"><span class="pre">Display.create(use_pygame=True)</span></tt>), the cursor is
+&#8220;warped&#8221; to the centre of the window each frame. There are slight differences
+in the behaviour of Mouse functions with the two systems but most of the
+demos simply use position()</p>
 <p>Mouse.position() returns a tuple (x, y) this can be constrained by passing
-Mouse.__init__() an argument restrict=True (the default), in which case
+Mouse constructor an argument restrict=True (the default), in which case
 values can also be set for the width and height that the mouse movement
 is restricted.</p>
 <p>Mouse.velocity() returns a tuple (dx, dy) which is either the distance since
@@ -193,7 +194,7 @@ shape in order for it to lie parallel with the surface at a given point
                         title="previous chapter">Constructing a Shape from scratch</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="Lines.html"
-                        title="next chapter">set_line_width and set_point_size</a></p>
+                        title="next chapter">Lines, Points and Merging</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/Input.txt"
@@ -223,7 +224,7 @@ shape in order for it to lie parallel with the surface at a given point
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="Lines.html" title="set_line_width and set_point_size"
+          <a href="Lines.html" title="Lines, Points and Merging"
              >next</a> |</li>
         <li class="right" >
           <a href="Constructing.html" title="Constructing a Shape from scratch"

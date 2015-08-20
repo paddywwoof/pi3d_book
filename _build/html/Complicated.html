@@ -47,6 +47,7 @@
             
   <div class="section" id="off-screen-textures-and-other-more-complicated-things">
 <h1>Off-screen textures (and other more complicated things)<a class="headerlink" href="#off-screen-textures-and-other-more-complicated-things" title="Permalink to this headline">¶</a></h1>
+<img alt="_images/tigershadow.jpg" class="align-right" src="_images/tigershadow.jpg" />
 <p>The normal result of drawing objects with pi3d is for them to appear on
 the display. However there can be situations where it might be useful to
 capture the output and do other processing on it before posting it to the
@@ -68,10 +69,10 @@ StereoCam</li>
 the off-screen texture to a Sprite with a normal uv_flat shader.</li>
 </ol>
 </div></blockquote>
-<img alt="_images/complicated.jpg" class="align-right" src="_images/complicated.jpg" />
+<img alt="_images/complicated.jpg" class="align-left" src="_images/complicated.jpg" />
 <p>Because offscreen textures can be used for a wide range of reasons the
 details of each one will vary greatly. However the Post-processing application
-is probably the most general this is a good one to look at.</p>
+is probably the most general so this is a good one to look at.</p>
 <p>Open pi3d_demos/Post.py and, after running it to see what it does, try
 commenting out the lines 67, 73 and 78. This will basically cut out the
 capturing to off-screen texture and subsequent post processing so you can
@@ -112,7 +113,7 @@ a value for unif[48] that very slowly increases from 2.0 to 6.999, after
 which it resets to 2.0.</p>
 <p>Now if you look in pi3d/shader/post_base.fs - the fragment shader - you
 will see on line 27 that use seems to be made of unif[16][0] (remember that
-the flat c_types.float(60) array in python becomes vec3[20] in GLSL so
+the &#8220;flat&#8221; c_types.float(60) array in python becomes vec3[20] in GLSL so
 unif[48] in python is unif[16][0] in the shader.) But what exactly is it
 doing? Well the vertex shader is very simple, essentially just setting the
 vertex location in gl_Position and flipping the image top to bottom as it
@@ -139,11 +140,39 @@ but, if you do, you will probably have to put your shaders in subdirectory
 of your working directory (as with pi3d_demos/shaders) and you will probably
 have to &#8220;expand&#8221; the <tt class="docutils literal"><span class="pre">#include</span> <span class="pre">...</span></tt> syntax used in the main pi3d shaders
 as the process of figuring out the path to import from might defeat the
-Shader loader!</p>
+Shader loader! Shaders are difficult to debug as the only info is graphical output
+to the screen but a general rule is to start from something that works and
+change a very small part before testing. That way you will stand more
+chance of figuring out what broke it!</p>
+</div>
+<div class="section" id="video-textures">
+<h2>Video Textures<a class="headerlink" href="#video-textures" title="Permalink to this headline">¶</a></h2>
+<p>By using pi3d.Texture.update_ndarray() to update the Texture with a numpy array
+it&#8217;s possible to change the image relatively quickly. Obviously this depends
+on the size of the image and the power of the cpu but even on the Raspberry
+Pi it&#8217;s can give a reasonable frame rate using ffmpeg as the video decoder.
+Have a look at the pi3d_demos.</p>
+<p>On line 39 <tt class="docutils literal"><span class="pre">image</span></tt> is defined as a numpy ndarray with dimensions the same
+as each video frame (N.B. C type arrays are rows (height) then cols (width)
+then RGB bytes). This array is then filled in a Thread running in the function
+pipe_thread() defined on line 41 and started just after. In pipe_thread
+ffmpeg is run as a subprocess and the output piped into the image array
+(line 48). There is a slightly messy variable length sleep on line 58 to
+keep the video frame rate regular, and a flag is set so that the main
+Thread which has the pi3d frame loop can refresh the Texture after each
+video frame has been copied into the numpy array see line 168.</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion<a class="headerlink" href="#conclusion" title="Permalink to this headline">¶</a></h2>
+<p>Hopefully you&#8217;ve arrived here, at the end of the book, with a better understanding
+of the way that pi3d uses the enormous processing power of the GPU through
+the OpenGL ES 2.0 standard. More importantly I hope you have a grasp of the
+architecture and terminology to help you search for and understand the answers
+to any problems you (inevitably) encounter as you start to make your own programs.</p>
 <table class="docutils footnote" frame="void" id="id2" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://en.wikipedia.org/wiki/Kernel_%28image_processing">https://en.wikipedia.org/wiki/Kernel_%28image_processing</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://en.wikipedia.org/wiki/Kernel_(image_processing">https://en.wikipedia.org/wiki/Kernel_(image_processing</a>)</td></tr>
 </tbody>
 </table>
 </div>
@@ -159,6 +188,8 @@ Shader loader!</p>
   <ul>
 <li><a class="reference internal" href="#">Off-screen textures (and other more complicated things)</a><ul>
 <li><a class="reference internal" href="#other-shaders">Other Shaders</a></li>
+<li><a class="reference internal" href="#video-textures">Video Textures</a></li>
+<li><a class="reference internal" href="#conclusion">Conclusion</a></li>
 </ul>
 </li>
 </ul>
