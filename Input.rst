@@ -19,7 +19,7 @@ non-blocking key input as a "built-in" function. The reasons is almost
 certainly because of the desire to make python applications run unaltered
 on all platforms. In pi3d we have to provide a host of different options for
 keyboard input: CursesKeyboard, SysKeyboard, x11Keyboard, AndroidKeyboard
-(which is really just a placeholder) and WindowsKeyboard. Normally the
+(which is really just a placeholder) and PygameKeyboard. Normally the
 appropriate one will be loaded for the environment you are using but this
 is a surprisingly non-straightforward area that may need some careful
 thought especially on non-standard platforms or using non-standard keyboards
@@ -36,13 +36,14 @@ that the mouse movements continue to provide input even when the cursor
 is outside the relevant window or even "stuck" against a screen edge. This
 means that it's possible to click on other things on the desktop, including
 the X to close the pi3d window, if needed! To achieve the same effect with
-the pygame mouse input (as used with Windows), the cursor is "warped" to the
-centre of the window each frame. There are slight differences in the
-behaviour of Mouse functions with the two systems but most of the demos
-simply use position()
+the pygame mouse input (as used with Windows but available on linux (except
+Raspberry Pi) by using ``Display.create(use_pygame=True)``), the cursor is
+"warped" to the centre of the window each frame. There are slight differences
+in the behaviour of Mouse functions with the two systems but most of the
+demos simply use position()
 
 Mouse.position() returns a tuple (x, y) this can be constrained by passing
-Mouse.__init__() an argument restrict=True (the default), in which case
+Mouse constructor an argument restrict=True (the default), in which case
 values can also be set for the width and height that the mouse movement
 is restricted.
 

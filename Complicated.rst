@@ -4,6 +4,9 @@
 Off-screen textures (and other more complicated things)
 =======================================================
 
+.. image:: tigershadow.jpg
+   :align: right
+
 The normal result of drawing objects with pi3d is for them to appear on
 the display. However there can be situations where it might be useful to
 capture the output and do other processing on it before posting it to the
@@ -29,7 +32,7 @@ these has a similar outline work flow each frame.
 
 Because offscreen textures can be used for a wide range of reasons the
 details of each one will vary greatly. However the Post-processing application
-is probably the most general this is a good one to look at.
+is probably the most general so this is a good one to look at.
 
 Open pi3d_demos/Post.py and, after running it to see what it does, try
 commenting out the lines 67, 73 and 78. This will basically cut out the
@@ -73,7 +76,7 @@ which it resets to 2.0.
 
 Now if you look in pi3d/shader/post_base.fs - the fragment shader - you
 will see on line 27 that use seems to be made of unif[16][0] (remember that
-the flat c_types.float(60) array in python becomes vec3[20] in GLSL so
+the "flat" c_types.float(60) array in python becomes vec3[20] in GLSL so
 unif[48] in python is unif[16][0] in the shader.) But what exactly is it
 doing? Well the vertex shader is very simple, essentially just setting the
 vertex location in gl_Position and flipping the image top to bottom as it
@@ -103,6 +106,53 @@ but, if you do, you will probably have to put your shaders in subdirectory
 of your working directory (as with pi3d_demos/shaders) and you will probably
 have to "expand" the ``#include ...`` syntax used in the main pi3d shaders
 as the process of figuring out the path to import from might defeat the
-Shader loader!
+Shader loader! Shaders are difficult to debug as the only info is graphical output
+to the screen but a general rule is to start from something that works and
+change a very small part before testing. That way you will stand more
+chance of figuring out what broke it!
+
+Video Textures
+--------------
+
+By using pi3d.Texture.update_ndarray() to update the Texture with a numpy array
+it's possible to change the image relatively quickly. Obviously this depends
+on the size of the image and the power of the cpu but even on the Raspberry
+Pi it's can give a reasonable frame rate using ffmpeg as the video decoder.
+Have a look at the pi3d_demos.
+
+On line 39 ``image`` is defined as a numpy ndarray with dimensions the same
+as each video frame (N.B. C type arrays are rows (height) then cols (width)
+then RGB bytes). This array is then filled in a Thread running in the function
+pipe_thread() defined on line 41 and started just after. In pipe_thread
+ffmpeg is run as a subprocess and the output piped into the image array
+(line 48). There is a slightly messy variable length sleep on line 58 to
+keep the video frame rate regular, and a flag is set so that the main
+Thread which has the pi3d frame loop can refresh the Texture after each
+video frame has been copied into the numpy array see line 168.
+
+Conclusion
+----------
+
+Hopefully you've arrived here, at the end of the book, with a better understanding
+of the way that pi3d uses the enormous processing power of the GPU through
+the OpenGL ES 2.0 standard. More importantly I hope you have a grasp of the
+architecture and terminology to help you search for and understand the answers
+to any problems you (inevitably) encounter as you start to make your own programs.
+
+If you started reading this book because you had some specific ideas you
+wanted to implement then you will be tempted to launch straight into an
+ambitious project. I have to say that **is** an excellent idea. However, before
+you do any coding draw up a plan of action that identifies the smallest,
+simplest elements first then write short programs to help you get to grips
+with the problems one at a time at a manageable scale. This approach has
+the advantage of giving you encouraging feedback early on, it forces you
+to break the problem down into its functional elements and you build up
+a set of test programs to help you verify later changes to your project
+code.
+
+Finally, don't give up too quickly when you run into trouble, but don't
+struggle on alone for too long either. There is always help available on-line.
+Try www.raspberrypi.org/forums/, groups.google.com/forum/ or stackoverflow.com
+to name but three.
 
 .. [#] https://en.wikipedia.org/wiki/Kernel_(image_processing)

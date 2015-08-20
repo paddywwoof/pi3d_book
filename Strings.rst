@@ -18,9 +18,6 @@ where that might not be available (I couldn't get it to work on Android),
 pi3d.Pngfont can be used (but it's restricted to the letters on the special
 png image files)
 
-.. image:: string01.jpg
-   :align: right
-
 The second mechanism is the pi3d.FixedString class which inherits from
 pi3d.Texture, a bit like the pi3d.Font class above but rather than containing
 the full alphabet it uses a string passed to the constructor. This means that
@@ -33,7 +30,10 @@ BLUR and SMOOTH. The FixedString class can be used wherever a pi3d.Texture
 would be used, but it also contains an instance of pi3d.Sprite (called
 pi3d.FixedString.sprite) which has width, height, umult and vmult to match
 the dimensions of the string to the Texture. (Look back at the chapter
-``Shapes, Buffers and Display`` if you don't remember umult and vmult)
+``Shapes, Buffers and Display`` if you don't remember umult and vmult!)
+
+.. image:: string01.jpg
+   :align: left
 
 However for varying text (such as a score, or timer) the overhead of
 creating a new PIL image and converting it to a Texture every frame would
@@ -49,10 +49,10 @@ use a 2D Camera (orthographic - argument is_3d=False) with a pi3d.String
 object, then you also need to set the argument in the String constructor
 to is_3d=False. Also the font passed to pi3d.String constructor is a pi3d.Font
 object but the font passed to pi3d.FixedString is the path to a TrueType
-font as a string. One odd.
+font as a string.
 
 With the rotating text you will have noticed the strange effect of the
-mipmaps which are a series of lower resolution images that automatically
+mipmaps which are a series of lower resolution texture maps that automatically
 get swapped depending on the z depth of the fragment being rendered.
 The mipmaps are generated at the time of Texture creation and are generally
 a good thing so the default argument to Texture is mipmap=True. 

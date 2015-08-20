@@ -107,6 +107,9 @@ and cluster() which is used to "scatter" objects randomly onto an ElevationMap,
 Points using texture mapping
 ----------------------------
 
+.. image:: spriteballs.jpg
+   :align: left
+
 Finally, in the chapter on 'Cameras, 2D projection and Sprites' I referred
 to an alternative sprite drawing method using points, for fast rendering
 when the numbers get big. Open up the demo pi3d_demos/SpriteBalls.py 
@@ -130,7 +133,8 @@ lookup is performed on the texture loaded in SpriteBalls.py, however rather
 than using a 2D vector calcualted from the texture coordinates (which are
 not passed to the shader when using the Points class anyway), it uses
 gl_PointCoord, a variable available in the fragment shader while drawing
-points.
+points. To get an idea of the increased speed of this type of rendering
+try increasing MAX_BALLS to several thousand as used for the image above.
 
 .. [#] https://github.com/paddywwoof/pi3d_book/blob/master/linepoint01.py
 .. [#] https://en.wikipedia.org/wiki/Z-fighting
@@ -139,3 +143,4 @@ points.
        fixed small amount would have sufficed, however the technique used
        in the example can be used more generally.
 .. [#] https://github.com/paddywwoof/pi3d_book/blob/master/linepoint03.py
+
