@@ -69,7 +69,7 @@ this flexibility.
 --------------
 
 In pi3d the background scenery is provided by either the EnvironmentCube
-or EnvironmentSphere classes. These are basically cubes or sphere where
+or EnvironmentSphere classes. These are basically cubes or spheres where
 the triangles are defined so that they face inwards (remember the order
 of vertices determines which way a surface faces in OpenGL). However the
 Texture used to wrap onto the inside of the shape has to conform to the

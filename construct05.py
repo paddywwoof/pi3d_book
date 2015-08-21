@@ -180,10 +180,24 @@ city.houses.set_textures([texh])
 
 city.set_shader(shader)
 city.set_fog((0.4, 0.4, 0.6, 0.95), 150)
+"""
+ground
+ - because fog factor is calculated in the vertex shader this produces
+ very unrealistic effects using a simple Sprite (try uncommenting the
+ set_fog() line below. By subdividing the Sprite into more vertices, as
+ with the LodSprite alternative below, or the ElevationMap covered in the
+ next chapter.
 
+ Once challenge you could consider would be to modify this demo to use an
+ ElevationMap for the ground. You would have to use the calcHeight() method
+ to adjust the y values of vertices, per corner for sidewalks but per building
+ otherwise (to avoid slanting walls and eves)
+"""
 ground = pi3d.Sprite(w=200, h=200, x=100, z=100, y=0.02, rx=90)
+#ground = pi3d.LodSprite(w=200, h=200, x=100, z=100, y=0.02, rx=90, n=8)
 texg = pi3d.Texture("ground.jpg")
 ground.set_draw_details(shader, [texg])
+#ground.set_fog((0.4, 0.4, 0.6, 0.95), 150)
 
 keys = pi3d.Keyboard()
 mymouse = pi3d.Mouse(restrict = False)
