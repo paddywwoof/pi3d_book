@@ -40,7 +40,7 @@ with this is that only the mat_flat shader works as expected. This is because
 the Buffer attribute array doesn't have normals or texture coordiates.
 There is also a pi3d.Points class which is very similar.
 
-.. image:: simple_quad.png
+.. image:: images/simple_quad.png
    :align: left
    
 You might also notice with many of the standard shapes drawn as lines with
@@ -77,7 +77,7 @@ exactly the same distance from the camera as the edges of the faces they
 outline so there is likely to be z-fighting [#]_ or partial obscuring of
 lines as the object rotates.
 
-.. image:: helix01.jpg
+.. image:: images/helix01.jpg
    :align: right
 
 There are at least three ways of tackling this problem. One might be to
@@ -99,15 +99,16 @@ pi3d.MergeShape class. This class can be used to combine several Shape
 objects into one with the advantage that only one draw() call will then
 be needed. For a large number of objects, such as the trees in the
 ForestWalk.py demo, this will make a very significant reduction in the
-(slow) python side matrix multiplication. MergeShape has two methods:
-radialCopy() which can be used to produce regular patterns (see pi3d_demos/Blur.py)
-and cluster() which is used to "scatter" objects randomly onto an ElevationMap,
+(slow) python side matrix multiplication. As well as merge() used here,
+MergeShape has two other methods: radialCopy() which can be used to
+produce regular patterns (see pi3d_demos/Blur.py) and cluster() which
+is used to "scatter" objects randomly onto an ElevationMap,
 (see pi3d_demos/ForestWalk.py).
 
 Points using texture mapping
 ----------------------------
 
-.. image:: spriteballs.jpg
+.. image:: images/spriteballs.jpg
    :align: left
 
 Finally, in the chapter on 'Cameras, 2D projection and Sprites' I referred
@@ -119,8 +120,9 @@ to explain any of that here but I do recommend trying to get to grips with
 this in the longer term. For the moment it is sufficient to understand
 that the sprites are represented by the vertices of a Points Shape and
 that the z location is being used to represent the size of each point (see
-lines 46 to 51). Each frame the vertices move according to "physics" and
-the locations are revised using the Buffer.re_init() method (line 73)
+lines 52 to 54, you can also see that the color is defined using the normal
+x component on line 61). Each frame the vertices move according to "physics"
+and the locations are revised using the Buffer.re_init() method (line 84)
 and the points are drawn using a special shader. Now look at the shaders
 pi3d_demos/shaders/uv_sprite.* (.vs and .fs)
 
@@ -136,11 +138,11 @@ gl_PointCoord, a variable available in the fragment shader while drawing
 points. To get an idea of the increased speed of this type of rendering
 try increasing MAX_BALLS to several thousand as used for the image above.
 
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/linepoint01.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/linepoint01.py
 .. [#] https://en.wikipedia.org/wiki/Z-fighting
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/linepoint02.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/linepoint02.py
 .. [#] In this case the camera isn't moving so a simple translateZ() by a
        fixed small amount would have sufficed, however the technique used
        in the example can be used more generally.
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/linepoint03.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/linepoint03.py
 

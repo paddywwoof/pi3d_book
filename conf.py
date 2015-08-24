@@ -208,12 +208,12 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'pi3d_book.tex', u'3D Graphics with pi3d',
-   u'Paddy Gaunt', 'manual'),
+   u'@paddyg', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
-#latex_logo = None
+latex_logo = 'images/coverpic.png'
 
 # For "manual" documents, if this is true, then toplevel headings are parts,
 # not chapters.

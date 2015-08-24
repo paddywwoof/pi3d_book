@@ -41,20 +41,20 @@ Shape
 Have a look at the source code for Shape. *Don't be dismayed by how long it
 is - the majority of it is just convenience methods for*:
 
-#. setting the uniform variables array (``self.unif``, remember uniform variables
-   from chapter two - one of the four categories of data passed to the GPU
-   shaders),
+1. setting the uniform variables array (``self.unif``, remember uniform variables
+from chapter two - one of the four categories of data passed to the GPU
+shaders),
 
-#. setting the uniform variables held in the Buffer list (``self.buf[0].unib``,
-   I will explain the relationship between Shapes and Buffers below),
+2. setting the uniform variables held in the Buffer list (``self.buf[0].unib``,
+I will explain the relationship between Shapes and Buffers below),
 
-#. updating the matrices (see ``rotateIncY()`` on line 665, you've already used
-   that method in 3D_matrix02.py and the process of writing sines and cosines
-   into an array should be reassuringly familiar!)
+3. updating the matrices (see ``rotateIncY()`` on line 655, you've already used
+that method in 3D_matrix02.py and the process of writing sines and cosines
+into an array should be reassuringly familiar!)
 
 However the draw() method does several important things. Firstly, on lines
-163, 164 and 37 (which is in __init__() actually!) you will see the method
-instance() being called for Camera, Shader and Light. These three classes
+162 and 38 (which is in __init__() actually!) you will see the method
+instance() being called for Camera and Light. These three classes
 inherit from the DefaultInstance class and the method will either return
 the first instance of that class that has been created, or if none, it will
 create one.
@@ -70,16 +70,14 @@ Buffer class you will see why a default material can be set easily but
 default textures would be messy.
 
 The second thing to look at in the Shape.draw() method is the section from line
-167 to 205. This is basically the matrix multiplication we did by hand in
+164 to 202. This is basically the matrix multiplication we did by hand in
 2D_matrix01.py and 3D_matrix01.py Because this has to be done for every
 object in the scene in every frame it is time critical and this has been
 found to be the fastest combination 1) use numpy dot() [#]_ 2) set flags
 everywhere and only do the dot() when something has moved or rotated.
-Line 210 is where two 4x4 matrices are passed to the shader and line 214
-passes twenty 3x1 vectors, the Shape.unif array.
 
-Before we follow line 218 to the Buffer.draw() we'll just have a quick
-scan through the Shape.unif array which occupies lines 38 to 49 (with a
+Before we follow line 207 to the Buffer.draw() we'll just have a quick
+scan through the Shape.unif array which occupies lines 40 to 50 (with a
 comprehensive description of what it all is underneath it). The first twelve
 values are taken from arguments to the __init__() method and only offset
 should need any explanation. This allows objects to be rotated about different
@@ -97,9 +95,10 @@ interpetted, an RGB color value for the light and RGB for ambient. The final
 eighteen values are available for special shader effects.
 
 N.B. If you are eagle-eyed and have been paying attention you will have
-noticed a "proteted" function [#]_ in Shape ``_lathe()`` that is used by
-the majority of the pi3d/shape classes. This will be investigated in a
-later chapter.
+noticed a "proteted" function [#]_ in Shape, ``_lathe()`` that is used by
+the majority of the pi3d/shape classes. This method provides a convenient
+way of generating objects with rotational symmetry - though there are
+modifiers that can produce variations such as spirals and helices.
 
 Buffer
 ------
@@ -115,67 +114,70 @@ of Model object i.e. Shapes that have been designed elsewhere and saved as
 The Buffer class is also complicated-looking and has more opengles function
 calls than Shape. There are a few things worth noting about this class
 
-#.  The "constructor" __init__() takes lists of vertices, normals, texture
-    coordinates and element indices, as we would expect. However if the normals
-    argument passed is ``None`` it will calculate a set of vectors at right
-    angles to both the triangle edges that meet at each vertex [#]_. It can
-    also be made to construct smaller buffers by being passed empty lists for
-    the texture coordinate and or the normals when these are not needed i.e.
-    for Lines, Points or a non-texture-mapped Shape.
+1. The "constructor" __init__() takes lists of vertices, normals, texture
+coordinates and element indices, as we would expect. However if the normals
+argument passed is ``None`` it will calculate a set of vectors at right
+angles to both the triangle edges that meet at each vertex [#]_. It can
+also be made to construct smaller buffers by being passed empty lists for
+the texture coordinate and or the normals when these are not needed i.e.
+for Lines, Points or a non-texture-mapped Shape.
 
-#.  The draw() method (which is called by Shape.draw() as we saw above) passes
-    the attribute and element arrays to the Shader on lines 263 to 270 and
-    on line 296 four 3x1 vectors, from Buffer.unib (which I will explain in
-    more detail below). draw() also passes the Texture samplers from line 275.
-    NB when I say "pass" the data it is only the pointer to the data that needs
-    to be transferred, the actual arrays were set up in the GPU memory space
-    when the Buffer was created and just need to be switched on (which is
-    very quick). However...
+2. The draw() method (which is called by Shape.draw() as we saw above) passes
+three 4x4 matrices to the shader on line 260 then on line 263 passes
+twenty 3x1 vectors as the Shape.unif array, both of these being arguments
+to draw() supplied from Shape.draw(). The attribute and element arrays
+are passed to the Shader on lines 271 to 278 and on line 304 four 3x1
+vectors, from Buffer.unib (which I will explain in more detail below).
+draw() also passes the Texture samplers from line 283. NB when I say
+"pass" the data it is only the pointer to the data that needs
+to be transferred, the actual arrays were set up in the GPU memory space
+when the Buffer was created and just need to be switched on (which is
+very quick). However...
 
-#.  There is a re_init() method that can be used to alter the values of the
-    vertex, normal or texture coordinate vectors from frame to frame. This
-    requires more processing than simply enabling data that is already there
-    but it is much faster than scrapping the previous Buffer object and
-    creating a complete new one.
+3. There is a re_init() method that can be used to alter the values of the
+vertex, normal or texture coordinate vectors from frame to frame. This
+requires more processing than simply enabling data that is already there
+but it is much faster than scrapping the previous Buffer object and
+creating a complete new one.
 
-    Moving vertices, normals or texture coordinates isn't something that needs
-    to be done very often but it might make an entertaining exercise in this
-    otherwise fairly wordy chapter. Copy the example program from the start of this
-    chapter into an editor and make sure it runs OK (there's no way of stopping
-    it as it stands apart from Ctrl+C to break or closing the window). Then
-    add some distortion, straight after ``ball.draw()`` at the same indent
-    along the lines of::
+Moving vertices, normals or texture coordinates isn't something that needs
+to be done very often but it might make an entertaining exercise in this
+otherwise fairly wordy chapter. Copy the example program from the start of this
+chapter into an editor and make sure it runs OK (there's no way of stopping
+it as it stands apart from Ctrl+C to break or closing the window). Then
+add some distortion, straight after ``ball.draw()`` at the same indent
+along the lines of::
 
-      bufr = ball.buf[0]        # only one Buffer in the list buf
-      b = bufr.array_buffer     # this is the array buffer!
-      l = len(b)                # length of the array (195 actually)
-      import numpy as np        # python will do this just once!
-      b[:,0:3] *= np.random.uniform(0.99, 1.01, (l, 3)) # see below..
-      bufr.re_init(pts=b[:,0:3]) # finally re make the buffer
+  bufr = ball.buf[0]        # only one Buffer in the list buf
+  b = bufr.array_buffer     # this is the array buffer!
+  lenb = len(b)             # length of the array (195 actually)
+  import numpy as np        # python will do this just once!
+  b[:,0:3] *= np.random.uniform(0.99, 1.01, (lenb, 3)) # below..
+  bufr.re_init(pts=b[:,0:3]) # finally re make the buffer
 
-    If you are not used to numpy you will probably be bamboozled by the
-    fifth line. This is how numpy works: the looping is done "automatically"
-    as a result of the slicing or the shape of the arrays involved. Using
-    python list comprehension this would achieve the same result::
-      
-      new_buf = [[b[i,j] * random.uniform(0.99, 1.01)
-                             for j in range(3)] for i in range(l)]
-      bufr.re_init(pts=new_buf)
+If you are not used to numpy you will probably be bamboozled by the
+fifth line. This is how numpy works: the looping is done "automatically"
+as a result of the slicing or the shape of the arrays involved. Using
+python list comprehension this would achieve the same result::
+  
+  new_buf = [[b[i,j] * random.uniform(0.99, 1.01)
+                         for j in range(3)] for i in range(lenb)]
+  bufr.re_init(pts=new_buf)
 
-    And good old straightforward, easy to understand looping::
-      
-      new_buf = []
-      for i in range(l):
-        new_buf.append([])
-        for j in range(3):
-          new_buf[i].append(b[i,j] * random.uniform(0.99, 1.01))
-      bufr.re_init(pts=new_buf)
+And good old straightforward, easy to understand looping::
+  
+  new_buf = []
+  for i in range(lenb):
+    new_buf.append([])
+    for j in range(3):
+      new_buf[i].append(b[i,j] * random.uniform(0.99, 1.01))
+  bufr.re_init(pts=new_buf)
 
-    The reason for this apparent regression to a less obvious code
-    format is **speed**. If you test the three alternatives with ``timeit``
-    you will find that the traditional looping takes 2.2ms, the list comprehension
-    takes 1.95ms and numpy takes 0.08ms, a massive margin that only increases
-    as the array gets bigger.
+The reason for this apparent regression to a less obvious code
+format is **speed**. If you test the three alternatives with ``timeit``
+you will find that the traditional looping takes 2.2ms, the list comprehension
+takes 1.95ms and numpy takes 0.08ms, a massive margin that only increases
+as the array gets bigger.
 
 The Buffer.unib array of uniform variable passed to the Shader needs a
 bit more explanation than the equivalent array in Shape. **ntile** is used
@@ -188,7 +190,7 @@ is produced by the mat_reflect or uv_reflect Shaders. **blend** is a variable
 set during the draw() process depending on whether the Texture values taken
 from the image file are to be blended or not. If the alpha value of the pixel
 is below this value then the pixel will be "discarded". This will be covered
-in detail later but it allow sharp edges to be produced around shapes
+in detail later but it allows sharp edges to be produced around shapes
 constructed from png images with large areas of transparency. **material**
 is the RGB values for this Buffer when drawn using a material Shader. **umult**
 and **vmult** control the tiling of the Texture map (the color one as opposed

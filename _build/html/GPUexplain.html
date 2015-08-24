@@ -58,11 +58,12 @@ skip over many of the more involved aspects such as rendering to off-screen
 buffers, using masks, etc.</p>
 <p>Beneath the python module classes and functions provided by pi3d there are
 three &#8220;steps&#8221; necessary for control of the GPU. Two or three of these
-require external libraries (shared objects in linux, dlls in windows) imported <a class="footnote-reference" href="#id5" id="id1">[1]</a>:</p>
+require external libraries (shared objects in linux, dlls in windows) to be
+imported <a class="footnote-reference" href="#id6" id="id1">[1]</a>:</p>
 <blockquote>
 <div><p>1. on the Raspberry Pi <tt class="docutils literal"><span class="pre">libbcm_host.so</span></tt> is used to create and manage a display
 surface to draw on. On linux (desktop and laptop) the surface is provided
-by the x11 server <a class="footnote-reference" href="#id6" id="id2">[2]</a> and windows and Android use pygame (which uses SDL2 <a class="footnote-reference" href="#id7" id="id3">[3]</a>)</p>
+by the x11 server <a class="footnote-reference" href="#id7" id="id2">[2]</a> and windows and Android use pygame (which uses SDL2 <a class="footnote-reference" href="#id8" id="id3">[3]</a>)</p>
 <p>2. <tt class="docutils literal"><span class="pre">libELG</span></tt> is used to set up the interface between the machine or operating
 system window system and</p>
 <p>3. <tt class="docutils literal"><span class="pre">libGLESv2</span></tt> provides access to the OpenGL language functions developed
@@ -82,7 +83,7 @@ pixel) shader which are written in a C like language (GLSL). I will give
 some more detail to what each actually does later but one crucial thing to
 appreciate is that information is passed from the CPU program (in
 our case python pi3d ones) to the shaders and the vertex shader can pass
-information on to the fragment shader, however the only output is pixels <a class="footnote-reference" href="#id8" id="id4">[4]</a>.
+information on to the fragment shader, however the only output is pixels <a class="footnote-reference" href="#id9" id="id4">[4]</a>.
 It is fundamental to the efficiency and speed of the GPU that the shaders
 operate on only one vertex or pixel. i.e. the vertex shader can&#8217;t access
 information about the location of adjacent vertices and the fragment shader
@@ -170,15 +171,16 @@ is clock-wise. Normally the backs of faces are not rendered by the GPU:</p>
    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
 </pre></div>
 </div>
+<img alt="_images/simple_quad.png" class="align-right" src="_images/simple_quad.png" />
 <p>The GPU uses coordinate directions x increases from left to right, y
 increases from bottom to top, z increases going into the screen.</p>
 <p>The GPU has been designed to be fantastically efficient at performing
 vector and matrix arithmetic. So rather than the CPU calculating where
-about the vertices have  moved and how these positions can be represented
+the vertices have moved and how these positions can be represented
 on the 2D computer screen it simply calculates a transformation matrix
 to represent this and passes that to the GPU. In pi3d we pass two matrices,
 one representing the object translation, rotation and scale and an additional
-one including the camera movement and perspective calculations. In the
+one including the camera movement and perspective calculations <a class="footnote-reference" href="#id10" id="id5">[5]</a>. In the
 vertex shader these matrices are used to convert the raw vertex positions
 to screen locations and to work out where the light should come from in
 order to work out shadows.</p>
@@ -207,7 +209,7 @@ is must be drawn <strong>after</strong> anything further away that should &#8216
 <p>pi3d uses a double buffer system where everything is drawn onto an off-screen
 buffer which, when complete at the end of the frame loop, is swapped
 &#8216;instantaneously&#8217; to visible. This makes the animation much smoother</p>
-<table class="docutils footnote" frame="void" id="id5" rules="none">
+<table class="docutils footnote" frame="void" id="id6" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>The attempt to work out on what platform pi3d is running and what
@@ -215,25 +217,33 @@ libraries to import is done in /pi3d/constants/__init__.py and the
 Initialization is done in /pi3d/utils/DisplayOpenGL.py</td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id6" rules="none">
+<table class="docutils footnote" frame="void" id="id7" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>X11 is the standard windowing and user-input system used on Linux
 systems</td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id7" rules="none">
+<table class="docutils footnote" frame="void" id="id8" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td>Simple DirectMedia Layer <a class="reference external" href="https://www.libsdl.org/index.php">https://www.libsdl.org/index.php</a></td></tr>
 </tbody>
 </table>
-<table class="docutils footnote" frame="void" id="id8" rules="none">
+<table class="docutils footnote" frame="void" id="id9" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
 <tr><td class="label"><a class="fn-backref" href="#id4">[4]</a></td><td>It is possible to get &#8216;output&#8217; from GPUs using sophisticated techniques
 that allow the parallel processing capabilities to be used elsewhere, but
 this is not trivial!</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id10" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td>There are actually three 4x4 matrices, the last of which is used
+for creating a &#8220;distance map&#8221; for calculating shadow casting (see the
+CastShadows.py and TigerShadow.py demos) Quite a technical procedure.</td></tr>
 </tbody>
 </table>
 </div>

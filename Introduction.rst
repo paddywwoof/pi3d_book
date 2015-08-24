@@ -34,6 +34,8 @@ always resort to google!). I assume that:
 * You want to learn a bit about the mechanisms of producing 3D graphics
   rather than simply find recipes for how to do things.
 
+.. image:: images/pi3d_book.png
+
 The Structure and how to use this book
 --------------------------------------
 
@@ -74,16 +76,12 @@ docstrings and comments. **The code and the docstrings are NOT duplicated
 in the narrative** so it is essential that the book is read in conjunction
 with the programs, and that the programs are *read* as well as run.
 
-.. figure:: pi3d_book.png
-
-   Outline mind map from Coggle.it
-
 Installation
 ------------
 
 If you don't have pi3d set up already you need to read the relevant section here
 http://pi3d.github.io/html/ReadMe.html#setup-on-the-raspberry-pi and the
-paragraphs below, that apply to your platform.
+paragraphs below it, that apply to your platform.
 
 At points in the book I will suggest that you look in various pi3d files
 and if you installed on Raspberry Pi or Linux these will be in
@@ -91,14 +89,13 @@ and if you installed on Raspberry Pi or Linux these will be in
 try  ``C:\Python27\Lib\site-packages\pi3d\``. Obviously python3 would have
 an appropriately different path.
 
-You also need to get a copy of http://github.com/pi3d/pi3d_demos either
-using git clone or download the zip and extract it.
+Also the demos from ``github.com/pi3d/pi3d_demos`` (using git clone or
+download the zip and extract it), and obviously you need a copy of the example
+programs for this book ``github.com/paddywwoof/pi3d_book``
 
-And you need a copy of the example programs for this book
-github.com/paddywwoof/pi3d_book
-
-.. [#] http://www.numpy.org/
-.. [#] https://docs.python.org/2/library/ctypes.html
+.. [#] numpy python module for **fast** array processing http://www.numpy.org/
+.. [#] ctypes python module for interacting with imported C libraries
+   https://docs.python.org/2/library/ctypes.html
 .. [#] http://en.wikipedia.org/wiki/OpenGL_Shading_Language
 .. [#] https://www.mathsisfun.com/sine-cosine-tangent.html
 .. [#] https://www.mathsisfun.com/pythagoras.html

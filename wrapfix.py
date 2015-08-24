@@ -16,7 +16,7 @@ for l in tx:
     else:
       fl_type = "L"
     txnew += ["\\begin{wrapfigure}{" + fl_type + "}{0.45\\textwidth}",
-              "\\includegraphics[width = 0.40\\textwidth]{" + fname + "}",
+              "\\includegraphics[width = 0.44\\textwidth]{" + fname + "}",
               "\\end{wrapfigure}"]
   else:
     txnew += [l]

@@ -133,9 +133,10 @@ pi3d.MergeShape class. This class can be used to combine several Shape
 objects into one with the advantage that only one draw() call will then
 be needed. For a large number of objects, such as the trees in the
 ForestWalk.py demo, this will make a very significant reduction in the
-(slow) python side matrix multiplication. MergeShape has two methods:
-radialCopy() which can be used to produce regular patterns (see pi3d_demos/Blur.py)
-and cluster() which is used to &#8220;scatter&#8221; objects randomly onto an ElevationMap,
+(slow) python side matrix multiplication. As well as merge() used here,
+MergeShape has two other methods: radialCopy() which can be used to
+produce regular patterns (see pi3d_demos/Blur.py) and cluster() which
+is used to &#8220;scatter&#8221; objects randomly onto an ElevationMap,
 (see pi3d_demos/ForestWalk.py).</p>
 </div>
 <div class="section" id="points-using-texture-mapping">
@@ -150,8 +151,9 @@ to explain any of that here but I do recommend trying to get to grips with
 this in the longer term. For the moment it is sufficient to understand
 that the sprites are represented by the vertices of a Points Shape and
 that the z location is being used to represent the size of each point (see
-lines 46 to 51). Each frame the vertices move according to &#8220;physics&#8221; and
-the locations are revised using the Buffer.re_init() method (line 73)
+lines 52 to 54, you can also see that the color is defined using the normal
+x component on line 61). Each frame the vertices move according to &#8220;physics&#8221;
+and the locations are revised using the Buffer.re_init() method (line 84)
 and the points are drawn using a special shader. Now look at the shaders
 pi3d_demos/shaders/uv_sprite.* (.vs and .fs)</p>
 <p>In the vertex shader you will see that it simply sets gl_Position in the
@@ -168,7 +170,7 @@ try increasing MAX_BALLS to several thousand as used for the image above.</p>
 <table class="docutils footnote" frame="void" id="id6" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/linepoint01.py">https://github.com/paddywwoof/pi3d_book/blob/master/linepoint01.py</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/programs/linepoint01.py">https://github.com/paddywwoof/pi3d_book/blob/master/programs/linepoint01.py</a></td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id7" rules="none">
@@ -180,7 +182,7 @@ try increasing MAX_BALLS to several thousand as used for the image above.</p>
 <table class="docutils footnote" frame="void" id="id8" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/linepoint02.py">https://github.com/paddywwoof/pi3d_book/blob/master/linepoint02.py</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id3">[3]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/programs/linepoint02.py">https://github.com/paddywwoof/pi3d_book/blob/master/programs/linepoint02.py</a></td></tr>
 </tbody>
 </table>
 <table class="docutils footnote" frame="void" id="id9" rules="none">
@@ -194,7 +196,7 @@ in the example can be used more generally.</td></tr>
 <table class="docutils footnote" frame="void" id="id10" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/linepoint03.py">https://github.com/paddywwoof/pi3d_book/blob/master/linepoint03.py</a></td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id5">[5]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/programs/linepoint03.py">https://github.com/paddywwoof/pi3d_book/blob/master/programs/linepoint03.py</a></td></tr>
 </tbody>
 </table>
 </div>

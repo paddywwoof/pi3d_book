@@ -41,7 +41,7 @@ to generate a range of building sizes and types in a controllable way.
 5. An algorithm to generate a pattern of
 city blocks.
 
-.. image:: construct01.jpg
+.. image:: images/construct01.jpg
    :align: left
 
 Before getting stuck into **construct01.py** [#]_ It's worth explaining
@@ -69,7 +69,7 @@ not unrelated) quirk when calculating normal directions using the cross
 product of two edges, namely cross(A,B) points the opposite direction to
 cross(B,A).
 
-.. image:: construct02.jpg
+.. image:: images/construct02.jpg
    :align: right
 
 In **construc02.py** [#]_ most of the functionality of make_houses has
@@ -81,7 +81,7 @@ pitch - i.e. how flat the roof will be 2. the whole of the tex_coords array
 which is quite different for offices, being a long image used for all four
 sides, rather than the image divided into six used for houses. There is
 also an additional factor added to the spec for each house or office that
-determines how much of texture to use in the uv map. If you play around
+determines how much of the texture to use in the uv map. If you play around
 with the `spec` values in the example program you may be able to get a feel
 for how this manipulation of uv values is being used.
 
@@ -98,14 +98,14 @@ The code to "populate" a block with offices and houses is one of the
 trickier aspects of this procedural generation exercise. It's not purely
 graphics related but if you're interested in the process this is the logic:
 
-  For each side of the block calculated how many buildings should be added.
-  Then make a list of points that will mark the street facing corners of
+  For each side of the block calculate how many buildings should be added.
+  Then make a list of points that will mark the street-facing corners of
   the buildings. For the corner buildings work out the fourth corner by
   seeing where two lines running in from the front corners intercept. For
   the intermediate buildings calculate the required other two (inside)
   points.
 
-.. image:: block_layout.jpg
+.. image:: images/block_layout.jpg
    :align: left
 
 There's a little bit of algebra involved, but it's essentially just stuff
@@ -139,7 +139,7 @@ would slow it down, the alternative approach would be to subdivide the
 ground surface and this is one of the benefits of using the ElevationMap
 class that will be covered later.
 
-.. image:: construct05.jpg
+.. image:: images/construct05.jpg
 
 One last new feature has been added to this demo that will be explained
 more fully in the next chapter - mouse camera control. As you will have
@@ -155,9 +155,9 @@ windows.. The scope is almost limitless but hopefully you now have some
 idea how to approach and implement some of the more sophisticated aspects
 of 3D modelling.
 
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/construct01.py
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/construct02.py
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/construct03.py
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/construct04.py
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/construct05.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/construct01.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/construct02.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/construct03.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/construct04.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/construct05.py
 
