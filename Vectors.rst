@@ -22,7 +22,7 @@ that they have more than one **component**. So whenever a value has to be
 uniquely defined like (x, y, z) or even (R, G, B) then that makes it a
 vector.
 
-.. image:: Coord_system_CA_0.png
+.. image:: images/Coord_system_CA_0.png
    :align: left
 
 So the way a surface "points" (the normal) if often drawn as an
@@ -57,8 +57,8 @@ from that perspective are indistinguishable from programming arrays::
        [0.8, 0.2, 3.2. 0.0],
        [0.0, 0.0, 0.0. 1.0]]
 
-However very useful properties have been defined and implemented in maths and
-subsequently programming languages that enable efficient and **fast**
+However very useful properties have been defined and implemented in mathematics
+and subsequently programming languages that enable efficient and **fast**
 calculations involving vectors. And, as we've just seen, vectors are the
 natural way to represent the components of 3D graphics.
 
@@ -78,7 +78,7 @@ are:
      v = P1(v) # then to 2D screen coordinates using perspective!
      # which you could write as
      v = P1(S1(R1(T1(v))))
-     # with matrix maths you can do
+     # with matrix algebra you can do
      # M = P1 x T1 x R1 x S1 # termed "matrix multiplication"
      M = P1(S1(R1(T1))) # or in our pseudo functional code
      v = M(v)
@@ -114,7 +114,7 @@ In **3D_matrix01.py** [#]_ there is an expansion into three dimensions so the tr
 matrices become 4x4. If you are unclear why this is necessary it may be a
 good idea to go back and look at the first illustration.
 
-.. image:: perspective.png
+.. image:: images/perspective.png
    :align: left
 
 Because the computer screen is essentially flat there has to be a method of
@@ -168,7 +168,7 @@ slightly theoretical background and start to see how the pi3d classes fit
 together and how they can be used in practice.
 
 .. [#] http://en.wikipedia.org/wiki/Euler_angles#Relationship_to_other_representations
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/2D_matrix01.py
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/3D_matrix01.py
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/3D_matrix02.py
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/3D_matrix03.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/2D_matrix01.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/3D_matrix01.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/3D_matrix02.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/3D_matrix03.py

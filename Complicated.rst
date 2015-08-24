@@ -4,7 +4,7 @@
 Off-screen textures (and other more complicated things)
 =======================================================
 
-.. image:: tigershadow.jpg
+.. image:: images/tigershadow.jpg
    :align: right
 
 The normal result of drawing objects with pi3d is for them to appear on
@@ -27,7 +27,7 @@ these has a similar outline work flow each frame.
   4. Process the image. Sometimes using a special shader, sometimes drawing
      the off-screen texture to a Sprite with a normal uv_flat shader. 
 
-.. image:: complicated.jpg
+.. image:: images/complicated.jpg
    :align: left
 
 Because offscreen textures can be used for a wide range of reasons the
@@ -80,7 +80,7 @@ the "flat" c_types.float(60) array in python becomes vec3[20] in GLSL so
 unif[48] in python is unif[16][0] in the shader.) But what exactly is it
 doing? Well the vertex shader is very simple, essentially just setting the
 vertex location in gl_Position and flipping the image top to bottom as it
-sets the uniform variable texcoordout. In the fragment shader lines 26 to 29
+sets the uniform variable texcoordout. In the fragment shader, lines 26 to 29
 loop nine times to increment the eventual pixel RGBA value texc. Each loop
 looks up the value from the PostProcess texture using Texture2D with a
 slightly offset coordinate dx[] and dy[] and a weighting factor f[]. unif[16][0]
@@ -98,11 +98,11 @@ things. Look at the source code, which was contributed by Peter Hess based
 on www.iquilezles.org shadertoy demos. The shader works by converting the
 texture coordinates to a polar basis in lines 25 and 26, then applying
 factors that depend on an incrementing value "time" and trigonometric
-transformations then using the values to lookup and modify the RGBA values
+transformations, then using the values to lookup and modify the RGBA values
 from the texture sampler.
 
 It's quite fun to experiment with different formulas and values in shaders
-but, if you do, you will probably have to put your shaders in subdirectory
+but, if you do, you will probably have to put your shaders in a subdirectory
 of your working directory (as with pi3d_demos/shaders) and you will probably
 have to "expand" the ``#include ...`` syntax used in the main pi3d shaders
 as the process of figuring out the path to import from might defeat the
@@ -117,13 +117,13 @@ Video Textures
 By using pi3d.Texture.update_ndarray() to update the Texture with a numpy array
 it's possible to change the image relatively quickly. Obviously this depends
 on the size of the image and the power of the cpu but even on the Raspberry
-Pi it's can give a reasonable frame rate using ffmpeg as the video decoder.
-Have a look at the pi3d_demos.
+Pi it can give a reasonable frame rate using ffmpeg as the video decoder.
+Have a look at the pi3d_demos/VideoWalk.py
 
 On line 39 ``image`` is defined as a numpy ndarray with dimensions the same
 as each video frame (N.B. C type arrays are rows (height) then cols (width)
 then RGB bytes). This array is then filled in a Thread running in the function
-pipe_thread() defined on line 41 and started just after. In pipe_thread
+pipe_thread() defined on line 41 and started just after that. In pipe_thread
 ffmpeg is run as a subprocess and the output piped into the image array
 (line 48). There is a slightly messy variable length sleep on line 58 to
 keep the video frame rate regular, and a flag is set so that the main

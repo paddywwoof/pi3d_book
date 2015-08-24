@@ -80,12 +80,12 @@ means that it&#8217;s possible to click on other things on the desktop, includin
 the X to close the pi3d window, if needed! To achieve the same effect with
 the pygame mouse input (as used with Windows but available on linux (except
 Raspberry Pi) by using <tt class="docutils literal"><span class="pre">Display.create(use_pygame=True)</span></tt>), the cursor is
-&#8220;warped&#8221; to the centre of the window each frame. There are slight differences
-in the behaviour of Mouse functions with the two systems but most of the
-demos simply use position()</p>
+&#8220;warped&#8221; to the centre of the window each frame and hidden. There are slight
+differences in the behaviour of Mouse functions with the two systems but
+most of the demos simply use position()</p>
 <p>Mouse.position() returns a tuple (x, y) this can be constrained by passing
 Mouse constructor an argument restrict=True (the default), in which case
-values can also be set for the width and height that the mouse movement
+values can also be set for the width and height to which the mouse movement
 is restricted.</p>
 <p>Mouse.velocity() returns a tuple (dx, dy) which is either the distance since
 the last movement or since the last call of position or velocity.</p>
@@ -97,7 +97,7 @@ to platform.</p>
 <h2>Events<a class="headerlink" href="#events" title="Permalink to this headline">¶</a></h2>
 <p>The InputEvents class provides a very flexible method for virtally any
 kind of input, not just mouse and keyboard but also joysticks and game
-controllers. However it becomes tricky to set up on linux devices with
+controllers. However it becomes tricky to set up on linux computers with
 variable input devices such as laptops with touch-pads and doesn&#8217;t work on
 Windows at all. In pi3d_demos the Silo.py demo uses this mechanism so
 checking out that demo would be a good place to start if you need to use
@@ -106,11 +106,11 @@ this flexibility.</p>
 <div class="section" id="d-backgrounds">
 <h2>3D Backgrounds<a class="headerlink" href="#d-backgrounds" title="Permalink to this headline">¶</a></h2>
 <p>In pi3d the background scenery is provided by either the EnvironmentCube
-or EnvironmentSphere classes. These are basically cubes or sphere where
+or EnvironmentSphere classes. These are basically cubes or spheres where
 the triangles are defined so that they face inwards (remember the order
 of vertices determines which way a surface faces in OpenGL). However the
 Texture used to wrap onto the inside of the shape has to conform to the
-perspective required for not distorting the scene or making the seams show.</p>
+perspective required to not distort the scene or make the seams show.</p>
 <p>The EnvironmentSphere is simplest in this regard, using an equirectangular
 projection in which top to bottom of the image is 180 degrees and left to
 right of the image is 360 degrees. If you have a modern phone you can

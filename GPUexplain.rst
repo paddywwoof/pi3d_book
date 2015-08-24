@@ -12,7 +12,8 @@ buffers, using masks, etc.
 
 Beneath the python module classes and functions provided by pi3d there are
 three "steps" necessary for control of the GPU. Two or three of these
-require external libraries (shared objects in linux, dlls in windows) imported [#]_:
+require external libraries (shared objects in linux, dlls in windows) to be
+imported [#]_:
 
   1. on the Raspberry Pi ``libbcm_host.so`` is used to create and manage a display
   surface to draw on. On linux (desktop and laptop) the surface is provided
@@ -131,21 +132,19 @@ is clock-wise. Normally the backs of faces are not rendered by the GPU::
     [[0, 1, 2],
      [0, 2, 3]])
 
-.. image:: simple_quad.png
-   :align: left
-
-   Here's a sketch so you can see how the system works.
+.. image:: images/simple_quad.png
+   :align: right
 
 The GPU uses coordinate directions x increases from left to right, y
 increases from bottom to top, z increases going into the screen.
 
 The GPU has been designed to be fantastically efficient at performing
 vector and matrix arithmetic. So rather than the CPU calculating where
-about the vertices have  moved and how these positions can be represented
+the vertices have moved and how these positions can be represented
 on the 2D computer screen it simply calculates a transformation matrix
 to represent this and passes that to the GPU. In pi3d we pass two matrices,
 one representing the object translation, rotation and scale and an additional
-one including the camera movement and perspective calculations. In the
+one including the camera movement and perspective calculations [#]_. In the
 vertex shader these matrices are used to convert the raw vertex positions
 to screen locations and to work out where the light should come from in
 order to work out shadows.
@@ -188,3 +187,6 @@ buffer which, when complete at the end of the frame loop, is swapped
 .. [#] It is possible to get 'output' from GPUs using sophisticated techniques
    that allow the parallel processing capabilities to be used elsewhere, but
    this is not trivial!
+.. [#] There are actually three 4x4 matrices, the last of which is used
+   for creating a "distance map" for calculating shadow casting (see the
+   CastShadows.py and TigerShadow.py demos) Quite a technical procedure.

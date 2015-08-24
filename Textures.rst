@@ -11,7 +11,7 @@ they can be used.
 Textures
 --------
 
-.. image:: texture02.png
+.. image:: images/texture02.png
    :align: right
 
 First of all have a look at the next illustration program **textures01.py** [#]_
@@ -181,6 +181,7 @@ and Fragment shader:
       gl_FragColor.rgb *= (unif[9] * intensity + unif[10]); 
       gl_FragColor.a *= unif[5][2]; // modify alpha with the Shape alpha
     }
+
 There is a khronos GLSL quick reference card [#]_ if you want to see what
 all the functions do.
 
@@ -212,7 +213,7 @@ projection used for photo-spheres.
 A Final look at Textures
 ------------------------
 
-.. image:: conway_texture.png
+.. image:: images/conway_texture.png
    :align: left
 
 As a final bit of fun have a look at the **textures03.py** [#]_ demo. This
@@ -226,10 +227,10 @@ can be read using ffmpeg and used to update a Texture. This is also a way
 to use OpenCV images as Textures as they are already numpy arrays.
 
 
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/textures01.py
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/light01.py
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/textures02.py
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/shader01.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/textures01.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/light01.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/textures02.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/shader01.py
 .. [#] https://www.khronos.org/opengles/sdk/docs/reference_cards/OpenGL-ES-2_0-Reference-card.pdf
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/textures03.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/textures03.py
 

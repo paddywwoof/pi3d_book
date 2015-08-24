@@ -71,12 +71,12 @@ rather than that number for every letter required by pi3d.String, so it can
 be quite a bit faster on some platforms if there&#8217;s lots of text. Another
 of advantage of FixedString is that PIL <a class="footnote-reference" href="#id3" id="id1">[1]</a> and numpy can be used to
 provide filters: BUMP will generate a normal map, EMBOSS, CONTOUR,
-BLUR and SMOOTH. The FixedString class can be used wherever a pi3d.Texture
-would be used, but it also contains an instance of pi3d.Sprite (called
+BLUR and SMOOTH do what you would expect. The FixedString class can be used wherever
+a pi3d.Texture would be used, but it also contains an instance of pi3d.Sprite (called
 pi3d.FixedString.sprite) which has width, height, umult and vmult to match
 the dimensions of the string to the Texture. (Look back at the chapter
 <tt class="docutils literal"><span class="pre">Shapes,</span> <span class="pre">Buffers</span> <span class="pre">and</span> <span class="pre">Display</span></tt> if you don&#8217;t remember umult and vmult!)</p>
-<img alt="_images/string01.jpg" class="align-left" src="_images/string01.jpg" />
+<img alt="_images/strings01.png" class="align-left" src="_images/strings01.png" />
 <p>However for varying text (such as a score, or timer) the overhead of
 creating a new PIL image and converting it to a Texture every frame would
 be large and in this case it is better to use the pi3d.String.quick_change()
@@ -96,8 +96,7 @@ mipmaps which are a series of lower resolution texture maps that automatically
 get swapped depending on the z depth of the fragment being rendered.
 The mipmaps are generated at the time of Texture creation and are generally
 a good thing so the default argument to Texture is mipmap=True.</p>
-<p>You will find strings used in quite a few of the pi3d_demos so have a look
-at those as well.</p>
+<p>Check out the use of strings in various of the pi3d_demos.</p>
 <table class="docutils footnote" frame="void" id="id3" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
@@ -107,7 +106,7 @@ at those as well.</p>
 <table class="docutils footnote" frame="void" id="id4" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
 <tbody valign="top">
-<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/strings01.py">https://github.com/paddywwoof/pi3d_book/blob/master/strings01.py</a> etc</td></tr>
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td><a class="reference external" href="https://github.com/paddywwoof/pi3d_book/blob/master/programs/strings01.py">https://github.com/paddywwoof/pi3d_book/blob/master/programs/strings01.py</a></td></tr>
 </tbody>
 </table>
 </div>

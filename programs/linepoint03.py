@@ -12,7 +12,7 @@ lshader = pi3d.Shader('mat_light')
 from random import random
 shape = pi3d.MergeShape(z=10.0)
 bfr_list = []
-""" There are two methods of passing objects to merge() one is as above,
+""" There are two ways of passing objects to merge() one is as above,
 one object at a time. An alternative, faster, method builds up a list
 first then merges this in one step. On a slower machine, such as the
 Raspberry Pi A or B you might see the difference if you comment out the

@@ -77,4 +77,4 @@ then it is more efficient to use the OpenGL point drawing functionality
 which will be touched on in the chapter ``Lines and Points`` and demonstrated
 in SpriteBalls.py and SpriteMulti.py
 
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/sprites01.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/sprites01.py

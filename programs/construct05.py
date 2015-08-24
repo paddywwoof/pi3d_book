@@ -154,7 +154,7 @@ for block, o_prob in blocks:
   hou_specs.extend(specs[1])
   side_specs.extend([shrink_block(block, 0.85)])
 
-display = pi3d.Display.create()
+display = pi3d.Display.create(background=(1.0, 1.0, 1.0, 1.0), samples=4)
 CAMERA = pi3d.Camera()
 LIGHT = pi3d.Light(lightamb=(0.3, 0.3, 0.5))
 shader = pi3d.Shader("uv_light")
@@ -179,7 +179,7 @@ texh = pi3d.Texture("house.jpg")
 city.houses.set_textures([texh])
 
 city.set_shader(shader)
-city.set_fog((0.4, 0.4, 0.6, 0.95), 150)
+city.set_fog((1.0,1.0, 1.0, 1.0), 150)
 """
 ground
  - because fog factor is calculated in the vertex shader this produces
@@ -188,16 +188,16 @@ ground
  with the LodSprite alternative below, or the ElevationMap covered in the
  next chapter.
 
- Once challenge you could consider would be to modify this demo to use an
+ One challenge you could consider would be to modify this demo to use an
  ElevationMap for the ground. You would have to use the calcHeight() method
  to adjust the y values of vertices, per corner for sidewalks but per building
  otherwise (to avoid slanting walls and eves)
 """
-ground = pi3d.Sprite(w=200, h=200, x=100, z=100, y=0.02, rx=90)
-#ground = pi3d.LodSprite(w=200, h=200, x=100, z=100, y=0.02, rx=90, n=8)
+#ground = pi3d.Sprite(w=200, h=200, x=100, z=100, y=0.02, rx=90)
+ground = pi3d.LodSprite(w=200, h=200, x=100, z=100, y=0.02, rx=90, n=8)
 texg = pi3d.Texture("ground.jpg")
 ground.set_draw_details(shader, [texg])
-#ground.set_fog((0.4, 0.4, 0.6, 0.95), 150)
+ground.set_fog((1.0,1.0, 1.0, 1.0), 150)
 
 keys = pi3d.Keyboard()
 mymouse = pi3d.Mouse(restrict = False)

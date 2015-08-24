@@ -11,7 +11,7 @@ Keyboard input has been used in all the demo programs without any real explanati
 so you've probably got a good idea how to use it but it might be worth
 explaining a little more about how it works.
 
-.. image:: envsphere.jpg
+.. image:: images/envsphere.jpg
    :align: right
 
 One aspect of python that people often find strange is the absence of
@@ -38,13 +38,13 @@ means that it's possible to click on other things on the desktop, including
 the X to close the pi3d window, if needed! To achieve the same effect with
 the pygame mouse input (as used with Windows but available on linux (except
 Raspberry Pi) by using ``Display.create(use_pygame=True)``), the cursor is
-"warped" to the centre of the window each frame. There are slight differences
-in the behaviour of Mouse functions with the two systems but most of the
-demos simply use position()
+"warped" to the centre of the window each frame and hidden. There are slight
+differences in the behaviour of Mouse functions with the two systems but
+most of the demos simply use position()
 
 Mouse.position() returns a tuple (x, y) this can be constrained by passing
 Mouse constructor an argument restrict=True (the default), in which case
-values can also be set for the width and height that the mouse movement
+values can also be set for the width and height to which the mouse movement
 is restricted.
 
 Mouse.velocity() returns a tuple (dx, dy) which is either the distance since
@@ -59,7 +59,7 @@ Events
 
 The InputEvents class provides a very flexible method for virtally any
 kind of input, not just mouse and keyboard but also joysticks and game
-controllers. However it becomes tricky to set up on linux devices with
+controllers. However it becomes tricky to set up on linux computers with
 variable input devices such as laptops with touch-pads and doesn't work on
 Windows at all. In pi3d_demos the Silo.py demo uses this mechanism so
 checking out that demo would be a good place to start if you need to use
@@ -73,7 +73,7 @@ or EnvironmentSphere classes. These are basically cubes or spheres where
 the triangles are defined so that they face inwards (remember the order
 of vertices determines which way a surface faces in OpenGL). However the
 Texture used to wrap onto the inside of the shape has to conform to the
-perspective required for not distorting the scene or making the seams show.
+perspective required to not distort the scene or make the seams show.
 
 The EnvironmentSphere is simplest in this regard, using an equirectangular
 projection in which top to bottom of the image is 180 degrees and left to
@@ -92,7 +92,7 @@ the inside of the sphere and that the orientation of the reflection correctly
 matches the environment - i.e. mirror image.
 
 
-.. image:: buckfastcube.jpg
+.. image:: images/buckfastcube.jpg
 
 It is important, when using a cube or sphere to represent the distant
 background, to move it around as the camera moves. You will see that most
@@ -121,7 +121,7 @@ such as png. In the ForestWalk.py demo the surface has been made tileable
 by making the left and right, and top and bottom, pixels identical - see
 the mechanism for "tiling" in lines 125-134 and 183-185.
 
-.. image:: forest1.jpg
+.. image:: images/forest1.jpg
    :align: right
 
 2. There are several useful methods in ElevationMap including calcHeight()

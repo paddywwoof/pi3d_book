@@ -84,19 +84,17 @@ Disk       Lines            Points       Triangle
 <h2>Shape<a class="headerlink" href="#shape" title="Permalink to this headline">¶</a></h2>
 <p>Have a look at the source code for Shape. <em>Don&#8217;t be dismayed by how long it
 is - the majority of it is just convenience methods for</em>:</p>
-<ol class="arabic simple">
-<li>setting the uniform variables array (<tt class="docutils literal"><span class="pre">self.unif</span></tt>, remember uniform variables
+<p>1. setting the uniform variables array (<tt class="docutils literal"><span class="pre">self.unif</span></tt>, remember uniform variables
 from chapter two - one of the four categories of data passed to the GPU
-shaders),</li>
-<li>setting the uniform variables held in the Buffer list (<tt class="docutils literal"><span class="pre">self.buf[0].unib</span></tt>,
-I will explain the relationship between Shapes and Buffers below),</li>
-<li>updating the matrices (see <tt class="docutils literal"><span class="pre">rotateIncY()</span></tt> on line 665, you&#8217;ve already used
+shaders),</p>
+<p>2. setting the uniform variables held in the Buffer list (<tt class="docutils literal"><span class="pre">self.buf[0].unib</span></tt>,
+I will explain the relationship between Shapes and Buffers below),</p>
+<p>3. updating the matrices (see <tt class="docutils literal"><span class="pre">rotateIncY()</span></tt> on line 655, you&#8217;ve already used
 that method in 3D_matrix02.py and the process of writing sines and cosines
-into an array should be reassuringly familiar!)</li>
-</ol>
+into an array should be reassuringly familiar!)</p>
 <p>However the draw() method does several important things. Firstly, on lines
-163, 164 and 37 (which is in __init__() actually!) you will see the method
-instance() being called for Camera, Shader and Light. These three classes
+162 and 38 (which is in __init__() actually!) you will see the method
+instance() being called for Camera and Light. These three classes
 inherit from the DefaultInstance class and the method will either return
 the first instance of that class that has been created, or if none, it will
 create one.</p>
@@ -110,15 +108,13 @@ than one that relies on Textures being loaded. When we look inside the
 Buffer class you will see why a default material can be set easily but
 default textures would be messy.</p>
 <p>The second thing to look at in the Shape.draw() method is the section from line
-167 to 205. This is basically the matrix multiplication we did by hand in
+164 to 202. This is basically the matrix multiplication we did by hand in
 2D_matrix01.py and 3D_matrix01.py Because this has to be done for every
 object in the scene in every frame it is time critical and this has been
 found to be the fastest combination 1) use numpy dot() <a class="footnote-reference" href="#id5" id="id1">[1]</a> 2) set flags
-everywhere and only do the dot() when something has moved or rotated.
-Line 210 is where two 4x4 matrices are passed to the shader and line 214
-passes twenty 3x1 vectors, the Shape.unif array.</p>
-<p>Before we follow line 218 to the Buffer.draw() we&#8217;ll just have a quick
-scan through the Shape.unif array which occupies lines 38 to 49 (with a
+everywhere and only do the dot() when something has moved or rotated.</p>
+<p>Before we follow line 207 to the Buffer.draw() we&#8217;ll just have a quick
+scan through the Shape.unif array which occupies lines 40 to 50 (with a
 comprehensive description of what it all is underneath it). The first twelve
 values are taken from arguments to the __init__() method and only offset
 should need any explanation. This allows objects to be rotated about different
@@ -135,9 +131,10 @@ as &#8220;point&#8221; or &#8220;directional&#8221; which determines how the x,y
 interpetted, an RGB color value for the light and RGB for ambient. The final
 eighteen values are available for special shader effects.</p>
 <p>N.B. If you are eagle-eyed and have been paying attention you will have
-noticed a &#8220;proteted&#8221; function <a class="footnote-reference" href="#id6" id="id2">[2]</a> in Shape <tt class="docutils literal"><span class="pre">_lathe()</span></tt> that is used by
-the majority of the pi3d/shape classes. This will be investigated in a
-later chapter.</p>
+noticed a &#8220;proteted&#8221; function <a class="footnote-reference" href="#id6" id="id2">[2]</a> in Shape, <tt class="docutils literal"><span class="pre">_lathe()</span></tt> that is used by
+the majority of the pi3d/shape classes. This method provides a convenient
+way of generating objects with rotational symmetry - though there are
+modifiers that can produce variations such as spirals and helices.</p>
 </div>
 <div class="section" id="buffer">
 <h2>Buffer<a class="headerlink" href="#buffer" title="Permalink to this headline">¶</a></h2>
@@ -150,25 +147,25 @@ of Model object i.e. Shapes that have been designed elsewhere and saved as
 <tt class="docutils literal"><span class="pre">obj</span></tt> or <tt class="docutils literal"><span class="pre">egg</span></tt> files.</p>
 <p>The Buffer class is also complicated-looking and has more opengles function
 calls than Shape. There are a few things worth noting about this class</p>
-<ol class="arabic">
-<li><p class="first">The &#8220;constructor&#8221; __init__() takes lists of vertices, normals, texture
+<p>1. The &#8220;constructor&#8221; __init__() takes lists of vertices, normals, texture
 coordinates and element indices, as we would expect. However if the normals
 argument passed is <tt class="docutils literal"><span class="pre">None</span></tt> it will calculate a set of vectors at right
 angles to both the triangle edges that meet at each vertex <a class="footnote-reference" href="#id7" id="id3">[3]</a>. It can
 also be made to construct smaller buffers by being passed empty lists for
 the texture coordinate and or the normals when these are not needed i.e.
 for Lines, Points or a non-texture-mapped Shape.</p>
-</li>
-<li><p class="first">The draw() method (which is called by Shape.draw() as we saw above) passes
-the attribute and element arrays to the Shader on lines 263 to 270 and
-on line 296 four 3x1 vectors, from Buffer.unib (which I will explain in
-more detail below). draw() also passes the Texture samplers from line 275.
-NB when I say &#8220;pass&#8221; the data it is only the pointer to the data that needs
+<p>2. The draw() method (which is called by Shape.draw() as we saw above) passes
+three 4x4 matrices to the shader on line 260 then on line 263 passes
+twenty 3x1 vectors as the Shape.unif array, both of these being arguments
+to draw() supplied from Shape.draw(). The attribute and element arrays
+are passed to the Shader on lines 271 to 278 and on line 304 four 3x1
+vectors, from Buffer.unib (which I will explain in more detail below).
+draw() also passes the Texture samplers from line 283. NB when I say
+&#8220;pass&#8221; the data it is only the pointer to the data that needs
 to be transferred, the actual arrays were set up in the GPU memory space
 when the Buffer was created and just need to be switched on (which is
 very quick). However...</p>
-</li>
-<li><p class="first">There is a re_init() method that can be used to alter the values of the
+<p>3. There is a re_init() method that can be used to alter the values of the
 vertex, normal or texture coordinate vectors from frame to frame. This
 requires more processing than simply enabling data that is already there
 but it is much faster than scrapping the previous Buffer object and
@@ -182,9 +179,9 @@ add some distortion, straight after <tt class="docutils literal"><span class="pr
 along the lines of:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">bufr</span> <span class="o">=</span> <span class="n">ball</span><span class="o">.</span><span class="n">buf</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>        <span class="c"># only one Buffer in the list buf</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">bufr</span><span class="o">.</span><span class="n">array_buffer</span>     <span class="c"># this is the array buffer!</span>
-<span class="n">l</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>                <span class="c"># length of the array (195 actually)</span>
+<span class="n">lenb</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>             <span class="c"># length of the array (195 actually)</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>        <span class="c"># python will do this just once!</span>
-<span class="n">b</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="c"># see below..</span>
+<span class="n">b</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">,</span> <span class="p">(</span><span class="n">lenb</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="c"># below..</span>
 <span class="n">bufr</span><span class="o">.</span><span class="n">re_init</span><span class="p">(</span><span class="n">pts</span><span class="o">=</span><span class="n">b</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span> <span class="c"># finally re make the buffer</span>
 </pre></div>
 </div>
@@ -193,13 +190,13 @@ fifth line. This is how numpy works: the looping is done &#8220;automatically&#8
 as a result of the slicing or the shape of the arrays involved. Using
 python list comprehension this would achieve the same result:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">new_buf</span> <span class="o">=</span> <span class="p">[[</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">)</span>
-                       <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">l</span><span class="p">)]</span>
+                       <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lenb</span><span class="p">)]</span>
 <span class="n">bufr</span><span class="o">.</span><span class="n">re_init</span><span class="p">(</span><span class="n">pts</span><span class="o">=</span><span class="n">new_buf</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>And good old straightforward, easy to understand looping:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">new_buf</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">l</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lenb</span><span class="p">):</span>
   <span class="n">new_buf</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
   <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
     <span class="n">new_buf</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.99</span><span class="p">,</span> <span class="mf">1.01</span><span class="p">))</span>
@@ -211,8 +208,6 @@ format is <strong>speed</strong>. If you test the three alternatives with <tt cl
 you will find that the traditional looping takes 2.2ms, the list comprehension
 takes 1.95ms and numpy takes 0.08ms, a massive margin that only increases
 as the array gets bigger.</p>
-</li>
-</ol>
 <p>The Buffer.unib array of uniform variable passed to the Shader needs a
 bit more explanation than the equivalent array in Shape. <strong>ntile</strong> is used
 to control how many normal map Texture maps (also called bump maps) are to
@@ -224,7 +219,7 @@ is produced by the mat_reflect or uv_reflect Shaders. <strong>blend</strong> is 
 set during the draw() process depending on whether the Texture values taken
 from the image file are to be blended or not. If the alpha value of the pixel
 is below this value then the pixel will be &#8220;discarded&#8221;. This will be covered
-in detail later but it allow sharp edges to be produced around shapes
+in detail later but it allows sharp edges to be produced around shapes
 constructed from png images with large areas of transparency. <strong>material</strong>
 is the RGB values for this Buffer when drawn using a material Shader. <strong>umult</strong>
 and <strong>vmult</strong> control the tiling of the Texture map (the color one as opposed

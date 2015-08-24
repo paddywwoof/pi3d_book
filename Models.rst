@@ -9,7 +9,7 @@ saved in nearly as large a variety of formats. In pi3d, at the moment,
 there are just two file types that can be parsed: wavefront **obj** and
 Panda3D **egg**. Of these two the obj is simpler and faster to load.
 
-.. figure:: blender01.jpg
+.. figure:: images/blender01.jpg
 
    Blender screen-capture
 
@@ -70,5 +70,5 @@ values), d alpha, illum illumination model, map_kd a file to use for diffuse
 values) Pi3d only picks up the Kd and map_kd to use as material and Texture.
 
 .. [#] http://www.blender.org/
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/model01.blend
-.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/model01.py
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/model01.blend
+.. [#] https://github.com/paddywwoof/pi3d_book/blob/master/programs/model01.py
