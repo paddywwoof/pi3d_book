@@ -5,8 +5,8 @@
 =======================
 
 This is a short introduction to 3D graphics from the perspective of pi3d,
-there will be gaps and possibly misapprehensions but it should give a
-reasonable general perspective of how things work! Also I intentionally
+there will be gaps and possibly misapprehensions but it should give you a
+reasonable feeling for how things work! Also I intentionally
 skip over many of the more involved aspects such as rendering to off-screen
 buffers, using masks, etc.
 
