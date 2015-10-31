@@ -103,6 +103,9 @@ modifiers that can produce variations such as spirals and helices.
 Buffer
 ------
 
+.. image:: images/shape_buffer.png
+   :align: right
+
 This class gets its name because it's the object used to hold the attribute
 array and element array which are both created by calling the OpenGL function
 ``glBufferData()``. The reason why it's a separate class (rather than just

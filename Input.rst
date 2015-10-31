@@ -12,7 +12,7 @@ so you've probably got a good idea how to use it but it might be worth
 explaining a little more about how it works.
 
 .. image:: images/envsphere.jpg
-   :align: right
+   :align: left
 
 One aspect of python that people often find strange is the absence of
 non-blocking key input as a "built-in" function. The reasons is almost
@@ -122,7 +122,7 @@ by making the left and right, and top and bottom, pixels identical - see
 the mechanism for "tiling" in lines 125-134 and 183-185.
 
 .. image:: images/forest1.jpg
-   :align: right
+   :align: left
 
 2. There are several useful methods in ElevationMap including calcHeight()
 used here, but also clashTest() that checks if a sphere would intersect

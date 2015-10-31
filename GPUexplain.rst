@@ -133,7 +133,7 @@ is clock-wise. Normally the backs of faces are not rendered by the GPU::
      [0, 2, 3]])
 
 .. image:: images/simple_quad.png
-   :align: right
+   :align: left
 
 The GPU uses coordinate directions x increases from left to right, y
 increases from bottom to top, z increases going into the screen.

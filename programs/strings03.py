@@ -35,7 +35,7 @@ string2.set_shader(shader)
 
 w, h = string1.ix, string1.iy
 shape = pi3d.Tube(sides=64, height=(h * 3.1416)/w, z=4.0, ry=-90)
-shape.set_material((0.6, 0.5, 0.1))
+#shape.set_material((0.6, 0.5, 0.1))
 shape.set_draw_details(lshader,[string1], 1.0)
 
 mykeys = pi3d.Keyboard()

@@ -23,7 +23,7 @@ uniquely defined like (x, y, z) or even (R, G, B) then that makes it a
 vector.
 
 .. image:: images/Coord_system_CA_0.png
-   :align: left
+   :align: right
 
 So the way a surface "points" (the normal) if often drawn as an
 arrow perpendicular to the surface and this can be easily understood as
@@ -115,7 +115,7 @@ matrices become 4x4. If you are unclear why this is necessary it may be a
 good idea to go back and look at the first illustration.
 
 .. image:: images/perspective.png
-   :align: left
+   :align: right
 
 Because the computer screen is essentially flat there has to be a method of
 converting the (x, y, z) vectors of the model into (x, y) vectors of the

@@ -42,7 +42,7 @@ to generate a range of building sizes and types in a controllable way.
 city blocks.
 
 .. image:: images/construct01.jpg
-   :align: left
+   :align: right
 
 Before getting stuck into **construct01.py** [#]_ It's worth explaining
 a couple of things. First the class definition City is very similar to most
@@ -70,7 +70,7 @@ product of two edges, namely cross(A,B) points the opposite direction to
 cross(B,A).
 
 .. image:: images/construct02.jpg
-   :align: right
+   :align: left
 
 In **construc02.py** [#]_ most of the functionality of make_houses has
 been transferred to a private method _make_buildings (denoted by the `_`
@@ -106,7 +106,7 @@ graphics related but if you're interested in the process this is the logic:
   points.
 
 .. image:: images/block_layout.jpg
-   :align: left
+   :align: right
 
 There's a little bit of algebra involved, but it's essentially just stuff
 you will have learned when you were 13 or 14: simultaneous equations and
