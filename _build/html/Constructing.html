@@ -81,7 +81,7 @@ it into appropriately sized buildings. This algorithm should be able
 to generate a range of building sizes and types in a controllable way.</p>
 <p>5. An algorithm to generate a pattern of
 city blocks.</p>
-<img alt="_images/construct01.jpg" class="align-left" src="_images/construct01.jpg" />
+<img alt="_images/construct01.jpg" class="align-right" src="_images/construct01.jpg" />
 <p>Before getting stuck into <strong>construct01.py</strong> <a class="footnote-reference" href="#id6" id="id1">[1]</a> It&#8217;s worth explaining
 a couple of things. First the class definition City is very similar to most
 of the &#8220;standard&#8221; pi3d shapes defined in the pi3d/shape directory. It
@@ -105,7 +105,7 @@ in a triangle determines which is the front, there is also a similar (and
 not unrelated) quirk when calculating normal directions using the cross
 product of two edges, namely cross(A,B) points the opposite direction to
 cross(B,A).</p>
-<img alt="_images/construct02.jpg" class="align-right" src="_images/construct02.jpg" />
+<img alt="_images/construct02.jpg" class="align-left" src="_images/construct02.jpg" />
 <p>In <strong>construc02.py</strong> <a class="footnote-reference" href="#id7" id="id2">[2]</a> most of the functionality of make_houses has
 been transferred to a private method _make_buildings (denoted by the <cite>_</cite>
 prefix, as mentioned in the introduction, this is purely a convention to
@@ -136,7 +136,7 @@ the buildings. For the corner buildings work out the fourth corner by
 seeing where two lines running in from the front corners intercept. For
 the intermediate buildings calculate the required other two (inside)
 points.</div></blockquote>
-<img alt="_images/block_layout.jpg" class="align-left" src="_images/block_layout.jpg" />
+<img alt="_images/block_layout.jpg" class="align-right" src="_images/block_layout.jpg" />
 <p>There&#8217;s a little bit of algebra involved, but it&#8217;s essentially just stuff
 you will have learned when you were 13 or 14: simultaneous equations and
 the fact that the gradient of a line is minus one over the gradient of
