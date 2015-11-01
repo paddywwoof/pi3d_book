@@ -51,7 +51,7 @@
             
   <div class="section" id="strings">
 <h1>Strings<a class="headerlink" href="#strings" title="Permalink to this headline">¶</a></h1>
-<p>pi3d has two mechanisms for producing Text:</p>
+<p>pi3d has three mechanisms for producing Text:</p>
 <p>The first one is the pi3d.String class which inherits from pi3d.Shape in
 the same way as the &#8220;standard&#8221; shapes such as Cuboid, Sphere, Sprite, Torus
 etc. However as it is initialised it constructs its vertices and texture
@@ -76,13 +76,16 @@ a pi3d.Texture would be used, but it also contains an instance of pi3d.Sprite (c
 pi3d.FixedString.sprite) which has width, height, umult and vmult to match
 the dimensions of the string to the Texture. (Look back at the chapter
 <tt class="docutils literal"><span class="pre">Shapes,</span> <span class="pre">Buffers</span> <span class="pre">and</span> <span class="pre">Display</span></tt> if you don&#8217;t remember umult and vmult!)</p>
-<img alt="_images/strings01.png" class="align-left" src="_images/strings01.png" />
+<img alt="_images/strings01.png" class="align-right" src="_images/strings01.png" />
 <p>However for varying text (such as a score, or timer) the overhead of
 creating a new PIL image and converting it to a Texture every frame would
-be large and in this case it is better to use the pi3d.String.quick_change()
-method. This has various restrictions as described in the documentation,
-the most significant of which is that the string can&#8217;t be changed to a
-longer length than it started (of course it should be padded by spaces initially
+be large and in this case it is better to use either use the pi3d.String.quick_change()
+method or the pi3d.PointText class. This latter method has only been added
+to pi3d as of v2.8 it is rather complicated but <strong>very</strong> fast and flexible,
+if you need this then study pi3d_demos/StringMulti.py. Both the approaches
+have various restrictions as described in the documentation, the most
+significant of which is that the string can&#8217;t be changed to a longer length
+than its original scope (of course it should be padded by spaces initially
 for this eventuality).</p>
 <p>Have a play with the three examples <strong>strings01.py</strong>, <strong>strings02.py</strong> and
 <strong>strings03.py</strong> <a class="footnote-reference" href="#id4" id="id2">[2]</a> There are one or two quirks to watch out for: if you
