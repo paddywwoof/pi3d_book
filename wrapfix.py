@@ -18,6 +18,8 @@ for l in tx:
     txnew += ["\\begin{wrapfigure}{" + fl_type + "}{0.45\\textwidth}",
               "\\includegraphics[width = 0.44\\textwidth]{" + fname + "}",
               "\\end{wrapfigure}"]
+  elif "makeindex" in l:
+    txnew += ["% don't remake index"]
   else:
     txnew += [l]
     
@@ -25,4 +27,6 @@ txnew = "\n".join(txnew)
 with open("_build/latex/pi3d_book.tex", "w") as fo:
   fo.write(txnew)
 
-subprocess.Popen(["pdflatex", "pi3d_book"], cwd="/home/jill/pi3d_book/_build/latex")
+p = subprocess.Popen(["pdflatex", "pi3d_book"], cwd="/home/jill/pi3d_book/_build/latex")
+p.wait()
+p = subprocess.Popen(["pdflatex", "pi3d_book"], cwd="/home/jill/pi3d_book/_build/latex")

@@ -4,7 +4,7 @@
 Strings
 =======
 
-pi3d has two mechanisms for producing Text:
+pi3d has three mechanisms for producing Text:
 
 The first one is the pi3d.String class which inherits from pi3d.Shape in
 the same way as the "standard" shapes such as Cuboid, Sphere, Sprite, Torus
@@ -33,14 +33,17 @@ the dimensions of the string to the Texture. (Look back at the chapter
 ``Shapes, Buffers and Display`` if you don't remember umult and vmult!)
 
 .. image:: images/strings01.png
-   :align: left
+   :align: right
 
 However for varying text (such as a score, or timer) the overhead of
 creating a new PIL image and converting it to a Texture every frame would
-be large and in this case it is better to use the pi3d.String.quick_change()
-method. This has various restrictions as described in the documentation,
-the most significant of which is that the string can't be changed to a
-longer length than it started (of course it should be padded by spaces initially
+be large and in this case it is better to use either use the pi3d.String.quick_change()
+method or the pi3d.PointText class. This latter method has only been added
+to pi3d as of v2.8 it is rather complicated but **very** fast and flexible,
+if you need this then study pi3d_demos/StringMulti.py. Both the approaches
+have various restrictions as described in the documentation, the most
+significant of which is that the string can't be changed to a longer length
+than its original scope (of course it should be padded by spaces initially
 for this eventuality).
 
 Have a play with the three examples **strings01.py**, **strings02.py** and

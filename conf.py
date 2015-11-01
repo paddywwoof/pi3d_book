@@ -201,6 +201,7 @@ latex_elements = {
 \definecolor{InnerLinkColor}{rgb}{0.0,0.0,0.0}
 \definecolor{OuterLinkColor}{rgb}{0.0,0.0,0.0}
 """,
+'classoptions':',english,openany',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
