@@ -165,4 +165,5 @@ while display.loop_running():
     refresh_vertices(square, vertices)
     refresh_vertices(letters, l_verts)
 
-
+keys.close()
+display.destroy()

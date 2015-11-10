@@ -1,3 +1,6 @@
+#!/usr/bin/python
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import demo
 import pi3d
 from math import *
@@ -120,3 +123,6 @@ while DISPLAY.loop_running():
     break
   elif key == ord("z"):
     ani = not ani
+
+mykeys.close()
+display.destroy()

@@ -1,3 +1,6 @@
+#!/usr/bin/python
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import demo
 import pi3d
 import random
@@ -51,3 +54,6 @@ while DISPLAY.loop_running():
     shape.set_line_width(4, strip=False, closed=False)
   elif key == ord('t'): # swap to triangles
     shape.set_line_width(0)
+
+mykeys.close()
+DISPLAY.destroy()

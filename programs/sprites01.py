@@ -56,3 +56,6 @@ while DISPLAY.loop_running():
     sprite1.positionZ(z1)
     sprite1.set_alpha(a1)
     sprite2.set_alpha(a2)
+
+keys.close()
+DISPLAY.destroy()

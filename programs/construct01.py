@@ -173,3 +173,5 @@ while display.loop_running():
     elif k == ord('f'): # tilt down
       tilt -= 2.5
 
+keys.close()
+display.destroy()

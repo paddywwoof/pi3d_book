@@ -10,7 +10,7 @@ display = pi3d.Display.create(w=800, h=600)
 CAMERA = pi3d.Camera(is_3d=True)
 shader = pi3d.Shader("uv_reflect")
 
-model = pi3d.Model(camera=CAMERA, file_string="model01.obj", y=-2.0, z=10.0)
+model = pi3d.Model(camera=CAMERA, file_string="blender01.obj", y=-2.0, z=10.0)
 bump = pi3d.Texture("rocktile2.jpg")
 refl = pi3d.Texture("glassbuilding.jpg")
 model.set_shader(shader)
@@ -53,3 +53,6 @@ while display.loop_running():
     elif k == ord('n'): # anti-clockwise y
       model.rotateIncY(0.5)
     model.set_offset((u_off, v_off))
+
+keys.close()
+display.destroy()
