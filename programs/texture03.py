@@ -76,3 +76,6 @@ while display.loop_running():
     elif k == ord('n'): # anti-clockwise y
       cube.rotateIncY(2.5)
     cube.set_offset((u_off, v_off))
+
+keys.close()
+display.destroy()

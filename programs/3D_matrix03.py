@@ -79,3 +79,6 @@ while display.loop_running():
     elif k == ord('n'): # anti-clockwise y
       cube.rotateIncY(2.5)
       letters.rotateIncY(2.5)
+
+keys.close()
+display.destroy()

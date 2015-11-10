@@ -124,19 +124,22 @@ a very simple one sided square this could be defined by the attribute array::
      [1.0, 1.0, 0.0,   0.0, 0.0,-1.0,   1.0, 1.0],   # 2
      [1.0, 0.0, 0.0,   0.0, 0.0,-1.0,   1.0, 0.0]])  # 3
 
-and the element array of triangle indices. Note the order of corners
-is important. Each triangle 'faces' towards a view where the sequence
-is clock-wise. Normally the backs of faces are not rendered by the GPU::
+and the element array of
+triangle indices::
 
   element_array = numpy.array(
     [[0, 1, 2],
      [0, 2, 3]])
 
-.. image:: images/simple_quad.png
-   :align: left
+Note the order of corners
+is important. Each triangle 'faces' towards a view where the sequence
+is clock-wise. Normally the backs of faces are not rendered by the GPU.
 
 The GPU uses coordinate directions x increases from left to right, y
 increases from bottom to top, z increases going into the screen.
+
+.. image:: images/simple_quad.png
+   :align: left
 
 The GPU has been designed to be fantastically efficient at performing
 vector and matrix arithmetic. So rather than the CPU calculating where

@@ -1,3 +1,6 @@
+#!/usr/bin/python
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 import demo
 import pi3d
 import time
@@ -58,3 +61,6 @@ while DISPLAY.loop_running():
     mykeys.close()
     DISPLAY.destroy()
     break
+
+mykeys.close()
+DISPLAY.destroy()

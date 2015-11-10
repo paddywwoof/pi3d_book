@@ -154,7 +154,7 @@ for block, o_prob in blocks:
   hou_specs.extend(specs[1])
   side_specs.extend([shrink_block(block, 0.85)])
 
-display = pi3d.Display.create(background=(1.0, 1.0, 1.0, 1.0), samples=4)
+display = pi3d.Display.create(background=(1.0, 1.0, 1.0, 1.0))
 CAMERA = pi3d.Camera()
 LIGHT = pi3d.Light(lightamb=(0.3, 0.3, 0.5))
 shader = pi3d.Shader("uv_light")
@@ -233,3 +233,5 @@ while display.loop_running():
       ym -= CAMERA.mtrx[1, 3]
       zm -= CAMERA.mtrx[2, 3]
 
+keys.close()
+display.destroy()

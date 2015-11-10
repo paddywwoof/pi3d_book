@@ -86,3 +86,6 @@ while display.loop_running():
                                   l_vec), line_width=4.0)
     light_obj.set_shader(flatsh)
 
+keys.close()
+display.destroy()
+

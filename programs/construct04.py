@@ -128,6 +128,3 @@ if __name__ == "__main__":
   for spec in hou_specs:
     draw.line([i for j in spec[:4] for i in j] + spec[0], fill=128, width=4)
   im.save("temp.png")
-
-    
-

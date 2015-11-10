@@ -122,3 +122,6 @@ while display.loop_running():
       cube.rotateIncY(2.5)
       letters.rotateIncY(2.5)
     print_matrices()
+
+keys.close()
+display.destroy()
