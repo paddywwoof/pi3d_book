@@ -8,7 +8,7 @@ DISPLAY = pi3d.Display.create(samples=4)
 CAMERA = pi3d.Camera()
 
 shape = pi3d.Helix(ringrots=16, sides=36, loops=4, rise=4.0, z=5.0) 
-#shape = pi3d.Model(file_string='model01.obj', z=8.0) # straight from blender
+#shape = pi3d.Model(file_string='blender01.obj', z=8.0) # straight from blender
 #shape = pi3d.Model(file_string='model02.obj', z=8.0) # revised order of faces
 shader = pi3d.Shader('mat_flat')
 lshader = pi3d.Shader('mat_light')
