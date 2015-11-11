@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import demo
 import pi3d
     
-DISPLAY = pi3d.Display.create(samples=0)
+DISPLAY = pi3d.Display.create(x=50, y=50)
 CAMERA = pi3d.Camera()
 
 unit = pi3d.Helix(loops=2, rise=4.0)

@@ -129,7 +129,7 @@ class City(pi3d.Shape):
     self.buf.append(self.sidewalks)
 
 
-display = pi3d.Display.create(w=800, h=600)
+display = pi3d.Display.create(x=50, y=50, w=800, h=600)
 CAMERA = pi3d.Camera()
 shader = pi3d.Shader("uv_light")
 city = City(camera=CAMERA, z=30.0)

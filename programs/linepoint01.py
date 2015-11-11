@@ -5,7 +5,7 @@ import demo
 import pi3d
 import random
     
-DISPLAY = pi3d.Display.create(samples=4)
+DISPLAY = pi3d.Display.create(x=50, y=50)
 CAMERA = pi3d.Camera()
 
 shape = pi3d.TCone(z=5.0) # try other shapes: Sphere, Torus, Cylinder, Helix etc

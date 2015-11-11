@@ -20,7 +20,7 @@ fps = "000.00FPS"
 N = 100
 FONT_SCALE = 0.005
 
-DISPLAY = pi3d.Display.create()
+DISPLAY = pi3d.Display.create(x=50, y=50)
 CAMERA = pi3d.Camera()
 CAMERA2D = pi3d.Camera(is_3d=False)
 
