@@ -48,7 +48,7 @@ shaders),
 2. setting the uniform variables held in the Buffer list (``self.buf[0].unib``,
 I will explain the relationship between Shapes and Buffers below),
 
-3. updating the matrices (see ``rotateIncY()`` on line 655, you've already used
+3. updating the matrices (see ``rotateIncY()`` on line 658, you've already used
 that method in 3D_matrix02.py and the process of writing sines and cosines
 into an array should be reassuringly familiar!)
 
@@ -126,12 +126,12 @@ the texture coordinate and or the normals when these are not needed i.e.
 for Lines, Points or a non-texture-mapped Shape.
 
 2. The draw() method (which is called by Shape.draw() as we saw above) passes
-three 4x4 matrices to the shader on line 260 then on line 263 passes
+three 4x4 matrices to the shader on line 263 then on line 263 passes
 twenty 3x1 vectors as the Shape.unif array, both of these being arguments
 to draw() supplied from Shape.draw(). The attribute and element arrays
-are passed to the Shader on lines 271 to 278 and on line 304 four 3x1
+are passed to the Shader on lines 274 to 281 and on line 307 four 3x1
 vectors, from Buffer.unib (which I will explain in more detail below).
-draw() also passes the Texture samplers from line 283. NB when I say
+draw() also passes the Texture samplers from line 286. NB when I say
 "pass" the data it is only the pointer to the data that needs
 to be transferred, the actual arrays were set up in the GPU memory space
 when the Buffer was created and just need to be switched on (which is

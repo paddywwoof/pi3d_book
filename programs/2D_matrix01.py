@@ -5,7 +5,7 @@ import demo
 import pi3d
 import math
 
-display = pi3d.Display.create(w=800, h=600)
+display = pi3d.Display.create(x=50, y=350, w=800, h=600)
 """ Camera defined with is_3d=False does not apply any perspective when
 rendering the scene and uses a convenient scale of 1 unit per pixel.
 The z value of shapes can be used for layering but doesn't have a normal

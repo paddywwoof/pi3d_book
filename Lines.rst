@@ -19,7 +19,7 @@ In pi3d.Shape there are two methods that allow switching between triangles
 set_line_width and set_point_size
 ---------------------------------
 
-Have a look at the source code of pi3d/Shape.py around line 420 and you
+Have a look at the source code of pi3d/Shape.py around line 442 and you
 will see that it is a relatively simple process of calling the OpenGL
 function glLineWidth() and changing the Buffer property ``draw_method``. If
 the argument ``closed`` is set to True then the line will loop from the

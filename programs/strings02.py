@@ -18,7 +18,7 @@ by running string1.draw() many times each frame
 fps = "000.00FPS"
 N = 100
 
-DISPLAY = pi3d.Display.create()
+DISPLAY = pi3d.Display.create(x=50, y=50)
 CAMERA = pi3d.Camera()
 CAMERA2D = pi3d.Camera(is_3d=False)
 font = pi3d.Font("fonts/FreeSans.ttf", color="#FF8010")

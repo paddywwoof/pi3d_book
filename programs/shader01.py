@@ -4,7 +4,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import demo
 import pi3d
 
-display = pi3d.Display.create(w=800, h=600)
+display = pi3d.Display.create(x=50, y=50, w=800, h=600)
 
 CAMERA = pi3d.Camera(is_3d=True)
 shader = pi3d.Shader(vshader_source = """

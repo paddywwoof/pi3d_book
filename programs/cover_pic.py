@@ -73,7 +73,7 @@ class Twist(pi3d.Shape):
     self.buf.append(buff)
 
 
-DISPLAY = pi3d.Display.create(samples=4)
+DISPLAY = pi3d.Display.create(x=50, y=50)
 CAMERA = pi3d.Camera()
 CAMERA_2D = pi3d.Camera(is_3d=False)
 
@@ -125,4 +125,4 @@ while DISPLAY.loop_running():
     ani = not ani
 
 mykeys.close()
-display.destroy()
+DISPLAY.destroy()
